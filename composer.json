@@ -1,11 +1,19 @@
 {
     "name": "internations/kodierungsregelwerksammlung",
     "description": "Custom InterNations code sniffer rules",
-    "license": "BSD",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Lars Strojny",
             "email": "lars.strojny@internations.org"
+        },
+        {
+            "name": "Marc Jakubowski",
+            "email": "marc.jakubowski@internations.org"
+        },
+        {
+            "name": "Michael Weinrich",
+            "email": "michael.weinrich@internations.org"
         }
     ],
     "require-dev": {
