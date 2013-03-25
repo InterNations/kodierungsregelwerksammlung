@@ -21,21 +21,21 @@
     <rule ref="PEAR.Functions.FunctionCallSignature.Indent">
         <severity>0</severity>
     </rule>
-    <rule ref="./app-new/src/InterNations/Sniffs/Naming/ConcatenationSpacingSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Naming/ConstantNameSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Naming/TypeNameSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Naming/FinalSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Naming/AliasUseLegacyClassSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Naming/AlwaysUseSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Waste/SuperfluousUseStatementsSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Waste/NonExecutableCodeSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Whitespace/NamespaceWhitespaceSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Files/LineLengthSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Syntax/ShortArraySyntaxSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Syntax/ClosureSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Whitespace/AlignedAssignmentSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Syntax/TypeCastSniff.php"/>
-    <rule ref="./app-new/src/InterNations/Sniffs/Syntax/DocBlockTypesSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/ConcatenationSpacingSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/ConstantNameSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/TypeNameSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/FinalSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/AliasUseLegacyClassSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/AlwaysUseSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousUseStatementsSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Waste/NonExecutableCodeSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Whitespace/NamespaceWhitespaceSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Files/LineLengthSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/ShortArraySyntaxSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/ClosureSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Whitespace/AlignedAssignmentSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/TypeCastSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/DocBlockTypesSniff.php"/>
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <rule ref="Squiz.Strings.EchoedStrings"/>
@@ -48,7 +48,7 @@
     <rule ref="Squiz.Classes.ClassFileName"/>
     <rule ref="Squiz.Classes.ValidClassName"/>
     <!-- Bugfix sniff -->
-    <rule ref="./app-new/src/InterNations/Sniffs/ControlStructures/SwitchDeclarationSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/ControlStructures/SwitchDeclarationSniff.php"/>
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
     <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration"/>
     <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
