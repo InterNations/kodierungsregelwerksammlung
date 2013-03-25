@@ -1,0 +1,14 @@
+{
+    "name": "internations/kodierungsregelwerksammlung",
+    "description": "Custom InterNations code sniffer rules",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Lars Strojny",
+            "email": "lars.strojny@internations.org"
+        }
+    ],
+    "require-dev": {
+        "squizlabs/php_codesniffer": "1.4.4"
+    }
+}
