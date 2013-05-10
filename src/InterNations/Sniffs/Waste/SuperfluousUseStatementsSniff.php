@@ -46,6 +46,7 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
 
         foreach ($this->docBlocks[$file] as $docBlock) {
             $namespaceRegexPart = '([\w\d]+\|)?' . preg_quote($namespace, '/') . '(\|[\w\d]+)?';
+            $classDeclarationRegexPart = preg_quote($namespace, '/') . '(\[\])?';
             // @<namespace>(...)
             if (strstr($docBlock, '@' . $namespace . '(') !== false) {
                 $annotation = true;
@@ -72,6 +73,14 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
                 break;
             // @var $variable <namespace>
             } elseif (preg_match('/@var \$[^\s]+ ' . $namespaceRegexPart . '/i', $docBlock)) {
+                $annotation = true;
+                break;
+            // @method <namespace> methodName()
+            } elseif (preg_match('/@method ' . $classDeclarationRegexPart . ' /i', $docBlock)) {
+                $annotation = true;
+                break;
+            // @method foo(<namespace> $var) or @method foo(\string $bla, <namespace> $var)
+            } elseif (preg_match('/@method .*(\(|, )' . $classDeclarationRegexPart . ' \$/i', $docBlock)) {
                 $annotation = true;
                 break;
             }
