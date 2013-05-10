@@ -144,6 +144,22 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
                 return;
             }
 
+            // Is it the first part of a trait use statement with aliasing ("foo" in foo as bar)?
+            if ($tokens[$nextPtr]['code'] === T_AS) {
+                return;
+            }
+
+            // Is it the second part of a trait use statement with aliasing ("bar" in foo as bar)?
+            $prevPtr = $phpcsFile->findPrevious(
+                [T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED],
+                ($stackPtr - 1),
+                null,
+                true
+            );
+            if ($tokens[$prevPtr]['code'] === T_AS) {
+                return;
+            }
+
             // Is this an insteadof name?
             if ($tokens[$nextPtr]['code'] === T_INSTEADOF) {
                 return;
