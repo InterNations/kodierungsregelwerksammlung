@@ -92,7 +92,7 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
 
     protected static function flattenErrors(array $errors)
     {
-        $flattened = array();
+        $flattened = [];
 
         foreach ($errors as $errorList) {
             foreach ($errorList as $nestedErrorList) {
