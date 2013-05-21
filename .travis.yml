@@ -8,6 +8,7 @@ before_script:
   - php composer.phar install --dev
 
 script:
+  - ./vendor/bin/phpcs --standard=ruleset.xml ./src/
   - phpunit
 
 notifications:
