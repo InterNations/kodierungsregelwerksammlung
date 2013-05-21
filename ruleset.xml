@@ -195,6 +195,7 @@
     <rule ref="./src/InterNations/Sniffs/Naming/ConcatenationSpacingSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/ConstantNameSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/TypeNameSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/MethodNameSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/FinalSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/AliasUseLegacyClassSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/AlwaysUseSniff.php"/>
