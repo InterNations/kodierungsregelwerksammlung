@@ -6,6 +6,7 @@ php:
 before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install --dev
+  - find vendor/phpunit/ -name "build" -exec rm -rf {} \;
 
 script:
   - ./vendor/bin/phpcs --standard=ruleset.xml ./src/
