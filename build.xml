@@ -23,6 +23,9 @@
     </target>
 
     <target name="phpcs">
+         <delete>
+            <fileset dir="${basedir}/vendor" includes="**/build/**"/>
+         </delete>
          <exec executable="./vendor/bin/phpcs" failonerror="true">
             <arg value="--standard=ruleset.xml"/>
             <arg value="--report=checkstyle" />
