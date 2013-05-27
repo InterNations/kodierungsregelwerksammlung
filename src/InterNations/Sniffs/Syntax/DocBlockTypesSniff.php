@@ -23,26 +23,27 @@ class InterNations_Sniffs_Syntax_DocBlockTypesSniff implements PHP_CodeSniffer_S
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $typePart = join('|', array_map('preg_quote', array_keys(static::$typeMap)));
-
-        $regex = '/@(?<annotation>var|param|return)\s+(?<invalidType>' . $typePart . ')(?:\s+|$)/xi';
+        $regex = '/@(?<annotation>var|param|return)\s+(?<types>[^\s]+)(?:\s+|$)/xi';
         if (!preg_match($regex, $file->getTokens()[$stackPtr]['content'], $matches)) {
             return;
         }
 
-        if (!isset(static::$typeMap[$matches['invalidType']])) {
-            return;
-        }
+        foreach (explode('|', $matches['types']) as $type) {
 
-        $file->addError(
-            sprintf(
-                'Found "@%1$s %2$s", expected "@%1$s %3$s"',
-                $matches['annotation'],
-                $matches['invalidType'],
-                static::$typeMap[$matches['invalidType']]
-            ),
-            $stackPtr,
-            'ShortDocCommentTypes'
-        );
+            if (!isset(static::$typeMap[$type])) {
+                continue;
+            }
+
+            $file->addError(
+                sprintf(
+                    'Found "@%1$s %2$s", expected "@%1$s %3$s"',
+                    $matches['annotation'],
+                    $matches['types'],
+                    str_replace($type, static::$typeMap[$type], $matches['types'])
+                ),
+                $stackPtr,
+                'ShortDocCommentTypes'
+            );
+        }
     }
 }
