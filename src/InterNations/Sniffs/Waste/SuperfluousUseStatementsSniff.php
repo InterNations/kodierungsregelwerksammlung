@@ -45,8 +45,8 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
         }
 
         foreach ($this->docBlocks[$file] as $docBlock) {
-            $namespaceRegexPart = '([\w\d]+\|)?' . preg_quote($namespace, '/') . '(\|[\w\d]+)?';
-            $classDeclarationRegexPart = preg_quote($namespace, '/') . '(\[\])?';
+            $namespaceRegexPart = '(?:[\w\d\[\]]+\|)?' . preg_quote($namespace, '/') . '(?:\[\])?(?:\|[\w\d\[\]]+)?';
+
             // @<namespace>(...)
             if (strstr($docBlock, '@' . $namespace . '(') !== false) {
                 $annotation = true;
@@ -76,11 +76,14 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
                 $annotation = true;
                 break;
             // @method <namespace> methodName()
-            } elseif (preg_match('/@method ' . $classDeclarationRegexPart . ' /i', $docBlock)) {
+            // @property <namespace> property
+            // @property-read <namespace> property
+            // @property-write <namespace> property
+            } elseif (preg_match('/@(property(?:-read|-write)?|method) ' . $namespaceRegexPart . ' /i', $docBlock)) {
                 $annotation = true;
                 break;
-            // @method foo(<namespace> $var) or @method foo(\string $bla, <namespace> $var)
-            } elseif (preg_match('/@method .*(\(|, )' . $classDeclarationRegexPart . ' \$/i', $docBlock)) {
+            // @method foo(<namespace> $var) @method foo(\string $bla, <namespace> $var)
+            } elseif (preg_match('/@method .*(?:\(|, )' . $namespaceRegexPart . ' \$/i', $docBlock)) {
                 $annotation = true;
                 break;
             }
