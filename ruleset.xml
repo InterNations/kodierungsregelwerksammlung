@@ -197,6 +197,7 @@
     <rule ref="./src/InterNations/Sniffs/Naming/TypeNameSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/MethodNameSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/FinalSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/BooleanSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/AliasUseLegacyClassSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/AlwaysUseSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousUseStatementsSniff.php"/>
