@@ -8,8 +8,6 @@ use PHP_CodeSniffer_File as CodeSnifferFile;
 class InterNations_Sniffs_Naming_BooleanSniff implements PHP_CodeSniffer_Sniff
 // @codingStandardsIgnoreEnd
 {
-    private $analyzed = [];
-
     public function register()
     {
         return [T_TRUE, T_FALSE];
