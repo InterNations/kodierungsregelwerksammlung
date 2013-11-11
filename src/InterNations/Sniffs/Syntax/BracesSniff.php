@@ -35,7 +35,7 @@ class InterNations_Sniffs_Syntax_BracesSniff implements PHP_CodeSniffer_Sniff
             );
         }
 
-        $previousStringTokenPos = $file->findPrevious(T_STRING, $bracketPos);
+        $previousStringTokenPos = $file->findPrevious([T_STRING, T_CLOSE_PARENTHESIS], $bracketPos);
 
         if (1 + $tokens[$previousStringTokenPos]['line'] < $tokens[$bracketPos]['line']) {
             $file->addError(

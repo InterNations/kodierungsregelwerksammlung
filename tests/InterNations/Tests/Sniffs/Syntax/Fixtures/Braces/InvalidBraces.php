@@ -41,6 +41,13 @@ class Valid
     public function test()
     {
     }
+
+    public function aLotOfArguments(
+        $arg1,
+        $arg2
+    )
+    {
+    }
 }
 
 abstract class AbstractValid extends Valid
