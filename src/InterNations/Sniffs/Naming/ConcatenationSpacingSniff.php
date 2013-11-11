@@ -10,15 +10,15 @@ class InterNations_Sniffs_Naming_ConcatenationSpacingSniff implements PHP_CodeSn
         return [T_STRING_CONCAT];
     }
 
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
         if ($tokens[($stackPtr - 1)]['code'] !== T_WHITESPACE
             || $tokens[($stackPtr + 1)]['code'] !== T_WHITESPACE
             || $tokens[($stackPtr + 2)]['code'] === T_WHITESPACE
         ) {
             $message = 'Concat operator must be surrounded by exactly one space';
-            $phpcsFile->addError($message, $stackPtr, 'Missing');
+            $file->addError($message, $stackPtr, 'Missing');
         }
     }
 }

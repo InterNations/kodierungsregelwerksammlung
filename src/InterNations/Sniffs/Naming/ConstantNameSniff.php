@@ -52,20 +52,20 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
+     * @param PHP_CodeSniffer_File $file The file being scanned.
      * @param integer                  $stackPtr  The position of the current token in the
      *                                        stack passed in $tokens.
      *
      * @return null
      */
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
 
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
         $constName = $tokens[$stackPtr]['content'];
 
         // If this token is in a heredoc, ignore it.
-        if ($phpcsFile->hasCondition($stackPtr, T_START_HEREDOC) === true) {
+        if ($file->hasCondition($stackPtr, T_START_HEREDOC) === true) {
             return;
         }
 
@@ -76,9 +76,9 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
 
         // If the next non-whitespace token after this token
         // is not an opening parenthesis then it is not a function call.
-        $openBracket = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+        $openBracket = $file->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
         if ($tokens[$openBracket]['code'] !== T_OPEN_PARENTHESIS) {
-            $functionKeyword = $phpcsFile->findPrevious(
+            $functionKeyword = $file->findPrevious(
                 [T_WHITESPACE, T_COMMA, T_COMMENT, T_STRING, T_NS_SEPARATOR],
                 ($stackPtr - 1),
                 null,
@@ -107,13 +107,13 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
             }
 
             if ($tokens[$functionKeyword]['code'] === T_CONST) {
-                $class = $phpcsFile->findPrevious(T_CLASS, ($stackPtr - 1), null, false, null);
-                $className = $phpcsFile->findNext(T_STRING, ($class + 1), null, false, null, true);
+                $class = $file->findPrevious(T_CLASS, ($stackPtr - 1), null, false, null);
+                $className = $file->findNext(T_STRING, ($class + 1), null, false, null, true);
 
                 if ($this->isEventClassName($tokens[$className]['content'])) {
                     if (!$this->isValidEventConstName($constName)) {
                         $error = 'Class constants for event types must be camelcase. Found %s';
-                        $phpcsFile->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
+                        $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                     }
 
                     return;
@@ -127,14 +127,14 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
                               strtoupper($constName),
                               $constName,
                              ];
-                    $phpcsFile->addError($error, $stackPtr, 'ClassConstantNotUpperCase', $data);
+                    $file->addError($error, $stackPtr, 'ClassConstantNotUpperCase', $data);
                 }
 
                 return;
             }
 
             // Is this a class name?
-            $nextPtr = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+            $nextPtr = $file->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
             if ($tokens[$nextPtr]['code'] === T_DOUBLE_COLON) {
                 return;
             }
@@ -150,7 +150,7 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
             }
 
             // Is it the second part of a trait use statement with aliasing ("bar" in foo as bar)?
-            $prevPtr = $phpcsFile->findPrevious(
+            $prevPtr = $file->findPrevious(
                 [T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED],
                 ($stackPtr - 1),
                 null,
@@ -167,20 +167,20 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
 
             // Is this a type hint?
             if ($tokens[$nextPtr]['code'] === T_VARIABLE
-                || $phpcsFile->isReference($nextPtr) === true
+                || $file->isReference($nextPtr) === true
             ) {
                 return;
             }
 
             // Is this a member var name?
-            $prevPtr = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
+            $prevPtr = $file->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
             if ($tokens[$prevPtr]['code'] === T_OBJECT_OPERATOR) {
                 return;
             }
 
             // Is this a variable name, in the form ${varname} ?
             if ($tokens[$prevPtr]['code'] === T_OPEN_CURLY_BRACKET) {
-                $nextPtr = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+                $nextPtr = $file->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
                 if ($tokens[$nextPtr]['code'] === T_CLOSE_CURLY_BRACKET) {
                     return;
                 }
@@ -192,7 +192,7 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
             }
 
             // Is this an instance of declare()
-            $prevPtrDeclare = $phpcsFile->findPrevious([T_WHITESPACE, T_OPEN_PARENTHESIS], ($stackPtr - 1), null, true);
+            $prevPtrDeclare = $file->findPrevious([T_WHITESPACE, T_OPEN_PARENTHESIS], ($stackPtr - 1), null, true);
             if ($tokens[$prevPtrDeclare]['code'] === T_DECLARE) {
                 return;
             }
@@ -204,12 +204,12 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
                 }
             }
 
-            $className = $phpcsFile->findPrevious(T_STRING, ($stackPtr - 1), null, false, null, true);
+            $className = $file->findPrevious(T_STRING, ($stackPtr - 1), null, false, null, true);
             if ($this->isEventClassName($tokens[$className]['content'])) {
                 if (!$this->isEventClassName($tokens[$className]['content'])) {
                     if (!$this->isValidEventConstName($constName)) {
                         $error = 'Class constants for event types must be camelcase. Found %s';
-                        $phpcsFile->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
+                        $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                     }
                 }
                 return;
@@ -222,7 +222,7 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
                           strtoupper($constName),
                           $constName,
                          ];
-                $phpcsFile->addError($error, $stackPtr, 'ConstantNotUpperCase', $data);
+                $file->addError($error, $stackPtr, 'ConstantNotUpperCase', $data);
             }
 
         } elseif (strtolower($constName) === 'define' || strtolower($constName) === 'constant') {
@@ -232,7 +232,7 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
             */
 
             // Make sure this is not a method call.
-            $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
+            $prev = $file->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
             if ($tokens[$prev]['code'] === T_OBJECT_OPERATOR
                 || $tokens[$prev]['code'] === T_DOUBLE_COLON
             ) {
@@ -240,7 +240,7 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
             }
 
             // The next non-whitespace token must be the constant name.
-            $constPtr = $phpcsFile->findNext(T_WHITESPACE, ($openBracket + 1), null, true);
+            $constPtr = $file->findNext(T_WHITESPACE, ($openBracket + 1), null, true);
             if ($tokens[$constPtr]['code'] !== T_CONSTANT_ENCAPSED_STRING) {
                 return;
             }
@@ -261,7 +261,7 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
                           $prefix . strtoupper($constName),
                           $prefix . $constName,
                          ];
-                $phpcsFile->addError($error, $stackPtr, 'ConstantNotUpperCase', $data);
+                $file->addError($error, $stackPtr, 'ConstantNotUpperCase', $data);
             }
         }//end if
 

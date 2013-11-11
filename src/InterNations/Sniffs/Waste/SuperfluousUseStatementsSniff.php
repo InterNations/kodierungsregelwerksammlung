@@ -17,34 +17,34 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
         return [T_USE];
     }
 
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
         /** function () use ($var) {} */
-        if ($phpcsFile->findPrevious(T_FUNCTION, $stackPtr)) {
+        if ($file->findPrevious(T_FUNCTION, $stackPtr)) {
             return;
         }
 
         /** use Trait; */
-        if ($phpcsFile->findPrevious(T_CLASS, $stackPtr)) {
+        if ($file->findPrevious(T_CLASS, $stackPtr)) {
             return;
         }
 
-        $file = $phpcsFile->getFilename();
-        $tokens = $phpcsFile->getTokens();
-        list($stackPtr, $namespace) = $this->getNamespace($stackPtr + 1, $phpcsFile);
+        $fileName = $file->getFilename();
+        $tokens = $file->getTokens();
+        list($stackPtr, $namespace) = $this->getNamespace($stackPtr + 1, $file);
 
         $class = false;
         $annotation = false;
 
-        if (!isset($this->docBlocks[$file])) {
-            $this->docBlocks[$file] = [];
+        if (!isset($this->docBlocks[$fileName])) {
+            $this->docBlocks[$fileName] = [];
             $commentPtr = $stackPtr;
-            while ($commentPtr = $phpcsFile->findNext(T_DOC_COMMENT, $commentPtr + 1)) {
-                $this->docBlocks[$file][] = $tokens[$commentPtr]['content'];
+            while ($commentPtr = $file->findNext(T_DOC_COMMENT, $commentPtr + 1)) {
+                $this->docBlocks[$fileName][] = $tokens[$commentPtr]['content'];
             }
         }
 
-        foreach ($this->docBlocks[$file] as $docBlock) {
+        foreach ($this->docBlocks[$fileName] as $docBlock) {
             $namespaceRegexPart = '(?:[\w\d\[\]]+\|)?' . preg_quote($namespace, '/') . '(?:\[\])?(?:\|[\w\d\[\]]+)?';
 
             // @<namespace>(...)
@@ -90,19 +90,19 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
         }
 
         if (!$annotation) {
-            if (!isset($this->namespaceUsages[$file])) {
-                $this->namespaceUsages[$file] = [];
+            if (!isset($this->namespaceUsages[$fileName])) {
+                $this->namespaceUsages[$fileName] = [];
                 $strPtr = $stackPtr;
-                while ($strPtr = $phpcsFile->findNext(T_STRING, $strPtr + 1)) {
-                    $namespaceUsed = $this->getNamespaceUsage($strPtr, $phpcsFile);
+                while ($strPtr = $file->findNext(T_STRING, $strPtr + 1)) {
+                    $namespaceUsed = $this->getNamespaceUsage($strPtr, $file);
                     if ($namespaceUsed) {
-                        $this->namespaceUsages[$file][$strPtr] = $namespaceUsed;
+                        $this->namespaceUsages[$fileName][$strPtr] = $namespaceUsed;
                     }
                 }
             }
 
             $found = 0;
-            foreach ($this->namespaceUsages[$file] as $ptr => $namespaceUsed) {
+            foreach ($this->namespaceUsages[$fileName] as $ptr => $namespaceUsed) {
                 if ($ptr > $stackPtr && strpos($namespaceUsed, $namespace) === 0) {
                     ++$found;
 
@@ -115,7 +115,7 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
         }
 
         if (!$class && !$annotation) {
-            $phpcsFile->addError(
+            $file->addError(
                 'Superfluous use-statement found for symbol "%s", but no further reference',
                 $stackPtr,
                 'SuperfluousUseStatement',

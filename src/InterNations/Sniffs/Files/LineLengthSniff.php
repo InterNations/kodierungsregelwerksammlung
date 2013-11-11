@@ -68,18 +68,18 @@ class InterNations_Sniffs_Files_LineLengthSniff implements PHP_CodeSniffer_Sniff
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
+     * @param PHP_CodeSniffer_File $file The file being scanned.
      * @param integer                  $stackPtr  The position of the current token in
      *                                        the stack passed in $tokens.
      *
      * @return null
      */
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
 
         // Make sure this is the first open tag.
-        $previousOpenTag = $phpcsFile->findPrevious(T_OPEN_TAG, ($stackPtr - 1));
+        $previousOpenTag = $file->findPrevious(T_OPEN_TAG, ($stackPtr - 1));
         if ($previousOpenTag !== false) {
             return;
         }
@@ -88,20 +88,20 @@ class InterNations_Sniffs_Files_LineLengthSniff implements PHP_CodeSniffer_Sniff
         $currentLineContent = '';
         $currentLine = 1;
 
-        $trim = (strlen($phpcsFile->eolChar) * -1);
-        for (; $tokenCount < $phpcsFile->numTokens; $tokenCount++) {
+        $trim = (strlen($file->eolChar) * -1);
+        for (; $tokenCount < $file->numTokens; $tokenCount++) {
             if ($tokens[$tokenCount]['line'] === $currentLine) {
                 $currentLineContent .= $tokens[$tokenCount]['content'];
             } else {
                 $currentLineContent = substr($currentLineContent, 0, $trim);
-                $this->checkLineLength($phpcsFile, ($tokenCount - 1), $currentLineContent);
+                $this->checkLineLength($file, ($tokenCount - 1), $currentLineContent);
                 $currentLineContent = $tokens[$tokenCount]['content'];
                 $currentLine++;
             }
         }
 
         $currentLineContent = substr($currentLineContent, 0, $trim);
-        $this->checkLineLength($phpcsFile, ($tokenCount - 1), $currentLineContent);
+        $this->checkLineLength($file, ($tokenCount - 1), $currentLineContent);
 
     }//end process()
 

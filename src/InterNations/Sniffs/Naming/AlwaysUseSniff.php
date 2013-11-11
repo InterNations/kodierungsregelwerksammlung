@@ -15,14 +15,14 @@ class InterNations_Sniffs_Naming_AlwaysUseSniff implements PHP_CodeSniffer_Sniff
         return [T_STRING];
     }
 
-    public function process(CodeSnifferFile $phpcsFile, $originalStackPtr)
+    public function process(CodeSnifferFile $file, $originalStackPtr)
     {
-        $fileName = $phpcsFile->getFilename();
+        $fileName = $file->getFilename();
         if (isset($this->analyzed[$fileName]) && $originalStackPtr < $this->analyzed[$fileName]) {
             return;
         }
 
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
 
         $stackPtr = $originalStackPtr;
         $type = null;
@@ -102,11 +102,11 @@ class InterNations_Sniffs_Naming_AlwaysUseSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        list($className, $endStackPtr) = $this->getClassName($phpcsFile, $leftStackPtr);
+        list($className, $endStackPtr) = $this->getClassName($file, $leftStackPtr);
 
 
         if ($className[0] === '\\') {
-            $phpcsFile->addError(
+            $file->addError(
                 'Fully qualified namespaces are prohibited (' . $className . '). Introduce a "use"-statement',
                 $originalStackPtr,
                 'FullyQualifiedNamespace.' . $type
@@ -118,7 +118,7 @@ class InterNations_Sniffs_Naming_AlwaysUseSniff implements PHP_CodeSniffer_Sniff
         }
 
         if (strpos($className, '_') !== false) {
-            $phpcsFile->addError(
+            $file->addError(
                 'Legacy namespaces are prohibited (' . $className . '). Introduce a "use"-statement and alias properly',
                 $originalStackPtr,
                 'LegacyNamespace.' . $type

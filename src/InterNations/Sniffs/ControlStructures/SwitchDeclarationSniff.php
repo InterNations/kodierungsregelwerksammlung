@@ -64,15 +64,15 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
+     * @param PHP_CodeSniffer_File $file The file being scanned.
      * @param integer                  $stackPtr  The position of the current token in the
      *                                        stack passed in $tokens.
      *
      * @return null
      */
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
 
         // We can't process SWITCH statements unless we know where they start and end.
         if (isset($tokens[$stackPtr]['scope_opener']) === false
@@ -87,7 +87,7 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
         $caseCount = 0;
         $foundDefault = false;
 
-        while (($nextCase = $phpcsFile->findNext(
+        while (($nextCase = $file->findNext(
             [T_CASE, T_DEFAULT, T_SWITCH],
             ($nextCase + 1),
             $switch['scope_closer']
@@ -114,12 +114,12 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
                              $expected,
                              $tokens[$nextCase]['content'],
                             ];
-                $phpcsFile->addError($error, $nextCase, $type . 'NotLower', $data);
+                $file->addError($error, $nextCase, $type . 'NotLower', $data);
             }
 
             if ($tokens[$nextCase]['column'] !== $caseAlignment) {
                 $error = strtoupper($type) . ' keyword must be indented 4 spaces from SWITCH keyword';
-                $phpcsFile->addError($error, $nextCase, $type . 'Indent');
+                $file->addError($error, $nextCase, $type . 'Indent');
             }
 
             if ($type === 'Case'
@@ -127,19 +127,19 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
                 || $tokens[($nextCase + 1)]['content'] !== ' ')
             ) {
                 $error = 'CASE keyword must be followed by a single space';
-                $phpcsFile->addError($error, $nextCase, 'SpacingAfterCase');
+                $file->addError($error, $nextCase, 'SpacingAfterCase');
             }
 
             $opener = $tokens[$nextCase]['scope_opener'];
             if ($tokens[($opener - 1)]['type'] === 'T_WHITESPACE') {
                 $error = 'There must be no space before the colon in a ' . strtoupper($type) . ' statement';
-                $phpcsFile->addError($error, $nextCase, 'SpaceBeforeColon' . $type);
+                $file->addError($error, $nextCase, 'SpaceBeforeColon' . $type);
             }
 
             $nextBreak = $tokens[$nextCase]['scope_closer'];
             $breakAfterThrow = false;
             if ($tokens[$nextBreak]['code'] === T_THROW) {
-                if ($pos = $phpcsFile->findNext([T_OPEN_PARENTHESIS], $nextBreak)) {
+                if ($pos = $file->findNext([T_OPEN_PARENTHESIS], $nextBreak)) {
                     // +4: ")" ";" "\n" "<whitespace>"
                     $breakAfterThrow = $tokens[$pos]['parenthesis_closer'] + 4;
                 }
@@ -154,7 +154,7 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
                     // the default case.
                     if ($tokens[$nextBreak]['column'] !== $caseAlignment + 4) {
                         $error = 'BREAK statement must be indented 4 spaces from SWITCH keyword';
-                        $phpcsFile->addError($error, $nextBreak, 'BreakIndent');
+                        $file->addError($error, $nextBreak, 'BreakIndent');
                     }
 
                     $breakLine = $tokens[$nextBreak]['line'];
@@ -168,12 +168,12 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
 
                     if ($prevLine !== ($breakLine - 1)) {
                         $error = 'Blank lines are not allowed before BREAK statements';
-                        $phpcsFile->addError($error, $nextBreak, 'SpacingBeforeBreak');
+                        $file->addError($error, $nextBreak, 'SpacingBeforeBreak');
                     }
 
                     $breakLine = $tokens[$nextBreak]['line'];
                     $nextLine = $tokens[$tokens[$stackPtr]['scope_closer']]['line'];
-                    $semicolon = $phpcsFile->findNext(T_SEMICOLON, $nextBreak);
+                    $semicolon = $file->findNext(T_SEMICOLON, $nextBreak);
                     for ($i = ($semicolon + 1); $i < $tokens[$stackPtr]['scope_closer']; $i++) {
                         if ($tokens[$i]['type'] !== 'T_WHITESPACE') {
                             $nextLine = $tokens[$i]['line'];
@@ -186,13 +186,13 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
                         // a single blank line, or the end switch brace.
                         if ($nextLine !== ($breakLine + 2) && $i !== $tokens[$stackPtr]['scope_closer']) {
                             $error = 'BREAK statements must be followed by a single blank line';
-                            $phpcsFile->addError($error, $nextBreak, 'SpacingAfterBreak');
+                            $file->addError($error, $nextBreak, 'SpacingAfterBreak');
                         }
                     } else {
                         // Ensure the BREAK statement is not followed by a blank line.
                         if ($nextLine !== ($breakLine + 1)) {
                             $error = 'Blank lines are not allowed after the DEFAULT case\'s BREAK statement';
-                            $phpcsFile->addError($error, $nextBreak, 'SpacingAfterDefaultBreak');
+                            $file->addError($error, $nextBreak, 'SpacingAfterDefaultBreak');
                         }
                     }
 
@@ -207,7 +207,7 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
 
                     if ($nextLine !== ($caseLine + 1)) {
                         $error = 'Blank lines are not allowed after ' . strtoupper($type) . ' statements';
-                        $phpcsFile->addError($error, $nextCase, 'SpacingAfter' . $type);
+                        $file->addError($error, $nextCase, 'SpacingAfter' . $type);
                     }
                 }//end if
 
@@ -232,7 +232,7 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
 
                         if ($foundContent === false) {
                             $error = 'Empty CASE statements are not allowed';
-                            $phpcsFile->addError($error, $nextCase, 'EmptyCase');
+                            $file->addError($error, $nextCase, 'EmptyCase');
                         }
                     } else {
                         // Ensure empty DEFAULT statements are not allowed.
@@ -248,29 +248,29 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
 
                         if ($foundContent === false) {
                             $error = 'Comment required for empty DEFAULT case';
-                            $phpcsFile->addError($error, $nextCase, 'EmptyDefault');
+                            $file->addError($error, $nextCase, 'EmptyDefault');
                         }
                     }//end if
                 }//end if
             } elseif ($type === 'Default') {
                 $error = 'DEFAULT case must have a breaking statement';
-                $phpcsFile->addError($error, $nextCase, 'DefaultNoBreak');
+                $file->addError($error, $nextCase, 'DefaultNoBreak');
             }//end if
         }//end while
 
         if ($foundDefault === false) {
             $error = 'All SWITCH statements must contain a DEFAULT case';
-            $phpcsFile->addError($error, $stackPtr, 'MissingDefault');
+            $file->addError($error, $stackPtr, 'MissingDefault');
         }
 
         if ($tokens[$switch['scope_closer']]['column'] !== $switch['column']) {
             $error = 'Closing brace of SWITCH statement must be aligned with SWITCH keyword';
-            $phpcsFile->addError($error, $switch['scope_closer'], 'CloseBraceAlign');
+            $file->addError($error, $switch['scope_closer'], 'CloseBraceAlign');
         }
 
         if ($caseCount === 0) {
             $error = 'SWITCH statements must contain at least one CASE statement';
-            $phpcsFile->addError($error, $stackPtr, 'MissingCase');
+            $file->addError($error, $stackPtr, 'MissingCase');
         }
 
     }//end process()

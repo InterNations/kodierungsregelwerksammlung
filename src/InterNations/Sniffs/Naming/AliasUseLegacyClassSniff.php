@@ -13,19 +13,19 @@ class InterNations_Sniffs_Naming_AliasUseLegacyClassSniff implements PHP_CodeSni
         return [T_USE];
     }
 
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
         /** function () use ($var) {} */
-        if ($phpcsFile->findPrevious(T_FUNCTION, $stackPtr)) {
+        if ($file->findPrevious(T_FUNCTION, $stackPtr)) {
             return;
         }
 
         /** use Trait; */
-        if ($phpcsFile->findPrevious(T_CLASS, $stackPtr)) {
+        if ($file->findPrevious(T_CLASS, $stackPtr)) {
             return;
         }
 
-        list($stackPtr, $namespace) = $this->getNamespace($stackPtr + 1, $phpcsFile);
+        list($stackPtr, $namespace) = $this->getNamespace($stackPtr + 1, $file);
 
         if ($namespace == 'stdClass') {
             return;
@@ -33,7 +33,7 @@ class InterNations_Sniffs_Naming_AliasUseLegacyClassSniff implements PHP_CodeSni
 
         // lowerCamelCase or Under_Score?
         if ($namespace[0] === strtolower($namespace[0]) || strpos($namespace, '_') !== false) {
-            $phpcsFile->addError(
+            $file->addError(
                 'Create an UpperCamelCased alias for symbol "%s"',
                 $stackPtr,
                 'AliasUseLegacyClass',

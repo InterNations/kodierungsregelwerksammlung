@@ -13,9 +13,9 @@ class InterNations_Sniffs_Whitespace_AlignedAssignmentSniff implements PHP_CodeS
         return [T_EQUAL];
     }
 
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
 
         $whitespaceLeft = $tokens[$stackPtr - 1]['code'] === T_WHITESPACE;
         $whitespaceRight = $tokens[$stackPtr + 1]['code'] === T_WHITESPACE;
@@ -23,15 +23,15 @@ class InterNations_Sniffs_Whitespace_AlignedAssignmentSniff implements PHP_CodeS
         $whitespaceRightLength = strlen($tokens[$stackPtr + 1]['content']);
 
         if (!$whitespaceLeft || !$whitespaceRight) {
-            $phpcsFile->addError('Assignment not separated by whitespace', $stackPtr, 'AssignmentWhitespace');
+            $file->addError('Assignment not separated by whitespace', $stackPtr, 'AssignmentWhitespace');
         }
 
         if ($whitespaceLeft && $whitespaceLeftLength !== 1) {
-            $phpcsFile->addError('Too much whitespace before equal sign', $stackPtr - 1, 'AssignmentWhitespace');
+            $file->addError('Too much whitespace before equal sign', $stackPtr - 1, 'AssignmentWhitespace');
         }
 
         if ($whitespaceRight && $whitespaceRightLength !== 1) {
-            $phpcsFile->addError('Too much whitespace after equal sign', $stackPtr - 1, 'AssignmentWhitespace');
+            $file->addError('Too much whitespace after equal sign', $stackPtr - 1, 'AssignmentWhitespace');
         }
     }
 }

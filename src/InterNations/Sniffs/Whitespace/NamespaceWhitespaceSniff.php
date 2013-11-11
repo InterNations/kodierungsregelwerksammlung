@@ -13,12 +13,12 @@ class InterNations_Sniffs_Whitespace_NamespaceWhitespaceSniff implements PHP_Cod
         return [T_NAMESPACE];
     }
 
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
 
         if ($tokens[$stackPtr - 1]['code'] === T_WHITESPACE) {
-            $phpcsFile->addError(
+            $file->addError(
                 'Invalid newline(s) before namespace declaration',
                 $stackPtr,
                 'WhitespaceBeforeNamespace'
