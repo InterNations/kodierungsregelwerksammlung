@@ -2,3 +2,4 @@ vendor/
 .idea/
 build/*
 composer.lock
+atlassian-ide-plugin.xml
