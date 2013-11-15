@@ -3,6 +3,11 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
 {
     protected static function analyze(array $sniffs, $files)
     {
+        $argv = $_SERVER['argv'];
+        $argc = $_SERVER['argc'];
+        $_SERVER['argv'] = [];
+        $_SERVER['argc'] = 0;
+
         $sniffs = array_map(
             static function ($sniff) {
                 $sniff = __DIR__ . '/../../../../src/' . $sniff . '.php';
@@ -24,7 +29,12 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
 
         $codeSniffer->process($files, '');
 
-        return $codeSniffer->getFilesErrors();
+        $errors = $codeSniffer->getFilesErrors();
+
+        $_SERVER['argv'] = $argv;
+        $_SERVER['argc'] = $argc;
+
+        return $errors;
     }
 
     protected static function assertReportCount($errorCount, $warningsCount, array $errors, $file)
