@@ -20,7 +20,7 @@ class InterNations_Sniffs_Whitespace_OverlongParameterSniff implements PHP_CodeS
      *
      *
      * @param PHP_CodeSniffer_File $file
-     * @param int $stackPtr
+     * @param integer $stackPtr
      */
     public function process(CodeSnifferFile $file, $stackPtr)
     {
@@ -76,7 +76,15 @@ class InterNations_Sniffs_Whitespace_OverlongParameterSniff implements PHP_CodeS
 
         $arguments = $this->getArguments($tokens, $openingBracePtr, $closingBracePtr);
         if ($operatorPtr && $tokens[$operatorPtr]['code'] === T_FUNCTION) {
-            $this->lintFunctionDeclaration($file, $stackPtr, $tokens, $operatorPtr, $arguments, $openingBracePtr, $closingBracePtr);
+            $this->lintFunctionDeclaration(
+                $file,
+                $stackPtr,
+                $tokens,
+                $operatorPtr,
+                $arguments,
+                $openingBracePtr,
+                $closingBracePtr
+            );
             return;
         }
 
@@ -104,10 +112,12 @@ class InterNations_Sniffs_Whitespace_OverlongParameterSniff implements PHP_CodeS
                  */
                 if (in_array($token['code'], $parenthesisTokens) && isset($token['parenthesis_opener'])) {
 
-                    $adjustment += $tokens[$token['parenthesis_closer']]['line'] - $tokens[$token['parenthesis_opener']]['line'];
+                    $adjustment += $tokens[$token['parenthesis_closer']]['line']
+                        - $tokens[$token['parenthesis_opener']]['line'];
                     break;
                 } elseif (in_array($token['code'], $bracketTokens) && isset($token['bracket_opener'])) {
-                    $adjustment += $tokens[$token['bracket_closer']]['line'] - $tokens[$token['bracket_opener']]['line'];
+                    $adjustment += $tokens[$token['bracket_closer']]['line']
+                        - $tokens[$token['bracket_opener']]['line'];
                     break;
                 }
 
@@ -224,7 +234,7 @@ class InterNations_Sniffs_Whitespace_OverlongParameterSniff implements PHP_CodeS
     )
     {
         $openingToken = $tokens[$openingBracePtr];
-        if ($this->argumentDeclarationFitsOneLine($file, $tokens, $openingBracePtr, $closingBracePtr)) {
+        if ($this->argumentDeclarationFitsOneLine($tokens, $openingBracePtr, $closingBracePtr)) {
             foreach ($arguments as $argument) {
                 foreach ($argument as $token) {
                     if ($token['line'] !== $openingToken['line']) {
@@ -263,7 +273,7 @@ class InterNations_Sniffs_Whitespace_OverlongParameterSniff implements PHP_CodeS
         }
     }
 
-    private function argumentDeclarationFitsOneLine(CodeSnifferFile $file, array $tokens, $openingBracePtr, $closingBracePtr)
+    private function argumentDeclarationFitsOneLine(array $tokens, $openingBracePtr, $closingBracePtr)
     {
         $code = '';
         $previousWhitespace = false;
