@@ -50,6 +50,19 @@ class InterNations_Sniffs_Naming_AlternativeMethodSniff implements PHP_CodeSniff
             return;
         }
 
+        $objectOperatorPtr = $file->findPrevious(
+            [T_OBJECT_OPERATOR],
+            $stackPtr - 1,
+            null,
+            false,
+            null,
+            true
+        );
+
+        if (!$objectOperatorPtr) {
+            return;
+        }
+
         $methodName = $tokens[$stackPtr]['content'];
 
         if (isset($this->alternatives[$methodName])) {
