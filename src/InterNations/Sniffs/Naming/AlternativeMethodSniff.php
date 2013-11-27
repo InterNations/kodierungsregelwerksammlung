@@ -50,16 +50,29 @@ class InterNations_Sniffs_Naming_AlternativeMethodSniff implements PHP_CodeSniff
             return;
         }
 
-        $objectOperatorPtr = $file->findPrevious(
-            [T_OBJECT_OPERATOR],
+        $beforeWhitespacePtr = $file->findPrevious(
+            [T_WHITESPACE],
             $stackPtr - 1,
             null,
+            true,
+            null,
+            true
+        );
+
+        if ($tokens[$beforeWhitespacePtr]['code'] == T_SEMICOLON) {
+            $beforeWhitespacePtr++;
+        }
+
+        $objectOperatorPtr = $file->findPrevious(
+            [T_PAAMAYIM_NEKUDOTAYIM, T_OBJECT_OPERATOR, T_FUNCTION],
+            $beforeWhitespacePtr,
+            $beforeWhitespacePtr - 1,
             false,
             null,
             true
         );
 
-        if (!$objectOperatorPtr) {
+        if ($objectOperatorPtr !== false) {
             return;
         }
 
