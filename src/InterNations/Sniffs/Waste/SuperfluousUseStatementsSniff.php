@@ -132,13 +132,13 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
         $asToken = false;
         $latestStackPtr = 0;
         while ($stackPtr = $phpcsFile->findNext(
-                [T_STRING, T_NS_SEPARATOR, T_WHITESPACE, T_AS],
-                $stackPtr + 1,
-                null,
-                null,
-                null,
-                true
-            )
+            [T_STRING, T_NS_SEPARATOR, T_WHITESPACE, T_AS],
+            $stackPtr + 1,
+            null,
+            null,
+            null,
+            true
+        )
         ) {
             if ($firstWhitespace && $tokens[$stackPtr]['code'] !== T_WHITESPACE) {
                 $firstWhitespace = false;
