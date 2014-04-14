@@ -1,9 +1,10 @@
 <?php
-use PHP_CodeSniffer_File as CodeSnifferFile;
+namespace InterNations\Sniffs\Naming;
 
-// @codingStandardsIgnoreStart
-class InterNations_Sniffs_Naming_ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+use PHP_CodeSniffer_File as CodeSnifferFile;
+use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+
+class ConcatenationSpacingSniff implements CodeSnifferSniff
 {
     public function register()
     {

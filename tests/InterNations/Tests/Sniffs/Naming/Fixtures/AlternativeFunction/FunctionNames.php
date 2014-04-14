@@ -1,5 +1,5 @@
 <?php
-class MethodNames
+class FunctionNames
 {
     public function join()
     {

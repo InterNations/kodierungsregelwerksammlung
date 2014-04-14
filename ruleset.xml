@@ -40,6 +40,7 @@
         <exclude name="Generic.VersionControl.SubversionProperties"/>
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
+        <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
     </rule>
 
     <rule ref="MySource">
@@ -200,7 +201,7 @@
     <rule ref="./src/InterNations/Sniffs/Naming/BooleanSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/AliasUseLegacyClassSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/AlwaysUseSniff.php"/>
-    <rule ref="./src/InterNations/Sniffs/Naming/AlternativeMethodSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Naming/AlternativeFunctionSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousUseStatementsSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/NonExecutableCodeSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Whitespace/NamespaceWhitespaceSniff.php"/>

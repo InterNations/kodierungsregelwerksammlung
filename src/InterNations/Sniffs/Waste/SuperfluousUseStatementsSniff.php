@@ -1,12 +1,10 @@
 <?php
-use PHP_CodeSniffer_File as CodeSnifferFile;
+namespace InterNations\Sniffs\Waste;
 
-/**
- * @SuppressWarnings(PMD)
- */
-// @codingStandardsIgnoreStart
-class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+use PHP_CodeSniffer_File as CodeSnifferFile;
+use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+
+class SuperfluousUseStatementsSniff implements CodeSnifferSniff
 {
     private $docBlocks = [];
 
@@ -124,7 +122,7 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
         }
     }
 
-    private function getNamespace($stackPtr, PHP_CodeSniffer_File $phpcsFile)
+    private function getNamespace($stackPtr, CodeSnifferFile $phpcsFile)
     {
         $tokens = $phpcsFile->getTokens();
         $namespace = '';
@@ -160,7 +158,7 @@ class InterNations_Sniffs_Waste_SuperfluousUseStatementsSniff implements PHP_Cod
         return [$latestStackPtr, ltrim($namespace, '\\')];
     }
 
-    private function getNamespaceUsage($stackPtr, PHP_CodeSniffer_File $phpcsFile)
+    private function getNamespaceUsage($stackPtr, CodeSnifferFile $phpcsFile)
     {
         $tokens = $phpcsFile->getTokens();
         $namespace = '';

@@ -1,4 +1,6 @@
 <?php
+namespace InterNations\Sniffs\Files;
+
 /**
  * Generic_Sniffs_Files_LineLengthSniff.
  *
@@ -29,11 +31,10 @@
  * @version   Release: 1.4.4
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-// @codingStandardsIgnoreStart
 use PHP_CodeSniffer_File as CodeSnifferFile;
+use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
-class InterNations_Sniffs_Files_LineLengthSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+class LineLengthSniff implements CodeSnifferSniff
 {
 
     /**
@@ -174,6 +175,4 @@ class InterNations_Sniffs_Files_LineLengthSniff implements PHP_CodeSniffer_Sniff
             $phpcsFile->addWarning($warning, $stackPtr, 'TooLong', $data);
         }
     }//end checkLineLength()
-
-
 }//end class

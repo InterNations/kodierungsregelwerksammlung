@@ -1,4 +1,6 @@
 <?php
+namespace InterNations\Sniffs\Naming;
+
 /**
  * Generic_Sniffs_NamingConventions_UpperCaseConstantNameSniff.
  *
@@ -30,10 +32,9 @@
  * @SuppressWarnings(PMD)
  */
 use PHP_CodeSniffer_File as CodeSnifferFile;
+use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
-// @codingStandardsIgnoreStart
-class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+class ConstantNameSniff implements CodeSnifferSniff
 {
 
 
@@ -276,5 +277,4 @@ class InterNations_Sniffs_Naming_ConstantNameSniff implements PHP_CodeSniffer_Sn
     {
         return preg_match('/^(on|after|before)/', $constantName) && !preg_match('/[A-Z]{2}/', $constantName);
     }
-
 }//end class

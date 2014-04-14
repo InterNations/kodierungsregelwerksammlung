@@ -1,4 +1,6 @@
 <?php
+namespace InterNations\Sniffs\ControlStructures;
+
 /**
  * Squiz_Sniffs_ControlStructures_SwitchDeclarationSniff.
  *
@@ -32,10 +34,9 @@
  */
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Tokens as CodeSnifferTokens;
+use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
-// @codingStandardsIgnoreStart
-class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+class SwitchDeclarationSniff implements CodeSnifferSniff
 {
 
     /**
@@ -274,6 +275,4 @@ class InterNations_Sniffs_ControlStructures_SwitchDeclarationSniff implements PH
         }
 
     }//end process()
-
-
 }//end class

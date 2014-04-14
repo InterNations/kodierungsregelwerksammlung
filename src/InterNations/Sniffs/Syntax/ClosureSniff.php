@@ -1,9 +1,10 @@
 <?php
-use PHP_CodeSniffer_File as CodeSnifferFile;
+namespace InterNations\Sniffs\Syntax;
 
-// @codingStandardsIgnoreStart
-class InterNations_Sniffs_Syntax_ClosureSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+use PHP_CodeSniffer_File as CodeSnifferFile;
+use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+
+class ClosureSniff implements CodeSnifferSniff
 {
     public function register()
     {

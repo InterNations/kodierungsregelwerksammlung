@@ -19,12 +19,23 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
             (array) $files
         );
 
-        $codeSniffer = new TestCodeSniffer();
-        $codeSniffer->setSniffFiles($sniffs);
+        $codeSniffer = new PHP_CodeSniffer();
+        $codeSniffer->registerSniffs($sniffs, []);
+        $codeSniffer->populateTokenListeners();
 
-        $codeSniffer->process($files, '');
+        $report = [];
+        foreach ($files as $file) {
+            $phpcsFile = $codeSniffer->processFile($file);
 
-        return $codeSniffer->getFilesErrors();
+            $report[$file] = [];
+            $report[$file]['numWarnings'] = $phpcsFile->getWarningCount();
+            $report[$file]['warnings'] = $phpcsFile->getWarnings();
+
+            $report[$file]['numErrors'] = $phpcsFile->getErrorCount();
+            $report[$file]['errors'] = $phpcsFile->getErrors();
+        }
+
+        return $report;
     }
 
     protected static function assertReportCount($errorCount, $warningsCount, array $errors, $file)
@@ -112,20 +123,5 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
         $message = array_shift($args);
 
         return vsprintf($message, $args) . "\n" . json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    }
-}
-
-class TestCodeSniffer extends PHP_CodeSniffer
-{
-    private $sniffs;
-
-    public function setSniffFiles(array $sniffs)
-    {
-        $this->sniffs = $sniffs;
-    }
-
-    public function getSniffFiles($dir, $standard = null)
-    {
-        return $this->sniffs;
     }
 }

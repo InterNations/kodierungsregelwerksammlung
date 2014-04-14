@@ -1,9 +1,10 @@
 <?php
-use PHP_CodeSniffer_File as CodeSnifferFile;
+namespace InterNations\Sniffs\Naming;
 
-// @codingStandardsIgnoreStart
-class InterNations_Sniffs_Naming_AlternativeMethodSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+use PHP_CodeSniffer_File as CodeSnifferFile;
+use PHP_CodeSniffer_Sniff as Sniff;
+
+class AlternativeFunctionSniff implements Sniff
 {
     protected $alternatives = [
         'join'       => 'implode',
@@ -81,7 +82,7 @@ class InterNations_Sniffs_Naming_AlternativeMethodSniff implements PHP_CodeSniff
         if (isset($this->alternatives[$methodName])) {
             $file->addError(
                 sprintf(
-                    'Method name "%s()" is not allowed. Use "%s()" instead',
+                    'Function name "%s()" is not allowed. Use "%s()" instead',
                     $methodName,
                     $this->alternatives[$methodName]
                 ),

@@ -1,4 +1,6 @@
 <?php
+namespace InterNations\Sniffs\Waste;
+
 /**
  * Squiz_Sniffs_PHP_InnerFunctionsSniff.
  *
@@ -28,12 +30,11 @@
  * @version   Release: 1.4.4
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-// @codingStandardsIgnoreStart
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Tokens as CodeSnifferTokens;
+use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
-class InterNations_Sniffs_Waste_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
-// @codingStandardsIgnoreEnd
+class NonExecutableCodeSniff implements CodeSnifferSniff
 {
 
 
@@ -278,8 +279,4 @@ class InterNations_Sniffs_Waste_NonExecutableCodeSniff implements PHP_CodeSniffe
         }//end for
 
     }//end process()
-
-
 }//end class
-
-?>
