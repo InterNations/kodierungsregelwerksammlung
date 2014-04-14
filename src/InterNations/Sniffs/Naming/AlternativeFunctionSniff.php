@@ -6,7 +6,7 @@ use PHP_CodeSniffer_Sniff as Sniff;
 
 class AlternativeFunctionSniff implements Sniff
 {
-    protected $alternatives = [
+    private $alternatives = [
         'join'       => 'implode',
         'sizeof'     => 'count',
         'fputs'      => 'fwrite',
@@ -17,6 +17,10 @@ class AlternativeFunctionSniff implements Sniff
         'key_exists' => 'array_key_exists',
         'is_double'  => 'is_float',
         'ini_alter'  => 'ini_set',
+        'is_long'    => 'is_int',
+        'is_integer' => 'is_int',
+        'is_real'    => 'is_float',
+        'pos'        => 'current',
     ];
 
     public function register()
@@ -25,7 +29,7 @@ class AlternativeFunctionSniff implements Sniff
     }
 
     /**
-     * @param PHP_CodeSniffer_File $file
+     * @param CodeSnifferFile $file
      * @param integer $stackPtr
      */
     public function process(CodeSnifferFile $file, $stackPtr)

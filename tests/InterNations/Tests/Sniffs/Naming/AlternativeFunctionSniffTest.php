@@ -16,8 +16,12 @@ class InterNations_Tests_Sniffs_Naming_AlternativeFunctionSniffTest extends Inte
             ['key_exists', 'array_key_exists'],
             ['is_double', 'is_float'],
             ['ini_alter', 'ini_set'],
+            ['is_long', 'is_int'],
+            ['is_integer', 'is_int'],
+            ['is_real', 'is_float'],
+            ['pos', 'current'],
         ];
-    }
+   }
 
     /**
      * @param $method
@@ -29,7 +33,7 @@ class InterNations_Tests_Sniffs_Naming_AlternativeFunctionSniffTest extends Inte
         $file = __DIR__ . '/Fixtures/AlternativeFunction/FunctionNames.php';
         $errors = $this->analyze(['InterNations/Sniffs/Naming/AlternativeFunctionSniff'], [$file]);
 
-        $this->assertReportCount(12, 0, $errors, $file);
+        $this->assertReportCount(16, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,

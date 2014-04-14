@@ -74,6 +74,26 @@ class FunctionNames
         ini_alter('display_errors', 1);
     }
 
+    public function is_long()
+    {
+        is_long(123);
+    }
+
+    public function is_integer()
+    {
+        is_integer(123);
+    }
+
+    public function is_real()
+    {
+        is_real(123);
+    }
+
+    public function pos()
+    {
+        pos(123);
+    }
+
     protected function tPaamayimNekudotayim()
     {
         PaamayimNekudotayim::sizeof([1, 2, 3]);
