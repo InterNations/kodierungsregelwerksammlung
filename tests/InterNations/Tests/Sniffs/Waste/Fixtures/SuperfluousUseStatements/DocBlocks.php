@@ -33,6 +33,8 @@ use ClassName29;
 use ClassName30;
 use ClassName31;
 use ClassName32;
+use PrefixClass;
+use Prefix;
 
 /**
  * @property-read ClassName1 readProperty1
@@ -83,6 +85,10 @@ class DocBlock
      * @return ClassName25[]|ClassName26[string]
      */
     public function getList(array $arg)
+    {
+    }
+
+    public function withPrefixClass(PrefixClass $c)
     {
     }
 }

@@ -101,7 +101,9 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
 
             $found = 0;
             foreach ($this->namespaceUsages[$fileName] as $ptr => $namespaceUsed) {
-                if ($ptr > $stackPtr && strpos($namespaceUsed, $namespace) === 0) {
+                $identicalNamespace = $namespaceUsed === $namespace;
+                $partialNamespace = strpos($namespaceUsed, $namespace . '\\') === 0;
+                if ($ptr > $stackPtr && ($identicalNamespace || $partialNamespace)) {
                     ++$found;
 
                     if ($found > 1) {
