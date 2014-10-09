@@ -7,20 +7,24 @@ use PHP_CodeSniffer_Sniff as Sniff;
 class AlternativeFunctionSniff implements Sniff
 {
     private $alternatives = [
-        'join'       => 'implode',
-        'sizeof'     => 'count',
-        'fputs'      => 'fwrite',
-        'chop'       => 'rtrim',
-        'is_real'    => 'is_float',
-        'strchr'     => 'strstr',
-        'doubleval'  => 'floatval',
-        'key_exists' => 'array_key_exists',
-        'is_double'  => 'is_float',
-        'ini_alter'  => 'ini_set',
-        'is_long'    => 'is_int',
-        'is_integer' => 'is_int',
-        'is_real'    => 'is_float',
-        'pos'        => 'current',
+        'join'       => 'implode()',
+        'sizeof'     => 'count()',
+        'fputs'      => 'fwrite()',
+        'chop'       => 'rtrim()',
+        'is_real'    => 'is_float()',
+        'strchr'     => 'strstr()',
+        'doubleval'  => 'floatval()',
+        'key_exists' => 'array_key_exists()',
+        'is_double'  => 'is_float()',
+        'ini_alter'  => 'ini_set()',
+        'is_long'    => 'is_int()',
+        'is_integer' => 'is_int()',
+        'is_real'    => 'is_float()',
+        'pos'        => 'current()',
+        'md5'        => 'hash(\'sha256\', ...)',
+        'md5_file'   => 'hash_file(\'sha256\', ...)',
+        'sha1'       => 'hash(\'sha256\', ...)',
+        'sha1_file'  => 'hash_file(\'sha256\', ...)',
     ];
 
     public function register()
@@ -86,7 +90,7 @@ class AlternativeFunctionSniff implements Sniff
         if (isset($this->alternatives[$methodName])) {
             $file->addError(
                 sprintf(
-                    'Function name "%s()" is not allowed. Use "%s()" instead',
+                    'Function "%s()" is not allowed. Use "%s" instead',
                     $methodName,
                     $this->alternatives[$methodName]
                 ),
