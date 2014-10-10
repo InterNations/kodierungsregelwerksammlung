@@ -13,6 +13,7 @@ class FunctionNames
         $newString = $pn->
             join('a', 'b'); join(',', ['foo', 'bar']);join(',', ['foo', 'bar']);
 
+        sha1('foo');
     }
 
     public function sizeof()
