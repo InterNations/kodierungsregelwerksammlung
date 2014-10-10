@@ -25,11 +25,15 @@ class AlternativeFunctionSniff implements Sniff
         'md5_file'   => 'hash_file(\'sha256\', ...)',
         'sha1'       => 'hash(\'sha256\', ...)',
         'sha1_file'  => 'hash_file(\'sha256\', ...)',
+        'var_dump'   => false,
+        'print_r'    => false,
+        'printf'     => false,
+        'vprintf'    => false,
     ];
 
     public function register()
     {
-        return [T_STRING];
+        return [T_STRING, T_ECHO, T_PRINT];
     }
 
     /**
@@ -39,6 +43,12 @@ class AlternativeFunctionSniff implements Sniff
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         $tokens = $file->getTokens();
+
+        // Special case for T_ECHO
+        if (in_array($tokens[$stackPtr]['code'], [T_ECHO, T_PRINT])) {
+            $this->createError($file, $stackPtr, $tokens[$stackPtr]['content'], 'Statement');
+            return;
+        }
 
         /**
          * Find out if the next relevant token is an opening parenthesis. Finding that would be an indicator for
@@ -85,18 +95,18 @@ class AlternativeFunctionSniff implements Sniff
             return;
         }
 
-        $methodName = $tokens[$stackPtr]['content'];
+        $functionName = $tokens[$stackPtr]['content'];
 
-        if (isset($this->alternatives[$methodName])) {
-            $file->addError(
-                sprintf(
-                    'Function "%s()" is not allowed. Use "%s" instead',
-                    $methodName,
-                    $this->alternatives[$methodName]
-                ),
-                $stackPtr,
-                'UseAlternative'
-            );
+        if (isset($this->alternatives[$functionName])) {
+            $this->createError($file, $stackPtr, $functionName . '()', 'Function', $this->alternatives[$functionName]);
         }
+    }
+
+    private function createError(CodeSnifferFile $file, $stackPtr, $functionName, $symbol, $alternative = false)
+    {
+        $message = sprintf('%s "%s" is not allowed. ', $symbol, $functionName);
+        $message .= $alternative ? sprintf('Use "%s" instead', $alternative) : 'Please remove it';
+
+        $file->addError($message, $stackPtr, 'UseAlternative');
     }
 }

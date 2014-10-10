@@ -12,8 +12,6 @@ class FunctionNames
 
         $newString = $pn->
             join('a', 'b'); join(',', ['foo', 'bar']);join(',', ['foo', 'bar']);
-
-        sha1('foo');
     }
 
     public function sizeof()
@@ -36,11 +34,6 @@ class FunctionNames
     public function is_real()
     {
         $float = 123;
-        if (is_real($float)) {
-            echo "Is float";
-        } else {
-            echo "Not float, it is";
-        }
     }
 
     protected function strchr()
@@ -50,13 +43,12 @@ class FunctionNames
 
     private function doubleval()
     {
-        echo doubleval(123);
+        doubleval(123);
     }
 
     public function key_exists()
     {
         if (key_exists('key', ['foo', 'bar'])) {
-            echo "key exists";
         }
     }
 
@@ -64,9 +56,7 @@ class FunctionNames
     {
         $double = 123.45;
         if (is_double($double)) {
-            echo "Is double";
         } else {
-            echo "Not double, it is";
         }
     }
 
@@ -93,6 +83,54 @@ class FunctionNames
     public function pos()
     {
         pos(123);
+        func(pos(123));
+        new Something(pos(123));
+    }
+
+    public function sha1()
+    {
+        sha1('foo');
+    }
+
+    public function sha1_file()
+    {
+        sha1_file('foo');
+    }
+
+    public function md5()
+    {
+        md5('foo');
+    }
+
+    public function md5_file()
+    {
+        md5_file('foo');
+    }
+
+    public function var_dump()
+    {
+        var_dump("something");
+    }
+
+    public function print_r()
+    {
+        print_r("something");
+    }
+
+    public function printf()
+    {
+        printf("something");
+    }
+
+    public function vprintf()
+    {
+        vprintf("something", []);
+    }
+
+    public function bla()
+    {
+        echo "something";
+        print "something";
     }
 
     protected function tPaamayimNekudotayim()
