@@ -23,7 +23,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         }
 
         /** use Trait; */
-        if ($file->findPrevious(T_CLASS, $stackPtr)) {
+        if ($file->findPrevious([T_CLASS, T_TRAIT], $stackPtr)) {
             return;
         }
 
