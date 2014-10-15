@@ -61,7 +61,6 @@ class ConstantNameSniff implements CodeSnifferSniff
      */
     public function process(CodeSnifferFile $file, $stackPtr)
     {
-
         $tokens = $file->getTokens();
         $constName = $tokens[$stackPtr]['content'];
 
