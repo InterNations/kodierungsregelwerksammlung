@@ -28,10 +28,6 @@ class UnnecessaryInstanceMethodSniff implements CodeSnifferSniff
 
         $closingBracePtr = $tokens[$stackPtr]['scope_closer'];
 
-        /*for ($a = $stackPtr; $a < $closingBracePtr; $a++) {
-            print $tokens[$a]['content'];
-        }*/
-
         $isInstance = false;
         $symbolPtr = $stackPtr;
         while ($symbolPtr = $file->findNext([T_CLOSURE, T_VARIABLE], $symbolPtr + 1, $closingBracePtr)) {
@@ -50,6 +46,10 @@ class UnnecessaryInstanceMethodSniff implements CodeSnifferSniff
                         break 2;
                     }
                     break;
+
+                default:
+                    // Nothing to do
+                    break;
             }
         }
 
@@ -59,7 +59,8 @@ class UnnecessaryInstanceMethodSniff implements CodeSnifferSniff
 
             $file->addError(
                 sprintf(
-                    'Method %s::%s() should be static as it does not access $this or indirectly use $this with an instance closure',
+                    'Method %s::%s() should be static as it does not access $this or indirectly use '
+                    . '$this with an instance closure',
                     $class,
                     $method
                 ),
