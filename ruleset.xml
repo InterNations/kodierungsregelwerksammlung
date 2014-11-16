@@ -213,6 +213,7 @@
     <rule ref="./src/InterNations/Sniffs/Syntax/BracesSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Whitespace/AlignedAssignmentSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Architecture/FormTypeConventionSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Formatting/ExpressionFormattingSniff.php"/>
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <rule ref="Squiz.Strings.EchoedStrings"/>

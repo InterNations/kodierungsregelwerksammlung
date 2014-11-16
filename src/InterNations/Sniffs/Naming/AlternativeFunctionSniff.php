@@ -69,14 +69,7 @@ class AlternativeFunctionSniff implements Sniff
             return;
         }
 
-        $beforeWhitespacePtr = $file->findPrevious(
-            [T_WHITESPACE],
-            $stackPtr - 1,
-            null,
-            true,
-            null,
-            true
-        );
+        $beforeWhitespacePtr = $file->findPrevious([T_WHITESPACE], $stackPtr - 1, null, true, null, true);
 
         if ($tokens[$beforeWhitespacePtr]['code'] == T_SEMICOLON) {
             $beforeWhitespacePtr++;

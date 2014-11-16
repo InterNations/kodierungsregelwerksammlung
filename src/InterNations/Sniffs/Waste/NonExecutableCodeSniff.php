@@ -118,10 +118,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
                 // This token closes the scope of a CASE or DEFAULT statement
                 // so any code between this token and the next CASE, DEFAULT or
                 // end of SWITCH token will not be executable.
-                $next = $phpcsFile->findNext(
-                    [T_CASE, T_DEFAULT, T_CLOSE_CURLY_BRACKET],
-                    ($stackPtr + 1)
-                );
+                $next = $phpcsFile->findNext([T_CASE, T_DEFAULT, T_CLOSE_CURLY_BRACKET], ($stackPtr + 1));
 
                 if ($next !== false) {
                     $end = $phpcsFile->findNext([T_SEMICOLON], ($stackPtr + 1));

@@ -20,21 +20,13 @@ class MethodNameSniff implements CodeSnifferSniff
 
         if (preg_match('/^getIs(?P<remainder>[A-Z].*)$/', $methodName, $matches)) {
             $file->addError(
-                sprintf(
-                    'Method name "%s()" is not allowed. Use "is%s()" instead',
-                    $methodName,
-                    $matches['remainder']
-                ),
+                sprintf('Method name "%s()" is not allowed. Use "is%s()" instead', $methodName, $matches['remainder']),
                 $stackPtr,
                 'BadIsser'
             );
         } elseif (preg_match('/^setIs(?P<remainder>[A-Z].*)$/', $methodName, $matches)) {
             $file->addError(
-                sprintf(
-                    'Method name "%s()" is not allowed. Use "set%s()" instead',
-                    $methodName,
-                    $matches['remainder']
-                ),
+                sprintf('Method name "%s()" is not allowed. Use "set%s()" instead', $methodName, $matches['remainder']),
                 $stackPtr,
                 'BadSetter'
             );

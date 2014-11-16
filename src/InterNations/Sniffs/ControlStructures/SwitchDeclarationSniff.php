@@ -88,11 +88,8 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
         $caseCount = 0;
         $foundDefault = false;
 
-        while (($nextCase = $file->findNext(
-            [T_CASE, T_DEFAULT, T_SWITCH],
-            ($nextCase + 1),
-            $switch['scope_closer']
-        )) !== false
+        while (($nextCase = $file->findNext([T_CASE, T_DEFAULT, T_SWITCH], ($nextCase + 1), $switch['scope_closer'])
+            ) !== false
         ) {
             // Skip nested SWITCH statements; they are handled on their own.
             if ($tokens[$nextCase]['code'] === T_SWITCH) {

@@ -47,30 +47,15 @@ class FinalSniff implements CodeSnifferSniff
                         || $className == 'EventType';
 
         if (!$isFinal && $shouldBeFinal && $methods === 0) {
-            $file->addError(
-                'Enum "%s" must be final',
-                $stackPtr,
-                'FinalClassEnum',
-                [$className]
-            );
+            $file->addError('Enum "%s" must be final', $stackPtr, 'FinalClassEnum', [$className]);
         }
 
         if (!$isFinal && $shouldBeFinal && $methods === $staticMethods) {
-            $file->addError(
-                'Static class "%s" must be final',
-                $stackPtr,
-                'FinalClassStatic',
-                [$className]
-            );
+            $file->addError('Static class "%s" must be final', $stackPtr, 'FinalClassStatic', [$className]);
         }
 
         if ($isFinal && !$shouldBeFinal) {
-            $file->addError(
-                'Class "%s" may not be final',
-                $stackPtr,
-                'FinalClassDisallowed',
-                [$className]
-            );
+            $file->addError('Class "%s" may not be final', $stackPtr, 'FinalClassDisallowed', [$className]);
         }
     }
 }

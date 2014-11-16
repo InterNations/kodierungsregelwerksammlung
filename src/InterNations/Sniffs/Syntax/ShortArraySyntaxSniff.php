@@ -13,10 +13,6 @@ class ShortArraySyntaxSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $file->addError(
-            'Legacy array syntax (array()) is discouraged. Use [] instead',
-            $stackPtr,
-            'legacyArraySyntax'
-        );
+        $file->addError('Legacy array syntax (array()) is discouraged. Use [] instead', $stackPtr, 'legacyArraySyntax');
     }
 }

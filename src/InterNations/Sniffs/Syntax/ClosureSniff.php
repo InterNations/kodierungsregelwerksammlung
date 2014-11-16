@@ -74,28 +74,14 @@ class ClosureSniff implements CodeSnifferSniff
             );
         }
 
-        $thisPtr = $file->findNext(
-            [T_VARIABLE],
-            $scopeOpener,
-            $scopeCloser,
-            false,
-            '$this'
-        );
+        $thisPtr = $file->findNext([T_VARIABLE], $scopeOpener, $scopeCloser, false, '$this');
 
         if ($isStaticClosure && $thisPtr !== false) {
-            $file->addError(
-                'Static closure references $this. Remove static qualifier',
-                $thisPtr,
-                'closureStaticThis'
-            );
+            $file->addError('Static closure references $this. Remove static qualifier', $thisPtr, 'closureStaticThis');
         }
 
         if (!$isStaticClosure && $thisPtr === false) {
-            $file->addError(
-                'Closure does not reference $this. Add "static" qualifier',
-                $stackPtr,
-                'closureStatic'
-            );
+            $file->addError('Closure does not reference $this. Add "static" qualifier', $stackPtr, 'closureStatic');
         }
     }
 }
