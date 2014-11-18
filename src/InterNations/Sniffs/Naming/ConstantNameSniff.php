@@ -2,42 +2,20 @@
 namespace InterNations\Sniffs\Naming;
 
 /**
- * Generic_Sniffs_NamingConventions_UpperCaseConstantNameSniff.
+ * Fork of Generic_Sniffs_NamingConventions_UpperCaseConstantNameSniff.
  *
- * PHP version 5
+ * Ensures that constant names follow the conventions
  *
- * @category  PHP
- * @package   PHP_CodeSniffer
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @author    Marc McIntyre <mmcintyre@squiz.net>
  * @copyright 2006 Squiz Pty Ltd (ABN 77 084 670 600)
  * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   CVS: $Id: UpperCaseConstantNameSniff.php 317950 2011-10-10 00:36:20Z squiz $
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-
-/**
- * Generic_Sniffs_NamingConventions_UpperCaseConstantNameSniff.
- *
- * Ensures that constant names are all uppercase.
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Greg Sherwood <gsherwood@squiz.net>
- * @author    Marc McIntyre <mmcintyre@squiz.net>
- * @copyright 2006 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   Release: 1.3.1
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- * @SuppressWarnings(PMD)
  */
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class ConstantNameSniff implements CodeSnifferSniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -46,17 +24,13 @@ class ConstantNameSniff implements CodeSnifferSniff
     public function register()
     {
         return [T_STRING];
-
-    }//end register()
-
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $file The file being scanned.
-     * @param integer                  $stackPtr  The position of the current token in the
-     *                                        stack passed in $tokens.
-     *
+     * @param CodeSnifferFile $file The file being scanned.
+     * @param integer $stackPtr The position of the current token in the stack passed in $tokens.
      * @return null
      */
     public function process(CodeSnifferFile $file, $stackPtr)
@@ -66,6 +40,16 @@ class ConstantNameSniff implements CodeSnifferSniff
 
         // If this token is in a heredoc, ignore it.
         if ($file->hasCondition($stackPtr, T_START_HEREDOC) === true) {
+            return;
+        }
+
+        $previousNonStringPtr = $file->findPrevious(
+            [T_STRING, T_WHITESPACE, T_CONST, T_NS_SEPARATOR, T_FUNCTION],
+            $stackPtr - 1,
+            null,
+            true
+        );
+        if ($tokens[$previousNonStringPtr]['code'] === T_USE) {
             return;
         }
 
@@ -116,7 +100,8 @@ class ConstantNameSniff implements CodeSnifferSniff
 
                 if ($this->isEventClassName($tokens[$className]['content'])) {
                     if (!$this->isValidEventConstName($constName)) {
-                        $error = 'Class constants for event types must be camelcase. Found %s';
+                        $error = 'Class constants for event types must be camelcase and start with '
+                               . '"on", "before" or "after". Found %s';
                         $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                     }
 
@@ -212,7 +197,8 @@ class ConstantNameSniff implements CodeSnifferSniff
             if ($this->isEventClassName($tokens[$className]['content'])) {
                 if (!$this->isEventClassName($tokens[$className]['content'])) {
                     if (!$this->isValidEventConstName($constName)) {
-                        $error = 'Class constants for event types must be camelcase. Found %s';
+                        $error = 'Class constants for event types must be camelcase and start with '
+                               . '"on", "before" or "after". Found %s';
                         $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                     }
                 }
@@ -267,17 +253,17 @@ class ConstantNameSniff implements CodeSnifferSniff
                          ];
                 $file->addError($error, $stackPtr, 'ConstantNotUpperCase', $data);
             }
-        }//end if
+        }
 
-    }//end process()
+    }
 
-    private function isEventClassName($className)
+    private static function isEventClassName($className)
     {
         return preg_match('/^.*Event.*Type$/', $className);
     }
 
-    private function isValidEventConstName($constantName)
+    private static function isValidEventConstName($constantName)
     {
         return preg_match('/^(on|after|before)/', $constantName) && !preg_match('/[A-Z]{2}/', $constantName);
     }
-}//end class
+}
