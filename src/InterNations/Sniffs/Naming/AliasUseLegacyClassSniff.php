@@ -13,8 +13,11 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
+        $tokens = $file->getTokens();
+
         /** function () use ($var) {} */
-        if ($file->findPrevious(T_FUNCTION, $stackPtr)) {
+        $previousToken = $file->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
+        if ($tokens[$previousToken]['code'] === T_CLOSE_PARENTHESIS) {
             return;
         }
 
@@ -23,30 +26,78 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
             return;
         }
 
-        list($stackPtr, $namespace) = $this->getNamespace($stackPtr + 1, $file);
 
-        if ($namespace == 'stdClass') {
-            return;
+        list($namespacePtr, $symbol, $namespace, $isAlias) = $this->getNamespace($stackPtr + 1, $file);
+
+
+        $nextToken = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
+        switch ($tokens[$nextToken]['code']) {
+            case T_FUNCTION:
+                if (strtolower($symbol) !== $symbol) {
+                    $this->addError(
+                        $file,
+                        $namespacePtr,
+                        'lower_case underscore separated',
+                        $symbol,
+                        $namespace,
+                        $isAlias
+                    );
+                }
+                break;
+
+            case T_CONST:
+                if (strtoupper($symbol) !== $symbol) {
+                    $this->addError(
+                        $file,
+                        $namespacePtr,
+                        'UPPER_CASE underscore separated',
+                        $symbol,
+                        $namespace,
+                        $isAlias
+                    );
+                }
+                break;
+
+            default:
+                if ($symbol === 'stdClass') {
+                    return;
+                }
+
+                // lowerCamelCase or Under_Score?
+                if ($symbol[0] === strtolower($symbol[0]) || strpos($symbol, '_') !== false) {
+                    $this->addError($file, $namespacePtr, 'UpperCamelCased', $symbol, $namespace, $isAlias);
+                }
+                break;
         }
+    }
 
-        // lowerCamelCase or Under_Score?
-        if ($namespace[0] === strtolower($namespace[0]) || strpos($namespace, '_') !== false) {
+    private static function addError(CodeSnifferFile $file, $namespacePtr, $alias, $symbol, $namespace, $isAlias)
+    {
+        if ($isAlias) {
             $file->addError(
-                'Create an UpperCamelCased alias for symbol "%s"',
-                $stackPtr,
+                'Create %s %s alias for symbol "%s" or fix the target symbol name "%s"',
+                $namespacePtr,
                 'AliasUseLegacyClass',
-                [$namespace]
+                [(strpos('aeiouAEIOU', $alias[0]) !== false ? 'an' : 'a'), $alias, $symbol, $namespace]
+            );
+        } else {
+            $file->addError(
+                'Fix the alias "%s" to be %s or fix the target symbol name "%s"',
+                $namespacePtr,
+                'AliasUseLegacyClass',
+                [$symbol, $alias, $namespace]
             );
         }
     }
 
-    private function getNamespace($stackPtr, CodeSnifferFile $phpcsFile)
+    private static function getNamespace($stackPtr, CodeSnifferFile $file)
     {
-        $tokens = $phpcsFile->getTokens();
         $namespace = '';
-        $firstWhitespace = true;
-        $asToken = false;
-        while ($stackPtr = $phpcsFile->findNext(
+        $symbolName = null;
+        $isAlias = false;
+
+        $tokens = $file->getTokens();
+        while ($stackPtr = $file->findNext(
             [T_STRING, T_NS_SEPARATOR, T_WHITESPACE, T_AS],
             $stackPtr + 1,
             null,
@@ -55,23 +106,25 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
             true
         )
         ) {
-            if ($firstWhitespace && $tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $firstWhitespace = false;
-                $namespace = $tokens[$stackPtr]['content'];
-            } elseif ($tokens[$stackPtr]['code'] === T_AS) {
-                $asToken = true;
-                $namespace = '';
-            } elseif ($tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $namespace = $tokens[$stackPtr]['content'];
-            } elseif ($asToken && $tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $namespace = $tokens[$stackPtr]['content'];
-            }
+            switch ($tokens[$stackPtr]['code']) {
+                case T_STRING:
+                case T_NS_SEPARATOR:
+                    if (!$isAlias) {
+                        $namespace .= $tokens[$stackPtr]['content'];
+                    }
+                    $symbolName = $tokens[$stackPtr]['content'];
+                    break;
 
-            if ($tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $latestStackPtr = $stackPtr - 1;
+                case T_AS:
+                    $isAlias = true;
+                    break;
+
+                default:
+                    // Just continue
+                    break;
             }
         }
 
-        return [$latestStackPtr, ltrim($namespace, '\\')];
+        return [$stackPtr, $symbolName, $namespace, $isAlias];
     }
 }
