@@ -6,7 +6,7 @@ class InterNations_Tests_Sniffs_Naming_AliasUseLegacyClassSniffTest extends Inte
     public function testLegacyClassUseStatements()
     {
         $file = __DIR__ . '/Fixtures/LegacyClass/Simple.php';
-        $errors = $this->analyze(['InterNations/Sniffs/Naming/AliasUSeLegacyClassSniff'], [$file]);
+        $errors = $this->analyze(['InterNations/Sniffs/Naming/AliasUseLegacyClassSniff'], [$file]);
 
         $this->assertReportCount(3, 0, $errors, $file);
         $this->assertReportContains(
@@ -32,7 +32,7 @@ class InterNations_Tests_Sniffs_Naming_AliasUseLegacyClassSniffTest extends Inte
     public function testLegacyClassWithUseFunctionUseConst()
     {
         $file = __DIR__ . '/Fixtures/LegacyClass/ComplexUse.php';
-        $errors = $this->analyze(['InterNations/Sniffs/Naming/AliasUSeLegacyClassSniff'], [$file]);
+        $errors = $this->analyze(['InterNations/Sniffs/Naming/AliasUseLegacyClassSniff'], [$file]);
 
         $this->assertReportCount(6, 0, $errors, $file);
         $this->assertReportContains(
@@ -76,7 +76,7 @@ class InterNations_Tests_Sniffs_Naming_AliasUseLegacyClassSniffTest extends Inte
     public function testLegacyClassFalsePositives()
     {
         $file = __DIR__ . '/Fixtures/LegacyClass/FalsePositives.php';
-        $errors = $this->analyze(['InterNations/Sniffs/Naming/AliasUSeLegacyClassSniff'], [$file]);
+        $errors = $this->analyze(['InterNations/Sniffs/Naming/AliasUseLegacyClassSniff'], [$file]);
 
         $this->assertReportCount(0, 0, $errors, $file);
     }
