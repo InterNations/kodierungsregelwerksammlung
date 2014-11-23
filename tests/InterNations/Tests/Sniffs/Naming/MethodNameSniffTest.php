@@ -8,12 +8,20 @@ class InterNations_Tests_Sniffs_Naming_MethodNameSniffTest extends InterNations_
         $file = __DIR__ . '/Fixtures/MethodName/BadIsser.php';
         $errors = $this->analyze(['InterNations/Sniffs/Naming/MethodNameSniff'], [$file]);
 
-        $this->assertReportCount(1, 0, $errors, $file);
+        $this->assertReportCount(2, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Method name "getIsSomething()" is not allowed. Use "isSomething()" instead',
+            'Method name "getIsSomething()" is not allowed. Use "isSomething()" or "hasSomething()" instead',
+            'InterNations.Naming.MethodName.BadIsser',
+            5
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Method name "doesSomething()" is not allowed. Use "isSomething()" or "hasSomething()" instead',
             'InterNations.Naming.MethodName.BadIsser',
             5
         );

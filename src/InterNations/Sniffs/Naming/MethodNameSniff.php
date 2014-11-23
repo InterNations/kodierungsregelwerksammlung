@@ -18,17 +18,19 @@ class MethodNameSniff implements CodeSnifferSniff
         $tokens = $file->getTokens();
         $methodName = $tokens[$namePtr]['content'];
 
-        if (preg_match('/^getIs(?P<remainder>[A-Z].*)$/', $methodName, $matches)) {
+        if (preg_match('/^(getIs|does)(?P<remainder>[A-Z].*)$/', $methodName, $matches)) {
             $file->addError(
-                sprintf('Method name "%s()" is not allowed. Use "is%s()" instead', $methodName, $matches['remainder']),
+                'Method name "%1$s()" is not allowed. Use "is%2$s()" or "has%2$s()" instead',
                 $stackPtr,
-                'BadIsser'
+                'BadIsser',
+                [$methodName, $matches['remainder']]
             );
         } elseif (preg_match('/^setIs(?P<remainder>[A-Z].*)$/', $methodName, $matches)) {
             $file->addError(
-                sprintf('Method name "%s()" is not allowed. Use "set%s()" instead', $methodName, $matches['remainder']),
+                'Method name "%s()" is not allowed. Use "set%s()" instead',
                 $stackPtr,
-                'BadSetter'
+                'BadSetter',
+                [$methodName, $matches['remainder']]
             );
         }
     }
