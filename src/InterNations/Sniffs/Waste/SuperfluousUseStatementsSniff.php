@@ -1,14 +1,20 @@
 <?php
 namespace InterNations\Sniffs\Waste;
 
+// @codingStandardsIgnoreFile
+require_once __DIR__ . '/../NamespaceSniffTrait.php';
+
+use InterNations\Sniffs\NamespaceSniffTrait;
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class SuperfluousUseStatementsSniff implements CodeSnifferSniff
 {
-    private $docBlocks = [];
+    use NamespaceSniffTrait;
 
-    private $namespaceUsages = [];
+    private static $docBlocks = [];
+
+    private static $namespaceUsages = [];
 
     public function register()
     {
@@ -17,8 +23,11 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
+        $tokens = $file->getTokens();
+
         /** function () use ($var) {} */
-        if ($file->findPrevious(T_FUNCTION, $stackPtr)) {
+        $previousPtr = $file->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
+        if ($tokens[$previousPtr]['code'] === T_CLOSE_PARENTHESIS) {
             return;
         }
 
@@ -28,32 +37,34 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         }
 
         $fileName = $file->getFilename();
-        $tokens = $file->getTokens();
-        list($stackPtr, $namespace) = $this->getNamespace($stackPtr + 1, $file);
+        list($stackPtr, $namespaceAlias, $fullyQualifiedNamespace) = $this->getNamespace($stackPtr + 1, $file);
 
-        $class = false;
+        $symbol = false;
         $annotation = false;
 
-        if (!isset($this->docBlocks[$fileName])) {
-            $this->docBlocks[$fileName] = [];
+        if (!isset(static::$docBlocks[$fileName])) {
+            static::$docBlocks[$fileName] = [];
             $commentPtr = $stackPtr;
             while ($commentPtr = $file->findNext(T_DOC_COMMENT, $commentPtr + 1)) {
-                $this->docBlocks[$fileName][] = $tokens[$commentPtr]['content'];
+                static::$docBlocks[$fileName][] = $tokens[$commentPtr]['content'];
             }
         }
 
-        foreach ($this->docBlocks[$fileName] as $docBlock) {
-            $namespaceRegexPart = '(?:[\w\d\[\]]+\|)?' . preg_quote($namespace, '/') . '(?:\[\])?(?:\|[\w\d\[\]]+)?';
+        foreach (static::$docBlocks[$fileName] as $docBlock) {
+            $namespaceRegexPart = '(?:[\w\d\[\]]+\|)?'
+                . preg_quote($namespaceAlias, '/')
+                . '(?:\[\])?(?:\|[\w\d\[\]]+)?';
 
             // @<namespace>(...)
-            if (strstr($docBlock, '@' . $namespace . '(') !== false) {
+            if (strstr($docBlock, '@' . $namespaceAlias . '(') !== false) {
                 $annotation = true;
                 break;
-            } elseif (strstr($docBlock, '@' . $namespace . "\n") !== false) {
+            // @<namespace><NEWLINE>
+            } elseif (strstr($docBlock, '@' . $namespaceAlias . "\n") !== false) {
                 $annotation = true;
                 break;
             // @<namespace>\Foo
-            } elseif (strstr($docBlock, '@' . $namespace . '\\') !== false) {
+            } elseif (strstr($docBlock, '@' . $namespaceAlias . '\\') !== false) {
                 $annotation = true;
                 break;
             // @param <namespace> $var
@@ -66,7 +77,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
                 $annotation = true;
                 break;
             // @throws <namespace>
-            } elseif (strstr($docBlock, '@throws ' . $namespace) !== false) {
+            } elseif (strstr($docBlock, '@throws ' . $namespaceAlias) !== false) {
                 $annotation = true;
                 break;
             // @var $variable <namespace>
@@ -88,83 +99,60 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         }
 
         if (!$annotation) {
-            if (!isset($this->namespaceUsages[$fileName])) {
-                $this->namespaceUsages[$fileName] = [];
+            if (!isset(static::$namespaceUsages[$fileName])) {
+                static::$namespaceUsages[$fileName] = [];
                 $strPtr = $stackPtr;
-                while ($strPtr = $file->findNext(T_STRING, $strPtr + 1)) {
+                while ($strPtr = $file->findNext([T_STRING, T_TRUE, T_FALSE], $strPtr + 1)) {
                     $namespaceUsed = $this->getNamespaceUsage($strPtr, $file);
                     if ($namespaceUsed) {
-                        $this->namespaceUsages[$fileName][$strPtr] = $namespaceUsed;
+                        static::$namespaceUsages[$fileName][$strPtr] = $namespaceUsed;
                     }
                 }
             }
 
             $found = 0;
-            foreach ($this->namespaceUsages[$fileName] as $ptr => $namespaceUsed) {
-                $identicalNamespace = $namespaceUsed === $namespace;
-                $partialNamespace = strpos($namespaceUsed, $namespace . '\\') === 0;
-                if ($ptr > $stackPtr && ($identicalNamespace || $partialNamespace)) {
+            foreach (static::$namespaceUsages[$fileName] as $ptr => $namespaceUsed) {
+                if ($ptr < $stackPtr) {
+                    continue;
+                }
+
+                $identicalNamespace = $namespaceUsed === $namespaceAlias;
+                $partialNamespace = strpos($namespaceUsed, $namespaceAlias . '\\') === 0;
+
+                if ($identicalNamespace || $partialNamespace) {
                     ++$found;
 
                     if ($found > 1) {
-                        $class = true;
+                        $symbol = true;
                         break;
                     }
                 }
             }
         }
 
-        if (!$class && !$annotation) {
+        if (!$symbol && !$annotation) {
             $file->addError(
                 'Superfluous use-statement found for symbol "%s", but no further reference',
                 $stackPtr,
                 'SuperfluousUseStatement',
-                [$namespace]
+                [$fullyQualifiedNamespace]
             );
         }
     }
 
-    private function getNamespace($stackPtr, CodeSnifferFile $phpcsFile)
+    private static function getNamespaceUsage($stackPtr, CodeSnifferFile $file)
     {
-        $tokens = $phpcsFile->getTokens();
+        $tokens = $file->getTokens();
         $namespace = '';
-        $firstWhitespace = true;
-        $asToken = false;
-        $latestStackPtr = 0;
-        while ($stackPtr = $phpcsFile->findNext(
-            [T_STRING, T_NS_SEPARATOR, T_WHITESPACE, T_AS],
-            $stackPtr + 1,
-            null,
-            null,
-            null,
-            true
-        )
-        ) {
-            if ($firstWhitespace && $tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $firstWhitespace = false;
-                $namespace = $tokens[$stackPtr]['content'];
-            } elseif ($tokens[$stackPtr]['code'] === T_AS) {
-                $asToken = true;
-                $namespace = '';
-            } elseif ($tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $namespace = $tokens[$stackPtr]['content'];
-            } elseif ($asToken && $tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $namespace = $tokens[$stackPtr]['content'];
+        while ($stackPtr = $file->findNext([T_STRING, T_NS_SEPARATOR, T_TRUE, T_FALSE], $stackPtr, $stackPtr + 1)) {
+
+            if (in_array($tokens[$stackPtr]['code'], [T_TRUE, T_FALSE], true)) {
+                if ($tokens[$stackPtr + 1]['code'] !== T_OPEN_PARENTHESIS) {
+                    $stackPtr++;
+                    continue;
+                }
             }
 
-            if ($tokens[$stackPtr]['code'] !== T_WHITESPACE) {
-                $latestStackPtr = $stackPtr - 1;
-            }
-        }
-
-        return [$latestStackPtr, ltrim($namespace, '\\')];
-    }
-
-    private function getNamespaceUsage($stackPtr, CodeSnifferFile $phpcsFile)
-    {
-        $tokens = $phpcsFile->getTokens();
-        $namespace = '';
-        while ($stackPtr = $phpcsFile->findNext([T_STRING, T_NS_SEPARATOR], $stackPtr, $stackPtr + 1)) {
             $namespace .= $tokens[$stackPtr]['content'];
             $stackPtr++;
         }

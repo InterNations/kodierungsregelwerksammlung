@@ -1,11 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Naming;
 
+// @codingStandardsIgnoreFile
+require_once __DIR__ . '/../NamespaceSniffTrait.php';
+
+use InterNations\Sniffs\NamespaceSniffTrait;
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class AliasUseLegacyClassSniff implements CodeSnifferSniff
 {
+    use NamespaceSniffTrait;
+
     public function register()
     {
         return [T_USE];
@@ -88,43 +94,5 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
                 [$symbol, $alias, $namespace]
             );
         }
-    }
-
-    private static function getNamespace($stackPtr, CodeSnifferFile $file)
-    {
-        $namespace = '';
-        $symbolName = null;
-        $isAlias = false;
-
-        $tokens = $file->getTokens();
-        while ($stackPtr = $file->findNext(
-            [T_STRING, T_NS_SEPARATOR, T_WHITESPACE, T_AS],
-            $stackPtr + 1,
-            null,
-            null,
-            null,
-            true
-        )
-        ) {
-            switch ($tokens[$stackPtr]['code']) {
-                case T_STRING:
-                case T_NS_SEPARATOR:
-                    if (!$isAlias) {
-                        $namespace .= $tokens[$stackPtr]['content'];
-                    }
-                    $symbolName = $tokens[$stackPtr]['content'];
-                    break;
-
-                case T_AS:
-                    $isAlias = true;
-                    break;
-
-                default:
-                    // Just continue
-                    break;
-            }
-        }
-
-        return [$stackPtr, $symbolName, $namespace, $isAlias];
     }
 }
