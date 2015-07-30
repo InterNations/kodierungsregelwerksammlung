@@ -16,23 +16,14 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
 
     private static $namespaceUsages = [];
 
-    private static $namespaces = [];
-
     public function register()
     {
-        return [T_NAMESPACE, T_USE];
+        return [T_USE];
     }
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         $tokens = $file->getTokens();
-        $fileName = $file->getFilename();
-
-        if ($tokens[$stackPtr]['code'] === T_NAMESPACE) {
-            list(, , $fqNs) = $this->getNamespace($stackPtr + 1, $file);
-            static::$namespaces[$fileName] = $fqNs;
-            return;
-        }
 
         /** function () use ($var) {} */
         $previousPtr = $file->findPrevious(T_WHITESPACE, $stackPtr - 1, null, true);
@@ -45,6 +36,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
             return;
         }
 
+        $fileName = $file->getFilename();
         list($stackPtr, $namespaceAlias, $fullyQualifiedNamespace) = $this->getNamespace($stackPtr + 1, $file);
 
         $symbol = false;
@@ -106,23 +98,16 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
             }
         }
 
-        //var_dump(static::$namespaceUsages);
         if (!$annotation) {
             if (!isset(static::$namespaceUsages[$fileName])) {
                 static::$namespaceUsages[$fileName] = [];
-                $strPtr = 0;
+                $strPtr = $stackPtr;
                 while ($strPtr = $file->findNext([T_STRING, T_TRUE, T_FALSE], $strPtr + 1)) {
-                    var_dump($strPtr);
-                    list($namespaceUsed, $updatedPtr) = $this->getNamespaceUsage($strPtr, $file);
-
+                    $namespaceUsed = $this->getNamespaceUsage($strPtr, $file);
                     if ($namespaceUsed) {
                         static::$namespaceUsages[$fileName][$strPtr] = $namespaceUsed;
-                        $strPtr = $updatedPtr;
-                        var_dump($strPtr);
                     }
                 }
-
-                var_dump(static::$namespaceUsages);
             }
 
             $found = 0;
@@ -131,26 +116,13 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
                     continue;
                 }
 
+                $identicalNamespace = $namespaceUsed === $namespaceAlias;
+                $partialNamespace = strpos($namespaceUsed, $namespaceAlias . '\\') === 0;
 
-                $fileNamespace = static::getNamespaceOfFile($fileName);
-                $fileNamespaceLength = strlen($fileNamespace) + 1;
-                if ($fileNamespace
-                    && substr($namespaceUsed, 0, $fileNamespaceLength) === $fileNamespace . '\\'
-                    && substr($namespaceUsed, $fileNamespaceLength) === $namespaceAlias) {
-                    continue;
-                }
-
-                $identicalMatch = $namespaceUsed === $namespaceAlias;
-                $partialMatch = strpos($namespaceUsed, $namespaceAlias . '\\') === 0;
-                //var_dump('NEW', $namespaceUsed, $namespaceAlias);
-
-
-                if ($identicalMatch || $partialMatch) {
-
-                    //var_dump($ptr, $namespaceAlias, $namespaceUsed, $identicalMatch, $partialMatch);
+                if ($identicalNamespace || $partialNamespace) {
                     ++$found;
 
-                    if ($found > 0) {
+                    if ($found > 1) {
                         $symbol = true;
                         break;
                     }
@@ -168,34 +140,23 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         }
     }
 
-    private static function getNamespaceOfFile($fileName)
-    {
-        return isset(static::$namespaces[$fileName]) ? static::$namespaces[$fileName] : null;
-    }
-
     private static function getNamespaceUsage($stackPtr, CodeSnifferFile $file)
     {
         $tokens = $file->getTokens();
         $namespace = '';
-        $lastStackPtr = $stackPtr;
-        while ($stackPtr = $file->findNext([T_STRING, T_NS_SEPARATOR, T_DOUBLE_COLON, T_TRUE, T_FALSE], $stackPtr, $stackPtr + 1)) {
+        while ($stackPtr = $file->findNext([T_STRING, T_NS_SEPARATOR, T_TRUE, T_FALSE], $stackPtr, $stackPtr + 1)) {
 
             if (in_array($tokens[$stackPtr]['code'], [T_TRUE, T_FALSE], true)) {
                 if ($tokens[$stackPtr + 1]['code'] !== T_OPEN_PARENTHESIS) {
-                    $lastStackPtr = ++$stackPtr;
+                    $stackPtr++;
                     continue;
                 }
             }
 
             $namespace .= $tokens[$stackPtr]['content'];
-            $lastStackPtr = ++$stackPtr;
+            $stackPtr++;
         }
 
-        $namespaceToken = [$namespace, $namespace];
-        if (preg_match('/^(.*?)(?::|\\\\)(.*)$/', $namespace, $matches)) {
-            $namespaceToken = [$matches[1], $matches[2]];
-        }
-
-        return [$namespaceToken, $lastStackPtr];
+        return $namespace;
     }
 }
