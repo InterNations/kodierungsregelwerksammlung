@@ -6,6 +6,11 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 class QueryParams
 {
     /**
+     * @QueryParam(name="ok", requirements="\d+", strict=true, description="Useless query parameter")
+     */
+    private $ok;
+
+    /**
      * @QueryParam(name="bothMissing", requirements="\d+")
      */
     private $bothMissing;
@@ -29,4 +34,22 @@ class QueryParams
      * @QueryParam(name="strictMissing", requirements="\d+", description="Useless query parameter")
      */
     private $strictMissing;
+
+    /**
+     * @QueryParam(
+     *     name="multiLineOk",
+     *     requirements="\d+",
+     *     strict=true,
+     *     description="Useless query parameter"
+     * )
+     */
+    private $multiLineOk;
+
+    /**
+     * @QueryParam(
+     *     name="multiLineMissing",
+     *     requirements="\d+"
+     * )
+     */
+    private $multiLineMissing;
 }

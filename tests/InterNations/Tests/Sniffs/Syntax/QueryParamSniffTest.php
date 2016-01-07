@@ -8,32 +8,14 @@ class InterNations_Tests_Sniffs_Syntax_QueryParamSniffTest extends InterNations_
         $file = __DIR__ . '/Fixtures/QueryParam/QueryParams.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/QueryParamSniff'], [$file]);
 
-        $this->assertReportCount(8, 0, $errors, $file);
+        $this->assertReportCount(10, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
             'Attribute "description" is missing for QueryParam',
             'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
-            9
-        );
-        $this->assertReportContains(
-            $errors,
-            $file,
-            'errors',
-            'Attribute "strict" is missing for QueryParam',
-            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
-            9
-        );
-        $this->assertReportContains(
-            $errors,
-            $file,
-            'errors',
-            'Attribute "description" is missing for QueryParam',
-            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
+            PHPCS_DEFAULT_ERROR_SEV,
             14
         );
         $this->assertReportContains(
@@ -42,7 +24,7 @@ class InterNations_Tests_Sniffs_Syntax_QueryParamSniffTest extends InterNations_
             'errors',
             'Attribute "strict" is missing for QueryParam',
             'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
+            PHPCS_DEFAULT_ERROR_SEV,
             14
         );
         $this->assertReportContains(
@@ -51,7 +33,7 @@ class InterNations_Tests_Sniffs_Syntax_QueryParamSniffTest extends InterNations_
             'errors',
             'Attribute "description" is missing for QueryParam',
             'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
+            PHPCS_DEFAULT_ERROR_SEV,
             19
         );
         $this->assertReportContains(
@@ -60,7 +42,7 @@ class InterNations_Tests_Sniffs_Syntax_QueryParamSniffTest extends InterNations_
             'errors',
             'Attribute "strict" is missing for QueryParam',
             'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
+            PHPCS_DEFAULT_ERROR_SEV,
             19
         );
         $this->assertReportContains(
@@ -69,7 +51,7 @@ class InterNations_Tests_Sniffs_Syntax_QueryParamSniffTest extends InterNations_
             'errors',
             'Attribute "description" is missing for QueryParam',
             'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
+            PHPCS_DEFAULT_ERROR_SEV,
             24
         );
         $this->assertReportContains(
@@ -78,8 +60,44 @@ class InterNations_Tests_Sniffs_Syntax_QueryParamSniffTest extends InterNations_
             'errors',
             'Attribute "strict" is missing for QueryParam',
             'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
-            5,
+            PHPCS_DEFAULT_ERROR_SEV,
+            24
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Attribute "description" is missing for QueryParam',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
+            PHPCS_DEFAULT_ERROR_SEV,
             29
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Attribute "strict" is missing for QueryParam',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
+            PHPCS_DEFAULT_ERROR_SEV,
+            34
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Attribute "description" is missing for QueryParam',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
+            PHPCS_DEFAULT_ERROR_SEV,
+            49
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Attribute "strict" is missing for QueryParam',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
+            PHPCS_DEFAULT_ERROR_SEV,
+            49
         );
     }
 }
