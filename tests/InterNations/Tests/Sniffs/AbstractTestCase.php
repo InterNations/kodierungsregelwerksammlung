@@ -58,7 +58,7 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
         );
     }
 
-    protected static function assertReportContains(array $errors, $file, $level, $message, $source = null, $severity = null, $line = null)
+    protected static function assertReportContains(array $errors, $file, $level, $message, $source = null, $severity = null)
     {
         static::assertArrayHasKey(
             $file,
@@ -75,24 +75,16 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
 
         $flattenedError = static::flattenErrors($errors[$file][$level]);
         foreach ($flattenedError as $error) {
-            if ($error['message'] === $message && ($line === null || $line === $error['line'])) {
+            if ($error['message'] === $message) {
                 $found = true;
                 break;
             }
         }
 
-        if ($line === null) {
-            static::assertTrue(
-                $found,
-                static::createErrorMessage($errors, 'Error message "%s" not found', $message)
-            );
-        } else {
-            static::assertTrue(
-                $found,
-                static::createErrorMessage($errors, 'Error message "%s" not found at line %s', $message, $line)
-            );
-        }
-
+        static::assertTrue(
+            $found,
+            static::createErrorMessage($errors, 'Error message "%s" not found', $message)
+        );
         if ($severity !== null) {
             static::assertSame(
                 $severity,
@@ -113,10 +105,9 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
     {
         $flattened = [];
 
-        foreach ($errors as $line => $errorList) {
+        foreach ($errors as $errorList) {
             foreach ($errorList as $nestedErrorList) {
                 foreach ($nestedErrorList as $error) {
-                    $error['line'] = $line;
                     $flattened[] = $error;
                 }
             }
