@@ -210,6 +210,7 @@
     <rule ref="./src/InterNations/Sniffs/Syntax/ClosureSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/TypeCastSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/DocBlockTypesSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/QueryParamSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/BracesSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Whitespace/AlignedAssignmentSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Architecture/FormTypeConventionSniff.php"/>
