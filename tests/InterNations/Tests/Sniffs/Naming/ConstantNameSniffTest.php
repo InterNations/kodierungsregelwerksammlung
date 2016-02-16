@@ -8,7 +8,7 @@ class InterNations_Tests_Sniffs_Naming_ConstantNameSniffTest extends InterNation
         $file = __DIR__ . '/Fixtures/ConstantName/Constants.php';
         $errors = $this->analyze(['InterNations/Sniffs/Naming/ConstantNameSniff'], [$file]);
 
-        $this->assertReportCount(5, 0, $errors, $file);
+        $this->assertReportCount(7, 0, $errors, $file);
 
 
         $this->assertReportContains(
@@ -41,6 +41,20 @@ class InterNations_Tests_Sniffs_Naming_ConstantNameSniffTest extends InterNation
             $file,
             'errors',
             'Class constants for event types must be camelcase and start with "on", "before" or "after". Found invalidName'
+        );
+
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Class constants for event types must be camelcase and start with "on", "before" or "after". Found onBeforeInvalid'
+        );
+
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Class constants for event types must be camelcase and start with "on", "before" or "after". Found onAfterInvalid'
         );
     }
 }

@@ -20,7 +20,7 @@ class Clazz
     }
 }
 
-class EventType
+class SomethingEvents
 {
     const onEventHappening = 'name';
 
@@ -31,5 +31,9 @@ class EventType
     const invalidName = 'invalid';
 
     const INVALID_CONSTANT_IN_EVENT_CLASS = null;
+
+    const onBeforeInvalid = 'invalid';
+
+    const onAfterInvalid = 'invalid';
 }
 

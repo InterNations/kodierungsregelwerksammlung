@@ -259,11 +259,12 @@ class ConstantNameSniff implements CodeSnifferSniff
 
     private static function isEventClassName($className)
     {
-        return preg_match('/^.*Event.*Type$/', $className);
+        return preg_match('/^.*Events$/', $className);
     }
 
     private static function isValidEventConstName($constantName)
     {
-        return preg_match('/^(on|after|before)/', $constantName) && !preg_match('/[A-Z]{2}/', $constantName);
+        return preg_match('/^(on(?!(After|Before))|after|before)/', $constantName)
+            && !preg_match('/[A-Z]{2}/', $constantName);
     }
 }
