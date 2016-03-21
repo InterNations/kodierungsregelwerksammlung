@@ -37,7 +37,7 @@ class EmptyLineBeforeControlStructureFormattingSniff implements CodeSnifferSniff
         ) {
             return;
         } elseif (count($prevLineTokens) > 0) {
-            $phpcsFile->addError('Missing blank line before '. $structureType . ' statement', $stackPtr);
+            $phpcsFile->addError('Missing blank line before ' . $structureType . ' statement', $stackPtr);
         }
     }
 }
