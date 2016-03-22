@@ -8,7 +8,7 @@ class EmptyLineBeforeControlStructureFormattingSniff implements CodeSnifferSniff
 {
     public function register()
     {
-        return [T_IF, T_SWITCH, T_FOR, T_FOREACH, T_WHILE, T_DO];
+        return [T_IF, T_SWITCH, T_FOR, T_FOREACH, T_WHILE, T_DO, T_RETURN];
     }
 
     public function process(CodeSnifferFile $phpcsFile, $stackPtr)

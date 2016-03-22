@@ -37,3 +37,12 @@ $c = 1;
 do {
 
 } while (false);
+
+function () {
+    return 0;
+}
+
+function () {
+    $c = 1;
+    return 0;
+}

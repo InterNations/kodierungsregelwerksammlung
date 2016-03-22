@@ -11,7 +11,7 @@ class InterNations_Tests_Sniffs_Formatting_EmptyLineBeforeControlStructureFormat
             [$file]
         );
 
-        $this->assertReportCount(6, 0, $errors, $file);
+        $this->assertReportCount(7, 0, $errors, $file);
 
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before if statement');
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before while statement');
@@ -19,6 +19,7 @@ class InterNations_Tests_Sniffs_Formatting_EmptyLineBeforeControlStructureFormat
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before switch statement');
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before for statement');
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before do statement');
+        $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before return statement');
 
     }
 }
