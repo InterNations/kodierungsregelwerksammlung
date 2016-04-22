@@ -43,25 +43,6 @@
         <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
     </rule>
 
-    <rule ref="MySource">
-        <exclude name="MySource.CSS.BrowserSpecificStyles"/>
-        <exclude name="MySource.Channels.ChannelException"/>
-        <exclude name="MySource.Channels.DisallowSelfActions"/>
-        <exclude name="MySource.Channels.IncludeSystem"/>
-        <exclude name="MySource.Channels.UnusedSystem"/>
-        <exclude name="MySource.Commenting.FunctionComment"/>
-        <exclude name="MySource.Debug.DebugCode"/>
-        <exclude name="MySource.Debug.FirebugConsole"/>
-        <exclude name="MySource.Objects.AssignThis"/>
-        <exclude name="MySource.Objects.CreateWidgetTypeCallback"/>
-        <exclude name="MySource.Objects.DisallowNewWidget"/>
-        <exclude name="MySource.PHP.AjaxNullComparison"/>
-        <exclude name="MySource.PHP.EvalObjectFactory"/>
-        <exclude name="MySource.PHP.GetRequestData"/>
-        <exclude name="MySource.PHP.ReturnFunctionValue"/>
-        <exclude name="MySource.Strings.JoinStrings"/>
-    </rule>
-
     <rule ref="PEAR">
         <exclude name="PEAR.Classes.ClassDeclaration"/>
         <exclude name="PEAR.Commenting.ClassComment"/>
