@@ -14,6 +14,7 @@ class ConcatenationSpacingSniff implements CodeSnifferSniff
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         $tokens = $file->getTokens();
+
         if ($tokens[($stackPtr - 1)]['code'] !== T_WHITESPACE
             || $tokens[($stackPtr + 1)]['code'] !== T_WHITESPACE
             || $tokens[($stackPtr + 2)]['code'] === T_WHITESPACE

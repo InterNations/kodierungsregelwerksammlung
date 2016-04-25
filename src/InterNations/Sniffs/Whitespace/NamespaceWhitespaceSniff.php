@@ -16,6 +16,7 @@ class NamespaceWhitespaceSniff implements CodeSnifferSniff
         $tokens = $file->getTokens();
 
         if ($tokens[$stackPtr - 1]['code'] === T_WHITESPACE) {
+
             $file->addError('Invalid newline(s) before namespace declaration', $stackPtr, 'WhitespaceBeforeNamespace');
         }
     }

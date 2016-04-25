@@ -14,6 +14,7 @@ class BracesSniff implements CodeSnifferSniff
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         $tokens = $file->getTokens();
+
         if ($tokens[$stackPtr]['code'] === T_FUNCTION && $file->isAnonymousFunction($stackPtr)) {
             return;
         }

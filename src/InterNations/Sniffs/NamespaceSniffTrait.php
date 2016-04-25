@@ -12,6 +12,7 @@ trait NamespaceSniffTrait
         $isAlias = false;
 
         $tokens = $file->getTokens();
+
         while ($stackPtr = $file->findNext(
             [T_STRING, T_NS_SEPARATOR, T_WHITESPACE, T_AS, T_PAAMAYIM_NEKUDOTAYIM],
             $stackPtr + 1,

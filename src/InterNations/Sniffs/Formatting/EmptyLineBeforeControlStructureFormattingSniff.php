@@ -22,9 +22,9 @@ class EmptyLineBeforeControlStructureFormattingSniff implements CodeSnifferSniff
         $prevLineTokens = [];
 
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
+
             if ($tokens[$current]['line'] === $previousLine
-                && $tokens[$current]['type'] !== 'T_WHITESPACE'
-                && $tokens[$current]['type'] !== 'T_COMMENT'
+                && !in_array($tokens[$current]['type'], ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT'], true)
             ) {
                 $prevLineTokens[] = $tokens[$current]['type'];
             }
@@ -35,6 +35,7 @@ class EmptyLineBeforeControlStructureFormattingSniff implements CodeSnifferSniff
             && ($prevLineTokens[0] === 'T_OPEN_CURLY_BRACKET'
                 || $prevLineTokens[0] === 'T_COLON')
         ) {
+
             return;
         } elseif (count($prevLineTokens) > 0) {
             $phpcsFile->addError('Missing blank line before ' . $structureType . ' statement', $stackPtr);

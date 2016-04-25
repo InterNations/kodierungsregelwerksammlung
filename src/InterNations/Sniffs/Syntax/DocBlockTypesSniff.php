@@ -25,6 +25,7 @@ class DocBlockTypesSniff implements CodeSnifferSniff
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         $regex = '/@(?<annotation>var|param|return)\s+(?<types>[^\s]+)(?:\s+|$)/xi';
+
         if (!preg_match($regex, $file->getTokens()[$stackPtr]['content'], $matches)) {
             return;
         }

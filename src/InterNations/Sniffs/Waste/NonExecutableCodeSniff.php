@@ -71,6 +71,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
         // If this token is preceded with an "or", it only relates to one line
         // and should be ignored. For example: fopen() or die().
         $prev = $phpcsFile->findPrevious(CodeSnifferTokens::$emptyTokens, ($stackPtr - 1), null, true);
+
         if ($tokens[$prev]['code'] === T_LOGICAL_OR) {
             return;
         }
@@ -96,16 +97,20 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
 
         if ($tokens[$stackPtr]['code'] === T_RETURN) {
             $next = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+
             if ($tokens[$next]['code'] === T_SEMICOLON) {
                 $next = $phpcsFile->findNext(T_WHITESPACE, ($next + 1), null, true);
+
                 if ($tokens[$next]['code'] === T_CLOSE_CURLY_BRACKET) {
                     // If this is the closing brace of a function
                     // then this return statement doesn't return anything
                     // and is not required anyway.
                     $owner = $tokens[$next]['scope_condition'];
+
                     if ($tokens[$owner]['code'] === T_FUNCTION) {
                         $warning = 'Empty return statement not required here';
                         $phpcsFile->addWarning($warning, $stackPtr, 'ReturnNotRequired');
+
                         return;
                     }
                 }
@@ -114,6 +119,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
 
         if (isset($tokens[$stackPtr]['scope_opener']) === true) {
             $owner = $tokens[$stackPtr]['scope_condition'];
+
             if ($tokens[$owner]['code'] === T_CASE || $tokens[$owner]['code'] === T_DEFAULT) {
                 // This token closes the scope of a CASE or DEFAULT statement
                 // so any code between this token and the next CASE, DEFAULT or
@@ -142,6 +148,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
                         }
 
                         $line = $tokens[$i]['line'];
+
                         if ($line > $lastLine) {
                             $type = substr($tokens[$stackPtr]['type'], 2);
                             $warning = 'Code after %s statement cannot be executed';
@@ -161,6 +168,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
         // If we find a closing parenthesis that belongs to a condition
         // we should ignore this token.
         $prev = $phpcsFile->findPrevious(CodeSnifferTokens::$emptyTokens, ($stackPtr - 1), null, true);
+
         if (isset($tokens[$prev]['parenthesis_owner']) === true) {
             $owner = $tokens[$prev]['parenthesis_owner'];
             $ignore = [
@@ -168,6 +176,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
                        T_ELSE,
                        T_ELSEIF,
                       ];
+
             if (in_array($tokens[$owner]['code'], $ignore) === true) {
                 return;
             }
@@ -199,7 +208,9 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
             // we will need to throw errors from this token to the next
             // shared opener (if there is one), not to the scope closer.
             $nextOpener = null;
+
             for ($i = ($stackPtr + 1); $i < $closer; $i++) {
+
                 if (isset($tokens[$i]['scope_closer']) === true) {
                     if ($tokens[$i]['scope_closer'] === $closer) {
                         // We found an opener that shares the same
@@ -248,7 +259,9 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
         }//end for
 
         $lastLine = $tokens[$start]['line'];
+
         for ($i = ($start + 1); $i < $end; $i++) {
+
             if (in_array($tokens[$i]['code'], CodeSnifferTokens::$emptyTokens) === true
                 || in_array($tokens[$i]['code'], CodeSnifferTokens::$bracketTokens) === true
             ) {
@@ -266,6 +279,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
             }
 
             $line = $tokens[$i]['line'];
+
             if ($line > $lastLine) {
                 $type = substr($tokens[$stackPtr]['type'], 2);
                 $warning = 'Code after %s statement cannot be executed';

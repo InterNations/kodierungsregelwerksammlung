@@ -16,6 +16,7 @@ class BooleanSniff implements CodeSnifferSniff
         $tokens = $file->getTokens();
 
         $expected = $tokens[$stackPtr]['code'] === T_TRUE ? 'true' : 'false';
+
         if ($tokens[$stackPtr]['content'] !== $expected) {
             $file->addError(
                 'Expected boolean to be defined as "%s", got "%s"',

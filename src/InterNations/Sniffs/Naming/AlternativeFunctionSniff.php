@@ -45,8 +45,9 @@ class AlternativeFunctionSniff implements Sniff
         $tokens = $file->getTokens();
 
         // Special case for T_ECHO
-        if (in_array($tokens[$stackPtr]['code'], [T_ECHO, T_PRINT])) {
+        if (in_array($tokens[$stackPtr]['code'], [T_ECHO, T_PRINT], true)) {
             $this->createError($file, $stackPtr, $tokens[$stackPtr]['content'], 'Statement');
+
             return;
         }
 

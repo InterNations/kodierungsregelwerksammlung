@@ -22,6 +22,7 @@ class FormTypeConventionSniff implements CodeSnifferSniff
         }
 
         $className = $file->getDeclarationName($stackPtr);
+
         if (!preg_match('/.*FormType$/D', $className)) {
             $file->addError(
                 sprintf('Form types are expected to be named "<Something>FormType", "%s" found', $className),

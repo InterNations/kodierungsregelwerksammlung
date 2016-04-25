@@ -18,6 +18,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
         if ($tokens[$stackPtr]['code'] === T_OPEN_SHORT_ARRAY) {
             $leftNonWhitespaceTokenPtr = $file->findPrevious([T_WHITESPACE], $stackPtr - 1, null, true);
             $arrayOpenerToken = [T_EQUAL, T_RETURN, T_DOUBLE_ARROW];
+
             if (!in_array($tokens[$leftNonWhitespaceTokenPtr]['code'], $arrayOpenerToken, true)) {
                 return;
             }
@@ -29,12 +30,13 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
 
         $leftTokenPtr = $file->findPrevious([T_STRING, T_NS_SEPARATOR], $stackPtr - 1, null, true);
         $invocationHints = [T_OBJECT_OPERATOR, T_PAAMAYIM_NEKUDOTAYIM, T_WHITESPACE, T_OPEN_TAG];
-        if (!in_array($tokens[$leftTokenPtr]['code'], $invocationHints)) {
+
+        if (!in_array($tokens[$leftTokenPtr]['code'], $invocationHints, true)) {
             return;
         }
 
         if (isset($tokens[$stackPtr - 2])
-            && in_array($tokens[$stackPtr - 2]['code'], [T_CLASS, T_INTERFACE, T_TRAIT])) {
+            && in_array($tokens[$stackPtr - 2]['code'], [T_CLASS, T_INTERFACE, T_TRAIT], true)) {
             return;
         }
 
@@ -57,9 +59,11 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
         $argumentsLine = '';
         $whitespaceCount = 0;
         $needsWhitespace = true;
+
         for ($expressionPtr = $stackPtr + 2; $expressionPtr < $closingPtr; $expressionPtr++) {
 
             $currentToken = $tokens[$expressionPtr];
+
             switch ($currentToken['code']) {
                 case T_WHITESPACE:
                     if (static::nextSignificantTokenClosesArray($file, $expressionPtr)) {
@@ -117,13 +121,17 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
         }
 
         $startPtr = $stackPtr;
+
         do {
             --$startPtr;
+
         } while ($tokens[$stackPtr]['line'] === $tokens[$startPtr]['line']);
 
         $endPtr = $expressionPtr;
+
         do {
             ++$endPtr;
+
         } while ($tokens[$stackPtr]['line'] === $tokens[$endPtr]['line']);
 
         $before = static::composeExpression($tokens, $startPtr + 1, $stackPtr + 1);
@@ -155,11 +163,14 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
     private static function append(&$expression, $content, &$whitespaceCount, &$needsWhitespace)
     {
         if ($content === ' ') {
+
             if ($whitespaceCount === 0 && $needsWhitespace) {
                 $expression .= $content;
                 $whitespaceCount++;
+
                 return;
             }
+
             return;
         }
 

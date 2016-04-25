@@ -19,6 +19,7 @@ class QueryParamSniff implements CodeSnifferSniff
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         $regex = '/\* @[^\(]*QueryParam\(.*/';
+
         if (!preg_match($regex, $file->getTokens()[$stackPtr]['content'], $matches)) {
             return;
         }
@@ -29,6 +30,7 @@ class QueryParamSniff implements CodeSnifferSniff
 
         while ($lineIndex < $fileSize) {
             $content .= $file->getTokens()[$lineIndex]['content'];
+
             if (substr_count($content, '(') <= substr_count($content, ')')) {
                 break;
             }

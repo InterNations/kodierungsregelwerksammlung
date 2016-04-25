@@ -24,8 +24,10 @@ class ClosureSniff implements CodeSnifferSniff
         $isStaticClosure = $tokens[$qualifierPtr]['code'] === T_STATIC;
 
         $afterQualifierWs = '';
+
         if ($isStaticClosure) {
             $afterQualifierWsPtr = $file->findPrevious([T_WHITESPACE], $stackPtr - 1, $qualifierPtr);
+
             if ($afterQualifierWsPtr) {
                 $afterQualifierWs = $tokens[$afterQualifierWsPtr]['content'];
             }
@@ -33,6 +35,7 @@ class ClosureSniff implements CodeSnifferSniff
 
         $afterClosureWs = '';
         $afterClosureWsPtr = $file->findNext([T_WHITESPACE], $stackPtr + 1, $parenthesisOpener);
+
         if ($afterClosureWsPtr) {
             $afterClosureWs = $tokens[$afterClosureWsPtr]['content'];
         }
@@ -40,9 +43,11 @@ class ClosureSniff implements CodeSnifferSniff
         $beforeUseWs = ' ';
         $afterUseWs = ' ';
         $usePtr = $file->findNext([T_USE], $tokens[$stackPtr]['parenthesis_closer'], $scopeOpener);
+
         if ($usePtr !== false) {
             $beforeUseWs = '';
             $useBeforeWsPtr = $file->findPrevious([T_WHITESPACE], $usePtr, $parenthesisCloser);
+
             if ($useBeforeWsPtr) {
                 $beforeUseWs = $tokens[$useBeforeWsPtr]['content'];
             }
@@ -50,6 +55,7 @@ class ClosureSniff implements CodeSnifferSniff
             $afterUseWs = '';
             $useClosePtr = $file->findNext([T_CLOSE_PARENTHESIS], $usePtr);
             $useAfterWsPtr = $file->findNext([T_WHITESPACE], $useClosePtr, $scopeOpener);
+
             if ($useAfterWsPtr) {
                 $afterUseWs = $tokens[$useAfterWsPtr]['content'];
             }

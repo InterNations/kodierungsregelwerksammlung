@@ -16,6 +16,7 @@ class AlwaysUseSniff implements CodeSnifferSniff
     public function process(CodeSnifferFile $file, $originalStackPtr)
     {
         $fileName = $file->getFilename();
+
         if (isset($this->analyzed[$fileName]) && $originalStackPtr < $this->analyzed[$fileName]) {
             return;
         }
@@ -24,6 +25,7 @@ class AlwaysUseSniff implements CodeSnifferSniff
 
         $stackPtr = $originalStackPtr;
         $type = null;
+
         while (--$stackPtr > 0) {
             switch ($tokens[$stackPtr]['code']) {
                 case T_NS_SEPARATOR:
@@ -79,6 +81,7 @@ class AlwaysUseSniff implements CodeSnifferSniff
 
         if ($type === null) {
             $stackPtr = $originalStackPtr;
+
             while (++$stackPtr > 0) {
                 switch ($tokens[$stackPtr]['code']) {
                     case T_NS_SEPARATOR:

@@ -19,8 +19,10 @@ class FinalSniff implements CodeSnifferSniff
         $methods = 0;
         $staticMethods = 0;
         $methodPtr = $stackPtr;
+
         while ($methodPtr = $file->findNext(T_FUNCTION, $methodPtr + 1)) {
             $methods++;
+
             if ($file->findPrevious(T_STATIC, $methodPtr - 1, $methodPtr - 3)) {
                 $staticMethods++;
             }
@@ -29,9 +31,12 @@ class FinalSniff implements CodeSnifferSniff
         $properties = 0;
         $staticProperties = 0;
         $propertyPtr = $stackPtr;
+
         while ($propertyPtr = $file->findNext(T_VARIABLE, $propertyPtr + 1)) {
+
             if ($file->findPrevious([T_PUBLIC, T_PROTECTED, T_PRIVATE], $propertyPtr - 1, $propertyPtr - 3)) {
                 $properties++;
+
                 if ($file->findPrevious(T_STATIC, $propertyPtr - 1, $propertyPtr - 3)) {
                     $staticProperties++;
                 }
@@ -44,7 +49,7 @@ class FinalSniff implements CodeSnifferSniff
                         && $properties === $staticProperties
                         && !$extendsClass
                         && !$implementsInterface)
-                        || $className == 'EventType';
+                        || $className === 'EventType';
 
         if (!$isFinal && $shouldBeFinal && $methods === 0) {
             $file->addError('Enum "%s" must be final', $stackPtr, 'FinalClassEnum', [$className]);

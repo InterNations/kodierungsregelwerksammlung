@@ -81,6 +81,7 @@ class LineLengthSniff implements CodeSnifferSniff
 
         // Make sure this is the first open tag.
         $previousOpenTag = $file->findPrevious(T_OPEN_TAG, ($stackPtr - 1));
+
         if ($previousOpenTag !== false) {
             return;
         }
@@ -90,6 +91,7 @@ class LineLengthSniff implements CodeSnifferSniff
         $currentLine = 1;
 
         $trim = (strlen($file->eolChar) * -1);
+
         for (; $tokenCount < $file->numTokens; $tokenCount++) {
             if ($tokens[$tokenCount]['line'] === $currentLine) {
                 $currentLineContent .= $tokens[$tokenCount]['content'];
@@ -147,6 +149,7 @@ class LineLengthSniff implements CodeSnifferSniff
         if (PHP_CODESNIFFER_ENCODING !== 'iso-8859-1') {
             // Not using the detault encoding, so take a bit more care.
             $lineLength = iconv_strlen($lineContent, PHP_CODESNIFFER_ENCODING);
+
             if ($lineLength === false) {
                 // String contained invalid characters, so revert to default.
                 $lineLength = strlen($lineContent);

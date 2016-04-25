@@ -129,6 +129,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
             }
 
             $opener = $tokens[$nextCase]['scope_opener'];
+
             if ($tokens[($opener - 1)]['type'] === 'T_WHITESPACE') {
                 $error = 'There must be no space before the colon in a ' . strtoupper($type) . ' statement';
                 $file->addError($error, $nextCase, 'SpaceBeforeColon' . $type);
@@ -136,6 +137,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
 
             $nextBreak = $tokens[$nextCase]['scope_closer'];
             $breakAfterThrow = false;
+
             if ($tokens[$nextBreak]['code'] === T_THROW) {
                 if ($pos = $file->findNext([T_OPEN_PARENTHESIS], $nextBreak)) {
                     // +4: ")" ";" "\n" "<whitespace>"
@@ -157,6 +159,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
 
                     $breakLine = $tokens[$nextBreak]['line'];
                     $prevLine = 0;
+
                     for ($i = ($nextBreak - 1); $i > $stackPtr; $i--) {
                         if ($tokens[$i]['type'] !== 'T_WHITESPACE') {
                             $prevLine = $tokens[$i]['line'];
@@ -172,6 +175,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
                     $breakLine = $tokens[$nextBreak]['line'];
                     $nextLine = $tokens[$tokens[$stackPtr]['scope_closer']]['line'];
                     $semicolon = $file->findNext(T_SEMICOLON, $nextBreak);
+
                     for ($i = ($semicolon + 1); $i < $tokens[$stackPtr]['scope_closer']; $i++) {
                         if ($tokens[$i]['type'] !== 'T_WHITESPACE') {
                             $nextLine = $tokens[$i]['line'];
@@ -196,6 +200,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
 
                     $caseLine = $tokens[$nextCase]['line'];
                     $nextLine = $tokens[$nextBreak]['line'];
+
                     for ($i = ($opener + 1); $i < $nextBreak; $i++) {
                         if ($tokens[$i]['type'] !== 'T_WHITESPACE') {
                             $nextLine = $tokens[$i]['line'];
@@ -216,6 +221,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
                         // But count RETURN statements as valid content if they also
                         // happen to close the CASE statement.
                         $foundContent = false;
+
                         for ($i = ($tokens[$nextCase]['scope_opener'] + 1); $i < $nextBreak; $i++) {
                             if ($tokens[$i]['code'] === T_CASE) {
                                 $i = $tokens[$i]['scope_opener'];
@@ -237,6 +243,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
                         // They must (at least) have a comment describing why
                         // the default case is being ignored.
                         $foundContent = false;
+
                         for ($i = ($tokens[$nextCase]['scope_opener'] + 1); $i < $nextBreak; $i++) {
                             if ($tokens[$i]['type'] !== 'T_WHITESPACE') {
                                 $foundContent = true;

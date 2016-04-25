@@ -49,6 +49,7 @@ class ConstantNameSniff implements CodeSnifferSniff
             null,
             true
         );
+
         if ($tokens[$previousNonStringPtr]['code'] === T_USE) {
             return;
         }
@@ -65,6 +66,7 @@ class ConstantNameSniff implements CodeSnifferSniff
         // If the next non-whitespace token after this token
         // is not an opening parenthesis then it is not a function call.
         $openBracket = $file->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+
         if ($tokens[$openBracket]['code'] !== T_OPEN_PARENTHESIS) {
             $functionKeyword = $file->findPrevious(
                 [T_WHITESPACE, T_COMMA, T_COMMENT, T_STRING, T_NS_SEPARATOR],
@@ -124,6 +126,7 @@ class ConstantNameSniff implements CodeSnifferSniff
 
             // Is this a class name?
             $nextPtr = $file->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+
             if ($tokens[$nextPtr]['code'] === T_DOUBLE_COLON) {
                 return;
             }
@@ -145,6 +148,7 @@ class ConstantNameSniff implements CodeSnifferSniff
                 null,
                 true
             );
+
             if ($tokens[$prevPtr]['code'] === T_AS) {
                 return;
             }
@@ -163,6 +167,7 @@ class ConstantNameSniff implements CodeSnifferSniff
 
             // Is this a member var name?
             $prevPtr = $file->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
+
             if ($tokens[$prevPtr]['code'] === T_OBJECT_OPERATOR) {
                 return;
             }
@@ -170,7 +175,9 @@ class ConstantNameSniff implements CodeSnifferSniff
             // Is this a variable name, in the form ${varname} ?
             if ($tokens[$prevPtr]['code'] === T_OPEN_CURLY_BRACKET) {
                 $nextPtr = $file->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
+
                 if ($tokens[$nextPtr]['code'] === T_CLOSE_CURLY_BRACKET) {
+
                     return;
                 }
             }
@@ -182,6 +189,7 @@ class ConstantNameSniff implements CodeSnifferSniff
 
             // Is this an instance of declare()
             $prevPtrDeclare = $file->findPrevious([T_WHITESPACE, T_OPEN_PARENTHESIS], ($stackPtr - 1), null, true);
+
             if ($tokens[$prevPtrDeclare]['code'] === T_DECLARE) {
                 return;
             }
@@ -194,14 +202,18 @@ class ConstantNameSniff implements CodeSnifferSniff
             }
 
             $className = $file->findPrevious(T_STRING, ($stackPtr - 1), null, false, null, true);
+
             if ($this->isEventClassName($tokens[$className]['content'])) {
+
                 if (!$this->isEventClassName($tokens[$className]['content'])) {
+
                     if (!$this->isValidEventConstName($constName)) {
                         $error = 'Class constants for event types must be camelcase and start with '
                                . '"on", "before" or "after". Found %s';
                         $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                     }
                 }
+
                 return;
             }
 
@@ -223,14 +235,14 @@ class ConstantNameSniff implements CodeSnifferSniff
 
             // Make sure this is not a method call.
             $prev = $file->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
-            if ($tokens[$prev]['code'] === T_OBJECT_OPERATOR
-                || $tokens[$prev]['code'] === T_DOUBLE_COLON
-            ) {
+
+            if ($tokens[$prev]['code'] === T_OBJECT_OPERATOR || $tokens[$prev]['code'] === T_DOUBLE_COLON) {
                 return;
             }
 
             // The next non-whitespace token must be the constant name.
             $constPtr = $file->findNext(T_WHITESPACE, ($openBracket + 1), null, true);
+
             if ($tokens[$constPtr]['code'] !== T_CONSTANT_ENCAPSED_STRING) {
                 return;
             }
@@ -240,6 +252,7 @@ class ConstantNameSniff implements CodeSnifferSniff
             // Check for constants like self::CONSTANT.
             $prefix = '';
             $splitPos = strpos($constName, '::');
+
             if ($splitPos !== false) {
                 $prefix = substr($constName, 0, ($splitPos + 2));
                 $constName = substr($constName, ($splitPos + 2));
