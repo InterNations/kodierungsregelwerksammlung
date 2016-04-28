@@ -107,4 +107,18 @@ class InterNations_Tests_Sniffs_Waste_SuperfluousUseStatementsSniffTest
             'Superfluous use-statement found for symbol "NamespaceName\\CONSTANT4", but no further reference'
         );
     }
+
+    public function testUseStatementSameNamespace()
+    {
+        $file = __DIR__ . '/Fixtures/SuperfluousUseStatements/SameNs.php';
+
+        $errors = $this->analyze(['InterNations/Sniffs/Waste/SuperfluousUseStatementsSniff'], [$file]);
+        $this->assertReportCount(1, 0, $errors, $file);
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Superfluous use-statement found for symbol "Foo\Bar\Superfluous", but no use statement needed as namespaces match'
+        );
+    }
 }

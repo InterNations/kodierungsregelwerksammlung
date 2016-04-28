@@ -13,23 +13,27 @@ trait NamespaceSniffTrait
 
         $tokens = $file->getTokens();
 
-        while ($stackPtr = $file->findNext(
+        $nextPtr = $stackPtr + 1;
+
+        while ($currentPtr = $file->findNext(
             [T_STRING, T_NS_SEPARATOR, T_WHITESPACE, T_AS, T_PAAMAYIM_NEKUDOTAYIM],
-            $stackPtr + 1,
+            $nextPtr,
             null,
             null,
             null,
             true
         )
         ) {
-            switch ($tokens[$stackPtr]['code']) {
+            $nextPtr = $currentPtr + 1;
+
+            switch ($tokens[$currentPtr]['code']) {
                 case T_STRING:
                 case T_NS_SEPARATOR:
                 case T_PAAMAYIM_NEKUDOTAYIM:
                     if (!$isAlias) {
-                        $namespace .= $tokens[$stackPtr]['content'];
+                        $namespace .= $tokens[$currentPtr]['content'];
                     }
-                    $symbolName = $tokens[$stackPtr]['content'];
+                    $symbolName = $tokens[$currentPtr]['content'];
                     break;
 
                 case T_AS:

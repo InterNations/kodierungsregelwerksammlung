@@ -50,10 +50,8 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
             }
         }
 
+        $namespaceRegexPart = '(?:[\w\d\[\]]+\|)?' . preg_quote($namespaceAlias, '/') . '(?:\[\])?(?:\|[\w\d\[\]]+)?';
         foreach (static::$docBlocks[$fileName] as $docBlock) {
-            $namespaceRegexPart = '(?:[\w\d\[\]]+\|)?'
-                . preg_quote($namespaceAlias, '/')
-                . '(?:\[\])?(?:\|[\w\d\[\]]+)?';
 
             // @<namespace>(...)
             if (strstr($docBlock, '@' . $namespaceAlias . '(') !== false) {
@@ -134,7 +132,21 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
             $file->addError(
                 'Superfluous use-statement found for symbol "%s", but no further reference',
                 $stackPtr,
-                'SuperfluousUseStatement',
+                'UnusedUse',
+                [$fullyQualifiedNamespace]
+            );
+
+            return;
+        }
+
+        $nsTokenPtr = $file->findPrevious(T_NAMESPACE, $stackPtr);
+        list( , , $currentFullyQualifiedNamespace) = $this->getNamespace($nsTokenPtr + 1, $file);
+
+        if ($this->isInSameNamespace($currentFullyQualifiedNamespace, $fullyQualifiedNamespace)) {
+            $file->addError(
+                'Superfluous use-statement found for symbol "%s", but no use statement needed as namespaces match',
+                $stackPtr,
+                'NamespaceMatch',
                 [$fullyQualifiedNamespace]
             );
         }
@@ -158,5 +170,13 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         }
 
         return $namespace;
+    }
+
+    private static function isInSameNamespace($namespace, $symbol)
+    {
+        $namespace .= '\\';
+
+        return strpos($symbol, $namespace) === 0
+            && strpos(substr($symbol, strlen($namespace)), '\\') === false;
     }
 }
