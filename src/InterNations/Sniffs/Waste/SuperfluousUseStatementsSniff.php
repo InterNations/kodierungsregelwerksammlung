@@ -177,6 +177,6 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         $namespace .= '\\';
 
         return strpos($symbol, $namespace) === 0
-            && strpos(substr($symbol, strlen($namespace)), T_NS_SEPARATOR) === false;
+            && strpos(substr($symbol, strlen($namespace)), '\\') === false;
     }
 }
