@@ -88,7 +88,7 @@ class TernaryOperatorFormattingSniff implements CodeSnifferSniff
             'else'      => [$colonPtr + 1, $endPtr - 1]
         ];
 
-        if ($tokens[$stackPtr + 1]['line'] === $tokens[$endPtr - 1]['line']) {
+        if ($tokens[$startPtr + 1]['line'] === $tokens[$endPtr - 1]['line']) {
             $this->checkSingleLineTernary(
                 $file,
                 $file->findNext(T_WHITESPACE, $startPtr + 1, null, true),
@@ -122,7 +122,11 @@ class TernaryOperatorFormattingSniff implements CodeSnifferSniff
         $indentLevel = $this->findIndentLevel($file, $startPtr);
 
         $args = array_merge($parts, [PHP_EOL, str_repeat(' ', ($indentLevel + 1) * static::INDENT)]);
-        $expected = vsprintf('%1$s ?%4$s%5$s%2$s :%4$s%5$s%3$s', $args);
+        if ($parts[1] === '') {
+            $expected = vsprintf('%1$s ?:%4$s%5$s%3$s', $args);
+        } else {
+            $expected = vsprintf('%1$s ?%4$s%5$s%2$s :%4$s%5$s%3$s', $args);
+        }
 
         if ($actual !== $expected) {
             $file->addError(

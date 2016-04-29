@@ -11,7 +11,7 @@ class InterNations_Tests_Sniffs_Formatting_TernaryOperatorFormattingSniffTest ex
             [$file]
         );
 
-        $this->assertReportCount(7, 0, $errors, $file);
+        $this->assertReportCount(8, 0, $errors, $file);
 
         $this->assertReportContains(
             $errors,
@@ -62,6 +62,13 @@ class InterNations_Tests_Sniffs_Formatting_TernaryOperatorFormattingSniffTest ex
             'Ternary operator incorrectly formatted: expected $value ?: ($value = true) got $value ? :  ($value = true)',
             'InterNations.Formatting.TernaryOperatorFormatting.SingleLineTernaryOperator'
         );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Nested ternary not allowed',
+            'InterNations.Formatting.TernaryOperatorFormatting.NestedTernary'
+        );
     }
 
     public function testMultiLineTernary()
@@ -72,7 +79,7 @@ class InterNations_Tests_Sniffs_Formatting_TernaryOperatorFormattingSniffTest ex
             [$file]
         );
 
-        $this->assertReportCount(3, 0, $errors, $file);
+        $this->assertReportCount(4, 0, $errors, $file);
 
         $this->assertReportContains(
             $errors,
@@ -95,5 +102,13 @@ class InterNations_Tests_Sniffs_Formatting_TernaryOperatorFormattingSniffTest ex
             'Nested ternary not allowed',
             'InterNations.Formatting.TernaryOperatorFormatting.NestedTernary'
         );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            "Ternary operator incorrectly formatted: expected true ?:\n    false got true\n    ?: false",
+            'InterNations.Formatting.TernaryOperatorFormatting.MultiLineTernaryOperator'
+        );
+
     }
 }

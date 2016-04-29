@@ -1,5 +1,4 @@
 <?php
-
 valid2(
     valid2() ?
         $trueValue :
@@ -10,17 +9,15 @@ $valid1 = valid1() ?
     $trueValue :
     $falseValue;
 
-
 $valid3 = functionExpression() ?
     $trueValue :
     $falseValue;
 
+$valid4 = true ?:
+    false;
 
-$valid4 = true
-    ?: false;
-
-$valid5 = $value
-    ?: ($value = $foo);
+$valid5 = $value ?:
+    ($value = $foo);
 
 $invalid1 = invalid1()
     ? $trueValue
@@ -38,3 +35,5 @@ $invalid3 = true ?
         false :
     false;
 
+$invalid4 = true
+    ?: false;

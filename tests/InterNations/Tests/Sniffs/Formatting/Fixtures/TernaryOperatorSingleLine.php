@@ -18,3 +18,5 @@ $invalid8 = $value ? :  ($value = true);
 
 $valid6 = true ?: false;
 $valid7 = $value ?: ($value = true);
+
+$invalidMulti = true ? true ? false : false : false;
