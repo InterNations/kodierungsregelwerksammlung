@@ -6,6 +6,12 @@ use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class ControllerMethodsConventionSniff implements CodeSnifferSniff
 {
+    private static $whitelist = [
+        '__construct',
+        '__destruct',
+        'set*'
+    ];
+
     private static $apiVerbs = ['index', 'get', 'post', 'put', 'patch', 'delete'];
 
     private static $webVerbs = ['new', 'edit'];
@@ -25,6 +31,10 @@ class ControllerMethodsConventionSniff implements CodeSnifferSniff
             return;
         }
 
+        if (strpos($file->getFilename(), 'Controller.php') === false) {
+            return;
+        }
+
         $tokens = $file->getTokens();
         $peakPtr = $file->findPrevious([T_WHITESPACE, T_STATIC], $stackPtr - 1, null, true);
 
@@ -34,6 +44,11 @@ class ControllerMethodsConventionSniff implements CodeSnifferSniff
 
         $namePtr = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
         $name = $tokens[$namePtr]['content'];
+
+        if (static::isWhitelistedName($name)) {
+            return;
+        }
+
         $isWebController = strpos($file->getFilename(), '/Controller/Api/') === false;
         $actions = $isWebController ? static::getWebActions() : static::getActions();
 
@@ -47,6 +62,17 @@ class ControllerMethodsConventionSniff implements CodeSnifferSniff
                 [$isWebController ? 'web' : 'API', implode('()", "', $actions), $name]
             );
         }
+    }
+
+    private static function isWhitelistedName($needle)
+    {
+        foreach (static::$whitelist as $expression) {
+            if (fnmatch($expression, $needle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static function getActions()

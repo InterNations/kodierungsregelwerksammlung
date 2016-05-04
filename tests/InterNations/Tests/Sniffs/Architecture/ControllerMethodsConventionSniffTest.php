@@ -18,6 +18,14 @@ class InterNations_Tests_Sniffs_Architecture_ControllerMethodsConventionSniffTes
         );
     }
 
+    public function testNonControllersAreIgnored()
+    {
+        $file = __DIR__ . '/Fixtures/InterNations/Bundle/SomethingBundle/Controller/Ignored.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Architecture/ControllerMethodsConventionSniff'], [$file]);
+
+        $this->assertReportCount(0, 0, $errors, $file);
+    }
+
     public function testApiControllerConventions()
     {
         $file = __DIR__ . '/Fixtures/InterNations/Bundle/SomethingBundle/Controller/Api/TestController.php';
