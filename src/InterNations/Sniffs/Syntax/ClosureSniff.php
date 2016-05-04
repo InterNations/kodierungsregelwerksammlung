@@ -53,41 +53,56 @@ class ClosureSniff implements CodeSnifferSniff
             }
 
             $afterUseWs = '';
-            $useClosePtr = $file->findNext([T_CLOSE_PARENTHESIS], $usePtr);
-            $useAfterWsPtr = $file->findNext([T_WHITESPACE], $useClosePtr, $scopeOpener);
+            $useClosePtr = $file->findNext(T_CLOSE_PARENTHESIS, $usePtr);
+            $useAfterWsPtr = $file->findNext(T_WHITESPACE, $useClosePtr, $scopeOpener);
 
-            if ($useAfterWsPtr) {
-                $afterUseWs = $tokens[$useAfterWsPtr]['content'];
-            }
+        } else {
+            $useAfterWsPtr = $file->findNext(T_WHITESPACE, $tokens[$stackPtr]['parenthesis_closer'], $scopeOpener);
         }
 
+        if ($useAfterWsPtr) {
+            $afterUseWs = $tokens[$useAfterWsPtr]['content'];
+        }
+
+        //$openingBracketPtr = $file->findNext(T_OPEN_CURLY_BRACKET, $tokens[$stackPtr]['parenthesis_closer']);
+        //var_dump($tokens[$openingBracketPtr]);
+
         if (($isStaticClosure && strlen($afterQualifierWs) !== 1)
-            || strlen($afterClosureWs) !== 1
-            || strlen($beforeUseWs) !== 1
-            || strlen($afterUseWs) !== 1) {
+            || $afterClosureWs !==  ' '
+            || $beforeUseWs !== ' '
+            || $afterUseWs !== ' ') {
 
             $file->addError(
                 sprintf(
-                    'Expected "%1$sfunction (...) use (...)", found "%2$sfunction%3$s(...)%4$suse(...)%5$s',
+                    'Expected "%1$sfunction (...) use (...) {", found "%2$sfunction%3$s(...)%4$suse(...)%5$s{"',
                     ($isStaticClosure ? 'static '  : ''),
                     ($isStaticClosure ? 'static ' : '') . $afterQualifierWs,
                     $afterClosureWs,
                     $beforeUseWs,
                     $afterUseWs
                 ),
-                $usePtr,
+                $stackPtr,
                 'useWhitespace'
             );
         }
 
-        $thisPtr = $file->findNext([T_VARIABLE], $scopeOpener, $scopeCloser, false, '$this');
+        $thisPtr = $file->findNext(T_VARIABLE, $scopeOpener, $scopeCloser, false, '$this');
 
         if ($isStaticClosure && $thisPtr !== false) {
-            $file->addError('Static closure references $this. Remove static qualifier', $thisPtr, 'closureStaticThis');
+            $file->addError(
+                'Static closure references %s but static qualifier exists. Remove "static" qualifier from the closure',
+                $thisPtr,
+                'closureInvalidStatic',
+                [$tokens[$thisPtr]['content']]
+            );
         }
 
         if (!$isStaticClosure && $thisPtr === false) {
-            $file->addError('Closure does not reference $this. Add "static" qualifier', $stackPtr, 'closureStatic');
+            $file->addError(
+                'Closure does not reference $this, static:: or self::. Add "static" qualifier to the closure',
+                $stackPtr,
+                'closureShouldBeStatic'
+            );
         }
     }
 }
