@@ -198,6 +198,7 @@
     <rule ref="./src/InterNations/Sniffs/Formatting/ExpressionFormattingSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Naming/NamespaceNameSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Formatting/EmptyLineBeforeControlStructureFormattingSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Architecture/ControllerMethodsConventionSniff.php"/>
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <rule ref="Squiz.Strings.EchoedStrings"/>

@@ -122,6 +122,6 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
         $errors = array_shift($args);
         $message = array_shift($args);
 
-        return vsprintf($message, $args) . "\n" . json_encode($errors, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        return vsprintf($message, $args) . "\n" . print_r($errors, true);
     }
 }
