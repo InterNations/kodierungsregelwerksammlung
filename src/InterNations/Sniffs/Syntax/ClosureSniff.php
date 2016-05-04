@@ -64,9 +64,6 @@ class ClosureSniff implements CodeSnifferSniff
             $afterUseWs = $tokens[$useAfterWsPtr]['content'];
         }
 
-        //$openingBracketPtr = $file->findNext(T_OPEN_CURLY_BRACKET, $tokens[$stackPtr]['parenthesis_closer']);
-        //var_dump($tokens[$openingBracketPtr]);
-
         if (($isStaticClosure && strlen($afterQualifierWs) !== 1)
             || $afterClosureWs !==  ' '
             || $beforeUseWs !== ' '
