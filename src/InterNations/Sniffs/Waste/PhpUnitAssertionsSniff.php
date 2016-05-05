@@ -7,26 +7,42 @@ use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 class PhpUnitAssertionsSniff implements CodeSnifferSniff
 {
     private static $aliasMap = [
-        'assertSame'  => [
-            T_TRUE  => 'assertTrue',
-            T_FALSE => 'assertFalse',
-            T_NULL  => 'assertNull',
-        ],
-        'assertTrue'  => [
-            T_EMPTY  => 'assertEmpty',
-            T_STRING => [
-                'array_key_exists' => 'assertArrayHasKey',
-                'in_array'         => 'assertContains',
+        'assertSame'    => [
+            T_TRUE                     => 'assertTrue',
+            T_FALSE                    => 'assertFalse',
+            T_NULL                     => 'assertNull',
+            T_LNUMBER                  => ['count' => 'assertCount'],
+            T_VARIABLE                 => [
+                'count'     => 'assertCount',
+                'get_class' => 'assertInstanceOf',
+                'gettype'   => 'assertInternalType',
             ],
-            T_ISSET  => 'assertArrayHasKey',
+            T_STRING                   => [T_PAAMAYIM_NEKUDOTAYIM => ['class' => ['get_class' => 'assertInstanceOf']]],
+            T_CONSTANT_ENCAPSED_STRING => ['gettype' => 'assertInternalType'],
         ],
-        'assertFalse' => [
-            T_EMPTY  => 'assertNotEmpty',
-            T_STRING => [
-                'array_key_exists' => 'assertArrayNotHasKey',
-                'in_array'         => 'assertNotContains',
+        'assertNotSame' => [
+            T_LNUMBER                  => ['count' => 'assertNotCount'],
+            T_VARIABLE                 => [
+                'count'     => 'assertNotCount',
+                'get_class' => 'assertNotInstanceOf',
+                'gettype'   => 'assertNotInternalType',
             ],
-            T_ISSET  => 'assertArrayNotHasKey',
+            T_STRING                   => [
+                T_PAAMAYIM_NEKUDOTAYIM => ['class' => ['get_class' => 'assertNotInstanceOf']],
+            ],
+            T_CONSTANT_ENCAPSED_STRING => ['gettype' => 'assertNotInternalType'],
+        ],
+        'assertTrue'    => [
+            T_EMPTY            => 'assertEmpty',
+            T_ISSET            => 'assertArrayHasKey',
+            'array_key_exists' => 'assertArrayHasKey',
+            'in_array'         => 'assertContains',
+        ],
+        'assertFalse'   => [
+            T_EMPTY            => 'assertNotEmpty',
+            'array_key_exists' => 'assertArrayNotHasKey',
+            'in_array'         => 'assertNotContains',
+            T_ISSET            => 'assertArrayNotHasKey',
         ],
     ];
 
@@ -43,11 +59,11 @@ class PhpUnitAssertionsSniff implements CodeSnifferSniff
             return;
         }
 
-        $methodName = $tokens[$stackPtr + 1]['content'];
+        if (strpos($tokens[$stackPtr + 1]['content'], 'assert') !== 0) {
+            return;
+        }
 
-        $firstArgumentPtr = $file->findNext([T_WHITESPACE, T_OPEN_PARENTHESIS], $stackPtr + 2, null, true);
-        $firstArgument = $tokens[$firstArgumentPtr];
-        list($alias, $code) = static::getAlias($file, $methodName, $firstArgument, $firstArgumentPtr);
+        list($alias, $code) = static::getAlias($file, $stackPtr);
 
         if ($alias !== null) {
             $file->addError(
@@ -59,37 +75,66 @@ class PhpUnitAssertionsSniff implements CodeSnifferSniff
         }
     }
 
-    private static function getAlias(CodeSnifferFile $file, $methodName, array $firstArgument, $firstArgumentPtr)
+    private static function getAlias(CodeSnifferFile $file, $stackPtr)
     {
-        if (!isset(static::$aliasMap[$methodName][$firstArgument['code']])) {
-            return [null, null];
-        }
+        $nextPtr = $stackPtr;
+        $alias = static::$aliasMap;
+        $tokens = $file->getTokens();
+        $foundParenthesis = false;
 
-        $alias = static::$aliasMap[$methodName][$firstArgument['code']];
+        while (is_array($alias)) {
+            $nextPtr = $file->findNext([T_WHITESPACE, T_COMMA, T_SEMICOLON], ++$nextPtr, null, true, null, true);
 
-        if (!is_array($alias)) {
-            return [$alias, static::getCode($file, $methodName, $firstArgument, $firstArgumentPtr)];
-        }
+            if ($nextPtr === false) {
+                break;
+            }
 
-        if (!isset($alias[$firstArgument['content']])) {
-            return [null, null];
+            if ($tokens[$nextPtr]['code'] === T_OPEN_PARENTHESIS) {
+                if ($foundParenthesis) {
+                    $nextPtr = $tokens[$nextPtr]['parenthesis_closer'] + 1;
+                }
+                $foundParenthesis = true;
+                continue;
+            }
+
+            if (isset($alias[$tokens[$nextPtr]['code']])) {
+                $alias = $alias[$tokens[$nextPtr]['code']];
+            } elseif (isset($alias[$tokens[$nextPtr]['content']])) {
+                $alias = $alias[$tokens[$nextPtr]['content']];
+            } else {
+                return [null, null];
+            }
+
         }
 
         return [
-            $alias[$firstArgument['content']],
-            static::getCode($file, $methodName, $firstArgument, $firstArgumentPtr),
+            $alias,
+            sprintf(
+                '%s%s',
+                $file->getTokensAsString($stackPtr + 1, $nextPtr - $stackPtr),
+                static::getClosing($file, $nextPtr + 1)
+            ),
         ];
     }
 
-    private static function getCode(CodeSnifferFile $file, $methodName, array $firstArgument, $firstArgumentPtr)
+    private static function getClosing(CodeSnifferFile $file, $ptr)
     {
-        $nextPtr = $file->findNext(T_WHITESPACE, $firstArgumentPtr + 1, null, true);
-        $next = '';
+        $tokens = $file->getTokens();
 
-        if ($file->getTokens()[$nextPtr]['code'] === T_OPEN_PARENTHESIS) {
-            $next = '()';
+        switch ($tokens[$ptr]['code']) {
+            case T_OPEN_PARENTHESIS:
+                $closing = '(), …)';
+                break;
+
+            case T_COMMA:
+                $closing = ', …)';
+                break;
+
+            default:
+                $closing = '…)';
+                break;
         }
 
-        return sprintf('%s(%s%s, …)', $methodName, $firstArgument['content'], $next);
+        return $closing;
     }
 }
