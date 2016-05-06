@@ -49,7 +49,7 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
         static::assertSame(
             $errorCount,
             $errors[$file]['numErrors'],
-            static::createErrorMessage($errors, 'Error count does not match')
+            static::createErrorMessage($errors, sprintf('Error count does not match. Expected %d', $errorCount))
         );
         static::assertSame(
             $warningsCount,

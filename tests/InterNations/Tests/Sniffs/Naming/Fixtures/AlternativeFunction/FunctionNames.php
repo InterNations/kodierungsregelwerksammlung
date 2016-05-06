@@ -151,3 +151,9 @@ class PaamayimNekudotayim
         return $a . $b;
     }
 }
+
+uniqid();
+openssl_random_pseudo_bytes();
+srand();
+rand();
+eval('echo 1');

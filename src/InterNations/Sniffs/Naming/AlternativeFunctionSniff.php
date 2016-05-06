@@ -6,34 +6,37 @@ use PHP_CodeSniffer_Sniff as Sniff;
 
 class AlternativeFunctionSniff implements Sniff
 {
-    private $alternatives = [
-        'join'       => 'implode()',
-        'sizeof'     => 'count()',
-        'fputs'      => 'fwrite()',
-        'chop'       => 'rtrim()',
-        'is_real'    => 'is_float()',
-        'strchr'     => 'strstr()',
-        'doubleval'  => 'floatval()',
-        'key_exists' => 'array_key_exists()',
-        'is_double'  => 'is_float()',
-        'ini_alter'  => 'ini_set()',
-        'is_long'    => 'is_int()',
-        'is_integer' => 'is_int()',
-        'is_real'    => 'is_float()',
-        'pos'        => 'current()',
-        'md5'        => 'hash(\'sha256\', ...)',
-        'md5_file'   => 'hash_file(\'sha256\', ...)',
-        'sha1'       => 'hash(\'sha256\', ...)',
-        'sha1_file'  => 'hash_file(\'sha256\', ...)',
-        'var_dump'   => false,
-        'print_r'    => false,
-        'printf'     => false,
-        'vprintf'    => false,
+    public static $alternatives = [
+        'join'                        => 'implode()',
+        'sizeof'                      => 'count()',
+        'fputs'                       => 'fwrite()',
+        'chop'                        => 'rtrim()',
+        'strchr'                      => 'strstr()',
+        'doubleval'                   => 'floatval()',
+        'key_exists'                  => 'array_key_exists()',
+        'is_double'                   => 'is_float()',
+        'ini_alter'                   => 'ini_set()',
+        'is_long'                     => 'is_int()',
+        'is_integer'                  => 'is_int()',
+        'is_real'                     => 'is_float()',
+        'pos'                         => 'current()',
+        'md5'                         => 'hash(\'sha256\', …)',
+        'md5_file'                    => 'hash_file(\'sha256\', …)',
+        'sha1'                        => 'hash(\'sha256\', …)',
+        'sha1_file'                   => 'hash_file(\'sha256\', …)',
+        'uniqid'                      => 'bin2hex(random_bytes(…))',
+        'openssl_random_pseudo_bytes' => 'bin2hex(random_bytes(…))',
+        'srand'                       => 'mt_srand(…)',
+        'rand'                        => 'mt_rand(…)',
+        'var_dump'                    => false,
+        'print_r'                     => false,
+        'printf'                      => false,
+        'vprintf'                     => false,
     ];
 
     public function register()
     {
-        return [T_STRING, T_ECHO, T_PRINT];
+        return [T_STRING, T_ECHO, T_PRINT, T_EVAL];
     }
 
     /**
@@ -44,8 +47,8 @@ class AlternativeFunctionSniff implements Sniff
     {
         $tokens = $file->getTokens();
 
-        // Special case for T_ECHO
-        if (in_array($tokens[$stackPtr]['code'], [T_ECHO, T_PRINT], true)) {
+        // Special case for functions that aren’t actually functions but builtins
+        if (in_array($tokens[$stackPtr]['code'], [T_ECHO, T_PRINT, T_EVAL], true)) {
             $this->createError($file, $stackPtr, $tokens[$stackPtr]['content'], 'Statement');
 
             return;
@@ -91,8 +94,14 @@ class AlternativeFunctionSniff implements Sniff
 
         $functionName = $tokens[$stackPtr]['content'];
 
-        if (isset($this->alternatives[$functionName])) {
-            $this->createError($file, $stackPtr, $functionName . '()', 'Function', $this->alternatives[$functionName]);
+        if (isset(static::$alternatives[$functionName])) {
+            $this->createError(
+                $file,
+                $stackPtr,
+                $functionName . '()',
+                'Function',
+                static::$alternatives[$functionName]
+            );
         }
     }
 
