@@ -8,9 +8,13 @@ class InterNations_Tests_Sniffs_Naming_AlternativeFunctionSniffTest extends Inte
 {
     public static function provideAlternativeNames()
     {
+        $arguments = [];
+
         foreach (AlternativeFunctionSniff::$alternatives as $function => $alternative) {
-            yield $function => [$function, $alternative];
+            $arguments[$function] = [$function, $alternative];
         }
+
+        return $arguments;
    }
 
     /**
