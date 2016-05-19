@@ -74,4 +74,12 @@ class InterNations_Tests_Sniffs_Naming_NamespaceNameSniffTest extends InterNatio
 
         $this->assertReportCount(0, 0, $errors, $file);
     }
+
+    public function testPsr4()
+    {
+        $file = __DIR__ . '/Fixtures/NamespaceName/src/Foo/CorrectClassName.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Naming/NamespaceNameSniff'], [$file]);
+
+        $this->assertReportCount(0, 0, $errors, $file);
+    }
 }

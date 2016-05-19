@@ -27,22 +27,39 @@ class NamespaceNameSniff implements CodeSnifferSniff
         $namespace = $fqNs . '\\' . $file->getTokens()[$symbolNamePtr]['content'];
 
         $expectedPath = str_replace('\\', DIRECTORY_SEPARATOR, $namespace, $namespaceLength) . '.php';
-
         $fileName = $file->getFilename();
-        if (strrpos($fileName, $expectedPath) !== strlen($fileName) - strlen($expectedPath)) {
-            $file->addError(
-                sprintf(
-                    'Namespace of %s "%s" does not match file "%s"',
-                    $symbol,
-                    $namespace,
-                    implode(
-                        DIRECTORY_SEPARATOR,
-                        array_slice(explode(DIRECTORY_SEPARATOR, $fileName), - $namespaceLength - 1)
-                    )
-                ),
-                $stackPtr,
-                'InvalidNamespaceName'
-            );
+
+        // PSR-1
+        if (strrpos($fileName, $expectedPath) === strlen($fileName) - strlen($expectedPath)) {
+            return;
         }
+
+        // PSR-4
+        $sourceDirectory = DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR;
+        if (strpos($fileName, $sourceDirectory) !== false) {
+            $path = substr($fileName, strpos($fileName, $sourceDirectory) + strlen($sourceDirectory));
+            $partialNamespace = implode(
+                '\\',
+                array_slice(explode('\\', $namespace), substr_count($path, DIRECTORY_SEPARATOR))
+            );
+
+            if (strrpos($namespace, $partialNamespace) + strlen($partialNamespace) === strlen($namespace)) {
+                return;
+            }
+        }
+
+        $file->addError(
+            sprintf(
+                'Namespace of %s "%s" does not match file "%s"',
+                $symbol,
+                $namespace,
+                implode(
+                    DIRECTORY_SEPARATOR,
+                    array_slice(explode(DIRECTORY_SEPARATOR, $fileName), - $namespaceLength - 1)
+                )
+            ),
+            $stackPtr,
+            'InvalidNamespaceName'
+        );
     }
 }
