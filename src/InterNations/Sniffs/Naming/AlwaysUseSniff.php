@@ -61,7 +61,7 @@ class AlwaysUseSniff implements CodeSnifferSniff
                     break 2;
 
                 case T_OPEN_PARENTHESIS:
-                    if ($tokens[$stackPtr + 2]['code'] !== T_OPEN_PARENTHESIS) {
+                    if ($tokens[$stackPtr - 3]['code'] === T_FUNCTION || $tokens[$stackPtr - 2]['code'] === T_CLOSURE) {
                         $type = 'TypeHint';
                         break 2;
                     }
