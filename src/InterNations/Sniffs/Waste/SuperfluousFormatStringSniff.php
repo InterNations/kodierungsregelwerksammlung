@@ -20,6 +20,7 @@ class SuperfluousFormatStringSniff implements CodeSnifferSniff
         }
 
         $openingBrace = $tokens[$stackPtr + 1];
+
         for ($pos = $openingBrace['parenthesis_opener'] + 1; $pos < $openingBrace['parenthesis_closer']; $pos++) {
             if (!in_array($tokens[$pos]['code'], [T_CONSTANT_ENCAPSED_STRING, T_WHITESPACE, T_STRING_CONCAT], true)) {
                 return;
