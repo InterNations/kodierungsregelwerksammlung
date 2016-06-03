@@ -200,6 +200,7 @@
     <rule ref="./src/InterNations/Sniffs/Formatting/EmptyLineBeforeControlStructureFormattingSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Architecture/ControllerMethodsConventionSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/PhpUnitAssertionsSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousFormatStringSniff.php"/>
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <rule ref="Squiz.Strings.EchoedStrings"/>
