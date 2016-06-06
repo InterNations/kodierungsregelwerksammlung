@@ -13,19 +13,19 @@ class InterNations_Tests_Sniffs_Waste_SuperfluousFormatStringSniffTest extends I
             $errors,
             $file,
             'errors',
-            'Superfluous printf() call as no parameters are passed'
+            'Superfluous printf() call as no parameters are passed. You can safely remove the function call'
         );
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Superfluous sprintf() call as no parameters are passed'
+            'Superfluous sprintf() call as no parameters are passed. You can safely remove the function call'
         );
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Superfluous sprintf() call as no parameters are passed'
+            'Superfluous sprintf() call as no parameters are passed. You can safely remove the function call'
         );
     }
 }

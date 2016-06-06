@@ -28,7 +28,7 @@ class SuperfluousFormatStringSniff implements CodeSnifferSniff
         }
 
         $file->addError(
-            'Superfluous %s() call as no parameters are passed',
+            'Superfluous %s() call as no parameters are passed. You can safely remove the function call',
             $stackPtr,
             'SuperfluousFormatString',
             [$tokens[$stackPtr]['content']]
