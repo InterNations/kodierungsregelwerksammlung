@@ -222,4 +222,12 @@ class InterNations_Tests_Sniffs_Formatting_ExpressionSniffTest extends InterNati
             "Expression \"return ['canTotallyBeOneLine'];\" should be in one line"
         );
     }
+
+    public function testStringConcatBug()
+    {
+        $file = __DIR__ . '/Fixtures/StringConcatBug.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Formatting/ExpressionFormattingSniff'], [$file]);
+
+        $this->assertReportCount(0, 0, $errors, $file);
+    }
 }

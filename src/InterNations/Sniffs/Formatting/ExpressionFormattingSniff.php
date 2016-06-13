@@ -85,7 +85,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
                 case T_CLOSE_PARENTHESIS:
                     static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
                     $nestingLevel--;
-                    $needsWhitespace = false;
+                    $needsWhitespace = static::nextSignificantTokenConcatsString($file, $expressionPtr + 1);
                     break;
 
                 case T_CONSTANT_ENCAPSED_STRING:
@@ -184,6 +184,22 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
         $tokens = $file->getTokens();
         $nextSignificantToken = $file->findNext(T_WHITESPACE, $ptr + 1, null, true);
 
-        return in_array($tokens[$nextSignificantToken]['code'], [T_CLOSE_SHORT_ARRAY, T_CLOSE_PARENTHESIS]);
+        if (!$nextSignificantToken) {
+            return false;
+        }
+
+        return in_array($tokens[$nextSignificantToken]['code'], [T_CLOSE_SHORT_ARRAY, T_CLOSE_PARENTHESIS], true);
+    }
+
+    private static function nextSignificantTokenConcatsString(CodeSnifferFile $file, $ptr)
+    {
+        $tokens = $file->getTokens();
+        $nextSignificantToken = $file->findNext(T_WHITESPACE, $ptr + 1, null, true);
+
+        if (!$nextSignificantToken) {
+            return false;
+        }
+
+        return in_array($tokens[$nextSignificantToken]['code'], [T_STRING_CONCAT], true);
     }
 }
