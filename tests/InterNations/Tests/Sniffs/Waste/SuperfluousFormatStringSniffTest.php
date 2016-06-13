@@ -13,7 +13,7 @@ class InterNations_Tests_Sniffs_Waste_SuperfluousFormatStringSniffTest extends I
             $errors,
             $file,
             'errors',
-            'Superfluous printf() call as no parameters are passed. You can safely remove the function call'
+            'Superfluous printf() call as no parameters are passed. Use plain "echo …;" instead'
         );
         $this->assertReportContains(
             $errors,
