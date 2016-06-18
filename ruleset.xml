@@ -146,6 +146,7 @@
         <exclude name="Squiz.WhiteSpace.SemicolonSpacing"/>
         <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
         <exclude name="Generic.Commenting.DocComment"/>
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
     </rule>
 
     <rule ref="Zend">
@@ -162,9 +163,6 @@
         <severity>0</severity>
     </rule>
     <rule ref="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase">
-        <severity>0</severity>
-    </rule>
-    <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
         <severity>0</severity>
     </rule>
     <rule ref="Squiz.Arrays.ArrayBracketSpacing.SpaceBeforeBracket">
