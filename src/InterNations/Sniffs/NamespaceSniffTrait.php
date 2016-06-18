@@ -26,6 +26,11 @@ trait NamespaceSniffTrait
         ) {
             $nextPtr = $currentPtr + 1;
 
+            if ($tokens[$currentPtr]['code'] === T_STRING
+                && in_array($tokens[$currentPtr]['content'], ['const', 'function'], true)) {
+                continue;
+            }
+
             switch ($tokens[$currentPtr]['code']) {
                 case T_STRING:
                 case T_NS_SEPARATOR:

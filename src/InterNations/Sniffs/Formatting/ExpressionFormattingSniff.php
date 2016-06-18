@@ -102,6 +102,11 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
                 case T_CLOSURE:
                 case T_COMMENT:
                 case T_DOC_COMMENT:
+                case T_DOC_COMMENT_OPEN_TAG:
+                case T_DOC_COMMENT_CLOSE_TAG:
+                case T_DOC_COMMENT_STAR:
+                case T_DOC_COMMENT_TAG:
+                case T_DOC_COMMENT_STRING:
                     // Don’t continue checking
                     return;
                     break;

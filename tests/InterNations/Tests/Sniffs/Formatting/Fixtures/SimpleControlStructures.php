@@ -1,4 +1,10 @@
 <?php
+/**
+ * All Good
+ */
+if (false) {
+}
+
 $b = true;
 if (true) {
     $b = false;
@@ -15,6 +21,7 @@ for ($i = 0; $i < 0; $i++) {
 for ($i = 0; $i < 0; $i++) {
 
 }
+
 
 $c = 1;
 switch ($b) {

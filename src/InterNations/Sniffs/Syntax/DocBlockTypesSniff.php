@@ -19,14 +19,15 @@ class DocBlockTypesSniff implements CodeSnifferSniff
 
     public function register()
     {
-        return [T_DOC_COMMENT];
+        return [T_DOC_COMMENT_TAG];
     }
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
+        $content = $file->getTokensAsString($stackPtr, 3);
         $regex = '/@(?<annotation>var|param|return)\s+(?<types>[^\s]+)(?:\s+|$)/xi';
 
-        if (!preg_match($regex, $file->getTokens()[$stackPtr]['content'], $matches)) {
+        if (!preg_match($regex, $content, $matches)) {
             return;
         }
 

@@ -13,14 +13,17 @@ class QueryParamSniff implements CodeSnifferSniff
 
     public function register()
     {
-        return [T_DOC_COMMENT];
+        return [T_DOC_COMMENT_TAG];
     }
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
-        $regex = '/\* @[^\(]*QueryParam\(.*/';
+        $regex = '/^@[^\(]*QueryParam\(.*/';
 
-        if (!preg_match($regex, $file->getTokens()[$stackPtr]['content'], $matches)) {
+        $tokens = $file->getTokens();
+        $content = $tokens[$stackPtr]['content'];
+
+        if (!preg_match($regex, $content, $matches)) {
             return;
         }
 
@@ -29,7 +32,7 @@ class QueryParamSniff implements CodeSnifferSniff
         $fileSize = count($file->getTokens());
 
         while ($lineIndex < $fileSize) {
-            $content .= $file->getTokens()[$lineIndex]['content'];
+            $content .= $tokens[$lineIndex]['content'];
 
             if (substr_count($content, '(') <= substr_count($content, ')')) {
                 break;
