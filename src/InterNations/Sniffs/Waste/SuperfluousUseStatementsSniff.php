@@ -62,6 +62,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
                     ' . $anyNamespace . $namespaceExpression . '                     # Parameter match
                 )
                 |
+                (\$[\w\d]+\s+)?                                                      # Variable name (@var)
                 ' . $anyNamespace . $namespaceExpression . '                         # Simple type (Foo|Bar)
             )
         /xi';
