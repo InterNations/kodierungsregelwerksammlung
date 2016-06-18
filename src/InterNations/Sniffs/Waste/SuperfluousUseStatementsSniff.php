@@ -52,17 +52,17 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
 
         $anyNamespace = '(?:[\w\d\[\]]+\|)?';
         $namespaceExpression = preg_quote($namespaceAlias, '/');
-        $namespaceRegex = '/^
+        $namespaceRegex = '/
             (
-                @ ' . $namespaceExpression . '(\\\\|\(|$)                              # Annotation (@ORM\Foo, @Foo)
+                @ ' . $namespaceExpression . '(\\\\|\(|$)                            # Annotation (@ORM\Foo, @Foo)
                 |
-                (                                                                    # Virtual method (@method)
+                ^(                                                                   # Virtual method (@method)
                     (' . $anyNamespace . $namespaceExpression  . $anyNamespace . ')? # Return match 
                     .*(?:\(|, )
                     ' . $anyNamespace . $namespaceExpression . '                     # Parameter match
                 )
                 |
-                (\$[\w\d]+\s+)?                                                      # Variable name (@var)
+                ^(\$[\w\d]+\s+)?                                                     # Variable name (@var)
                 ' . $anyNamespace . $namespaceExpression . '                         # Simple type (Foo|Bar)
             )
         /xi';

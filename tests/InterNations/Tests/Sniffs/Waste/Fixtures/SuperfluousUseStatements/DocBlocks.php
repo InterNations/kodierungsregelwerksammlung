@@ -34,6 +34,7 @@ use ClassName30;
 use ClassName31;
 use ClassName32;
 use ClassName33;
+use ClassName34 as AliasNs;
 use PrefixClass;
 use Prefix;
 
@@ -88,6 +89,7 @@ class DocBlock
     public function getList(array $arg)
     {
         /** @var $arg ClassName33 */
+        /** @var $arg AliasNs */
     }
 
     public function withPrefixClass(PrefixClass $c)
