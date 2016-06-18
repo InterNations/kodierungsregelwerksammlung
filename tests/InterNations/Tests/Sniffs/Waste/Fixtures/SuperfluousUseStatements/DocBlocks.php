@@ -35,6 +35,7 @@ use ClassName31;
 use ClassName32;
 use ClassName33;
 use ClassName34 as AliasNs;
+use ClassName35 as SomeAlias;
 use PrefixClass;
 use Prefix;
 
@@ -47,6 +48,7 @@ use Prefix;
  * @property ClassName8|ClassName9 property2
  * @method ClassName10|ClassName11 virtualMethod1(ClassName12|ClassName13 $arg)
  * @method ClassName14 virtualMethod2(ClassName15 $arg)
+ * @method boolean virtualMethod3(ClassName15 $arg, SomeAlias $arg)
  */
 class DocBlock
 {

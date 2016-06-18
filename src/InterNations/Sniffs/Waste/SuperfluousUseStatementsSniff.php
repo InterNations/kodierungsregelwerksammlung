@@ -58,7 +58,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
                 |
                 ^(                                                                   # Virtual method (@method)
                     (' . $anyNamespace . $namespaceExpression  . $anyNamespace . ')? # Return match 
-                    .*(?:\(|, )
+                    .*(\(|,\s)
                     ' . $anyNamespace . $namespaceExpression . '                     # Parameter match
                 )
                 |
