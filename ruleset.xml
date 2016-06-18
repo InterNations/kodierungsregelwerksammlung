@@ -40,7 +40,8 @@
         <exclude name="Generic.VersionControl.SubversionProperties"/>
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
-        <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
+        <exclude name="Generic.Commenting.DocComment"/>
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
     </rule>
 
     <rule ref="PEAR">
@@ -145,8 +146,7 @@
         <exclude name="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
         <exclude name="Squiz.WhiteSpace.SemicolonSpacing"/>
         <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
-        <exclude name="Generic.Commenting.DocComment"/>
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
     </rule>
 
     <rule ref="Zend">
