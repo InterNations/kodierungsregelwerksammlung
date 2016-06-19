@@ -8,54 +8,48 @@ class ExceptionTestSniff implements CodeSnifferSniff
 {
     public function register()
     {
-        return [T_DOC_COMMENT];
+        return [T_DOC_COMMENT_TAG];
     }
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
-        if (strpos($tokens[$stackPtr]['content'], '@expectedException ') === false) {
+        if ($tokens[$stackPtr]['content'] !== '@expectedException') {
             return;
         }
 
         $docBlocks = [$tokens[$stackPtr]['content']];
-        $ptr = $stackPtr;
-
-        while ($ptr = $file->findPrevious([T_WHITESPACE], $ptr - 1, null, true)) {
-            if ($tokens[$ptr]['code'] !== T_DOC_COMMENT) {
-                break;
-            }
-            $docBlocks[] = $tokens[$ptr]['content'];
-        }
-
-
-        $ptr = $stackPtr;
-
-        while ($ptr = $file->findNext([T_WHITESPACE], $ptr + 1, null, true)) {
-            if ($tokens[$ptr]['code'] !== T_DOC_COMMENT) {
-                break;
-            }
-            $docBlocks[] = $tokens[$ptr]['content'];
-        }
-
+        $docCommentTypes = [
+            T_DOC_COMMENT_OPEN_TAG,
+            T_DOC_COMMENT_CLOSE_TAG,
+            T_DOC_COMMENT_STAR,
+            T_DOC_COMMENT_TAG,
+            T_DOC_COMMENT_STRING,
+            T_DOC_COMMENT_WHITESPACE,
+        ];
+        $docBlockOpenTagPtr = $file->findPrevious(T_DOC_COMMENT_OPEN_TAG, $stackPtr - 1);
         $arguments = [
             'class'   => null,
             'message' => null,
             'code'    => null,
         ];
         $method = 'setExpectedException';
-        $regex = '#(?P<annotation>@expectedException(Code|Message(RegExp)?)?)\s+(?P<parameter>.+)(\s*\*/)?$#U';
 
-        foreach ($docBlocks as $docBlock) {
-            if (!preg_match($regex, $docBlock, $matches)) {
+        while ($docBlockOpenTagPtr = $file->findNext([T_WHITESPACE], $docBlockOpenTagPtr + 1, null, true)) {
+            if (!in_array($tokens[$docBlockOpenTagPtr]['code'], $docCommentTypes, true)) {
+                break;
+            }
+
+            if ($tokens[$docBlockOpenTagPtr]['code'] !== T_DOC_COMMENT_TAG) {
                 continue;
             }
 
 
-            $parameter = $matches['parameter'];
+            $annotation = $tokens[$docBlockOpenTagPtr]['content'];
+            $parameter = trim($tokens[$file->findNext(T_DOC_COMMENT_STRING, $docBlockOpenTagPtr)]['content']);
 
-            switch ($matches['annotation']) {
+            switch ($annotation) {
 
                 case '@expectedExceptionMessage':
                     $arguments['message'] = var_export($parameter, true);
