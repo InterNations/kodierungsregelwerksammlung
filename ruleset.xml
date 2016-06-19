@@ -40,7 +40,8 @@
         <exclude name="Generic.VersionControl.SubversionProperties"/>
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
-        <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
+        <exclude name="Generic.Commenting.DocComment"/>
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
     </rule>
 
     <rule ref="PEAR">
@@ -86,7 +87,6 @@
         <exclude name="Squiz.Classes.ClassDeclaration"/>
         <exclude name="Squiz.Classes.DuplicateProperty"/>
         <exclude name="Squiz.Classes.LowercaseClassKeywords"/>
-        <exclude name="Squiz.CodeAnalysis.EmptyStatement"/>
         <exclude name="Squiz.Commenting.BlockComment"/>
         <exclude name="Squiz.Commenting.ClassComment"/>
         <exclude name="Squiz.Commenting.ClosingDeclarationComment"/>
@@ -112,7 +112,6 @@
         <exclude name="Squiz.Functions.GlobalFunction"/>
         <exclude name="Squiz.Functions.LowercaseFunctionKeywords"/>
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration"/>
-        <exclude name="Squiz.NamingConventions.ConstantCase"/>
         <exclude name="Squiz.NamingConventions.ValidFunctionName"/>
         <exclude name="Squiz.NamingConventions.ValidVariableName"/>
         <exclude name="Squiz.Objects.DisallowObjectStringIndex"/>
@@ -147,6 +146,7 @@
         <exclude name="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
         <exclude name="Squiz.WhiteSpace.SemicolonSpacing"/>
         <exclude name="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+        <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
     </rule>
 
     <rule ref="Zend">

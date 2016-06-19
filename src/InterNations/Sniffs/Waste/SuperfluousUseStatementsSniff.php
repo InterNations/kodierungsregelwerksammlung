@@ -45,52 +45,30 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         if (!isset(static::$docBlocks[$fileName])) {
             static::$docBlocks[$fileName] = [];
             $commentPtr = $stackPtr;
-            while ($commentPtr = $file->findNext(T_DOC_COMMENT, $commentPtr + 1)) {
+            while ($commentPtr = $file->findNext([T_DOC_COMMENT_TAG, T_DOC_COMMENT_STRING], $commentPtr + 1)) {
                 static::$docBlocks[$fileName][] = $tokens[$commentPtr]['content'];
             }
         }
 
-        $namespaceRegexPart = '(?:[\w\d\[\]]+\|)?' . preg_quote($namespaceAlias, '/') . '(?:\[\])?(?:\|[\w\d\[\]]+)?';
-        foreach (static::$docBlocks[$fileName] as $docBlock) {
+        $anyNamespace = '(?:[\w\d\[\]]+\|)?';
+        $namespaceExpression = preg_quote($namespaceAlias, '/');
+        $namespaceRegex = '/
+            (
+                @ ' . $namespaceExpression . '(\\\\|\(|$)                            # Annotation (@ORM\Foo, @Foo)
+                |
+                ^(                                                                   # Virtual method (@method)
+                    (' . $anyNamespace . $namespaceExpression  . $anyNamespace . ')? # Return match 
+                    .*(\(|,\s)
+                    ' . $anyNamespace . $namespaceExpression . '                     # Parameter match
+                )
+                |
+                ^(\$[\w\d]+\s+)?                                                     # Variable name (@var)
+                ' . $anyNamespace . $namespaceExpression . '                         # Simple type (Foo|Bar)
+            )
+        /xi';
 
-            // @<namespace>(...)
-            if (strstr($docBlock, '@' . $namespaceAlias . '(') !== false) {
-                $annotation = true;
-                break;
-            // @<namespace><NEWLINE>
-            } elseif (strstr($docBlock, '@' . $namespaceAlias . "\n") !== false) {
-                $annotation = true;
-                break;
-            // @<namespace>\Foo
-            } elseif (strstr($docBlock, '@' . $namespaceAlias . '\\') !== false) {
-                $annotation = true;
-                break;
-            // @param <namespace> $var
-            } elseif (preg_match('/@param ' . $namespaceRegexPart . ' \$/i', $docBlock)) {
-                $annotation = true;
-                break;
-            // @var <namespace>
-            // @return <namespace>
-            } elseif (preg_match('/@(var|return) ' . $namespaceRegexPart . '/i', $docBlock)) {
-                $annotation = true;
-                break;
-            // @throws <namespace>
-            } elseif (strstr($docBlock, '@throws ' . $namespaceAlias) !== false) {
-                $annotation = true;
-                break;
-            // @var $variable <namespace>
-            } elseif (preg_match('/@var \$[^\s]+ ' . $namespaceRegexPart . '/i', $docBlock)) {
-                $annotation = true;
-                break;
-            // @method <namespace> methodName()
-            // @property <namespace> property
-            // @property-read <namespace> property
-            // @property-write <namespace> property
-            } elseif (preg_match('/@(property(?:-read|-write)?|method) ' . $namespaceRegexPart . ' /i', $docBlock)) {
-                $annotation = true;
-                break;
-            // @method foo(<namespace> $var) @method foo(\string $bla, <namespace> $var)
-            } elseif (preg_match('/@method .*(?:\(|, )' . $namespaceRegexPart . ' \$/i', $docBlock)) {
+        foreach (static::$docBlocks[$fileName] as $comment) {
+            if (preg_match($namespaceRegex, $comment)) {
                 $annotation = true;
                 break;
             }

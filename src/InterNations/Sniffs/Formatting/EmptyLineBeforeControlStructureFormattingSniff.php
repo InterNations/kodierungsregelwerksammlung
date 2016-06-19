@@ -21,19 +21,19 @@ class EmptyLineBeforeControlStructureFormattingSniff implements CodeSnifferSniff
         $previousLine = $tokens[$stackPtr]['line'] - 1;
         $prevLineTokens = [];
 
+        $ignoredTokens = [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT_CLOSE_TAG, T_DOC_COMMENT_WHITESPACE];
+
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
 
             if ($tokens[$current]['line'] === $previousLine
-                && !in_array($tokens[$current]['type'], ['T_WHITESPACE', 'T_COMMENT', 'T_DOC_COMMENT'], true)
-            ) {
-                $prevLineTokens[] = $tokens[$current]['type'];
+                && !in_array($tokens[$current]['code'], $ignoredTokens, true)) {
+                $prevLineTokens[] = $tokens[$current]['code'];
             }
             $current--;
         }
 
         if (isset($prevLineTokens[0])
-            && ($prevLineTokens[0] === 'T_OPEN_CURLY_BRACKET'
-                || $prevLineTokens[0] === 'T_COLON')
+            && ($prevLineTokens[0] === T_OPEN_CURLY_BRACKET || $prevLineTokens[0] === T_COLON)
         ) {
 
             return;

@@ -37,8 +37,8 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
 
 
         $nextToken = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
-        switch ($tokens[$nextToken]['code']) {
-            case T_FUNCTION:
+        switch ($tokens[$nextToken]['content']) {
+            case 'function':
                 if (strtolower($symbol) !== $symbol) {
                     $this->addError(
                         $file,
@@ -51,7 +51,7 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
                 }
                 break;
 
-            case T_CONST:
+            case 'const':
                 if (strtoupper($symbol) !== $symbol) {
                     $this->addError(
                         $file,
