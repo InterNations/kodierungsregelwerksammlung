@@ -22,6 +22,10 @@ for ($i = 0; $i < 0; $i++) {
 
 }
 
+/** Shouldn't show up */
+if (true) {
+
+}
 
 $c = 1;
 switch ($b) {

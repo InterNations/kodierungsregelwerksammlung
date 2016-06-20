@@ -20,6 +20,5 @@ class InterNations_Tests_Sniffs_Formatting_EmptyLineBeforeControlStructureFormat
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before for statement');
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before do statement');
         $this->assertReportContains($errors, $file, 'errors', 'Missing blank line before return statement');
-
     }
 }

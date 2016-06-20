@@ -21,7 +21,16 @@ class EmptyLineBeforeControlStructureFormattingSniff implements CodeSnifferSniff
         $previousLine = $tokens[$stackPtr]['line'] - 1;
         $prevLineTokens = [];
 
-        $ignoredTokens = [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT_CLOSE_TAG, T_DOC_COMMENT_WHITESPACE];
+        $ignoredTokens = [
+            T_WHITESPACE,
+            T_COMMENT,
+            T_DOC_COMMENT_CLOSE_TAG,
+            T_DOC_COMMENT_WHITESPACE,
+            T_DOC_COMMENT_STAR,
+            T_DOC_COMMENT_OPEN_TAG,
+            T_DOC_COMMENT_TAG,
+            T_DOC_COMMENT_STRING,
+        ];
 
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
 
