@@ -42,6 +42,8 @@
         <exclude name="Generic.WhiteSpace.ScopeIndent"/>
         <exclude name="Generic.Commenting.DocComment"/>
         <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        <exclude name="Generic.Formatting.SpaceAfterNot"/>
+        <exclude name="Generic.Classes.OpeningBraceSameLine"/>
     </rule>
 
     <rule ref="PEAR">

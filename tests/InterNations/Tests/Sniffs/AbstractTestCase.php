@@ -20,7 +20,7 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestC
         );
 
         $codeSniffer = new PHP_CodeSniffer();
-        $codeSniffer->registerSniffs($sniffs, []);
+        $codeSniffer->registerSniffs($sniffs, [], []);
         $codeSniffer->cli->setCommandLineValues(['--showSources=false', '--report=checkstyle']);
         $codeSniffer->populateTokenListeners();
 
