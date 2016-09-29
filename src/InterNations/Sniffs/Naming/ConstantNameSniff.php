@@ -267,7 +267,6 @@ class ConstantNameSniff implements CodeSnifferSniff
                 $file->addError($error, $stackPtr, 'ConstantNotUpperCase', $data);
             }
         }
-
     }
 
     private static function isEventClassName($className)

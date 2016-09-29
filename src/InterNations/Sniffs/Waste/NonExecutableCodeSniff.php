@@ -52,7 +52,6 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
                 T_THROW,
                 T_EXIT,
                ];
-
     }//end register()
 
 
@@ -288,6 +287,5 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
                 $lastLine = $line;
             }
         }//end for
-
     }//end process()
 }//end class

@@ -58,7 +58,6 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
     public function register()
     {
         return [T_SWITCH];
-
     }//end register()
 
 
@@ -277,6 +276,5 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
             $error = 'SWITCH statements must contain at least one CASE statement';
             $file->addError($error, $stackPtr, 'MissingCase');
         }
-
     }//end process()
 }//end class
