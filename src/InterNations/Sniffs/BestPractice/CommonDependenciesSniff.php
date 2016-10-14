@@ -7,10 +7,11 @@ use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 class CommonDependenciesSniff implements CodeSnifferSniff
 {
     private static $commonSymbolNames = [
-        'EntityManager' => 'em',
-        'EntityManagerInterface' => 'em',
-        'ObjectManager' => 'om',
-        'EngineInterface' => 'templating',
+        'Doctrine\ORM\EntityManager' => 'em',
+        'Doctrine\ORM\EntityManagerInterface' => 'em',
+        'Doctrine\Common\Persistence\ObjectManager' => 'om',
+        'Symfony\Component\Templating\EngineInterface' => 'templating',
+        'Symfony\Bundle\FrameworkBundle\Templating\EngineInterface' => 'templating',
     ];
 
     public function register()
@@ -44,9 +45,9 @@ class CommonDependenciesSniff implements CodeSnifferSniff
     private function verifyParameterName(CodeSnifferFile $file, $stackPtr, $methodName, array $methodParameter)
     {
         $name = ltrim($methodParameter['name'], '$');
-        $typeHint = $methodParameter['type_hint'];
+        list($fqNs, $className) = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
 
-        if (!isset(self::$commonSymbolNames[$typeHint]) || self::$commonSymbolNames[$typeHint] === $name) {
+        if (!isset(self::$commonSymbolNames[$fqNs]) || self::$commonSymbolNames[$fqNs] === $name) {
             return;
         }
 
@@ -54,7 +55,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
             'Parameter "$%s" ("%s") of method "%s" must be called "$%s"',
             $stackPtr,
             'ParameterName',
-            [$name, $typeHint, $methodName, self::$commonSymbolNames[$typeHint]]
+            [$name, $className, $methodName, self::$commonSymbolNames[$fqNs]]
         );
     }
 
@@ -67,16 +68,16 @@ class CommonDependenciesSniff implements CodeSnifferSniff
     )
     {
         $parameterName = ltrim($methodParameter['name'], '$');
-        $typeHint = $methodParameter['type_hint'];
+        list($fqNs, $className) = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
 
-        if (!isset(self::$commonSymbolNames[$typeHint], $assignments[$methodParameter['name']])) {
+        if (!isset(self::$commonSymbolNames[$fqNs], $assignments[$methodParameter['name']])) {
             return;
         }
 
 
         $propertyName = $assignments[$methodParameter['name']];
 
-        if (self::$commonSymbolNames[$typeHint] === $propertyName) {
+        if (self::$commonSymbolNames[$fqNs] === $propertyName) {
             return;
         }
 
@@ -85,7 +86,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
             'Property "$%s" assigned from parameter "$%s" ("%s") of method "%s" must be called "$%s"',
             $stackPtr,
             'PropertyName',
-            [$propertyName, $parameterName, $typeHint, $methodName, self::$commonSymbolNames[$typeHint]]
+            [$propertyName, $parameterName, $className, $methodName, self::$commonSymbolNames[$fqNs]]
         );
     }
 
@@ -135,5 +136,37 @@ class CommonDependenciesSniff implements CodeSnifferSniff
         }
 
         return $assignments;
+    }
+
+    private function getFullQualifiedName(CodeSnifferFile $file, $symbolName)
+    {
+        $tokens = $file->getTokens();
+
+        $stackPtr = 0;
+
+        while ($stackPtr !== false) {
+            $usePtr = $file->findNext(T_USE, $stackPtr);
+            $nextPtr = $file->findNext(T_WHITESPACE, $usePtr + 1, null, true);
+
+            if ($tokens[$nextPtr]['code'] !== T_STRING) {
+                break;
+            }
+
+            $endPtr = $file->findNext(T_SEMICOLON, $usePtr + 1);
+
+            $asPtr = $file->findNext(T_AS, $usePtr + 1, $endPtr);
+            $endOfFqNsPtr = $asPtr ? $asPtr - 3 : $endPtr - 2;
+
+            $fqNs = $file->getTokensAsString($usePtr + 2, $endOfFqNsPtr - $usePtr);
+            $name = $file->getTokensAsString($endPtr - 1, 1);
+
+            if ($name === $symbolName) {
+                return [$fqNs, $name];
+            }
+
+            $stackPtr = $endPtr;
+        }
+
+        return [null, null];
     }
 }

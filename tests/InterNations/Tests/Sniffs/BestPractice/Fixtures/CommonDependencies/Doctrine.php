@@ -1,4 +1,5 @@
 <?php
+use Doctrine\ORM\EntityManager as Foo;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
