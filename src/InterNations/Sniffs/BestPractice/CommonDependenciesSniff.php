@@ -14,6 +14,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
         'Symfony\Bundle\FrameworkBundle\Templating\EngineInterface' => 'templating',
         'Symfony\Component\EventDispatcher\EventDispatcherInterface' => 'dispatcher',
         'Symfony\Component\EventDispatcher\EventDispatcher' => 'dispatcher',
+        'Psr\Log\LoggerInterface' => 'logger',
     ];
 
     public function register()
