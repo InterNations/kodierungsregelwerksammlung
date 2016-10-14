@@ -101,7 +101,7 @@ class InterNations_Tests_Sniffs_BestPractice_CommonDependenciesSniffTest
             $file,
             'errors',
             'Property "$entityManager" assigned from parameter "$entityManager" ("EntityManager") of method '
-                . '"setEntityManager" must be called "$em"'
+            . '"setEntityManager" must be called "$em"'
         );
         $this->assertReportContains(
             $errors,
@@ -114,7 +114,41 @@ class InterNations_Tests_Sniffs_BestPractice_CommonDependenciesSniffTest
             $file,
             'errors',
             'Property "$entityManager" assigned from parameter "$entityManager" ("EntityManager") of method '
-                . '"setAnotherEntityManager" must be called "$em"'
+            . '"setAnotherEntityManager" must be called "$em"'
+        );
+    }
+
+    public function testSymfonyVariableNamesAreEnforced()
+    {
+        $file = __DIR__ . '/Fixtures/CommonDependencies/Symfony.php';
+        $errors = $this->analyze(['InterNations/Sniffs/BestPractice/CommonDependenciesSniff'], [$file]);
+
+        $this->assertReportCount(4, 0, $errors, $file);
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Parameter "$eventDispatcher" ("EventDispatcherInterface") of method "__construct" must '
+            . 'be called "$dispatcher"'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Parameter "$engine" ("EngineInterface") of method "__construct" must be called "$templating"'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Parameter "$ed" ("EventDispatcher") of method "__construct" must be called "$dispatcher"'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Property "$eventDispatcherProperty" assigned from parameter "$eventDispatcher" '
+            . '("EventDispatcherInterface") of method "__construct" must be called "$dispatcher"'
         );
     }
 }
