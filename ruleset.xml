@@ -218,6 +218,9 @@
     <rule ref="Squiz.Classes.ValidClassName"/>
     <!-- Bugfix sniff -->
     <rule ref="./src/InterNations/Sniffs/ControlStructures/SwitchDeclarationSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/ControlStructures/CatchUndefinedExceptionSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Formatting/ExpressionFormattingSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/BestPractice/CommonDependenciesSniff.php"/>
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
     <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration"/>
     <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
