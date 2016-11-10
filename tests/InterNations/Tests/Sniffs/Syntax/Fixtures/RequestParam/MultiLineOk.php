@@ -9,7 +9,7 @@ class MultiLineOk
      *     name="multiLineOk",
      *     requirements="\d+",
      *     strict=true,
-     *     description="Useless query parameter"
+     *     description="Useless request parameter"
      * )
      */
     private $multiLineOk;
