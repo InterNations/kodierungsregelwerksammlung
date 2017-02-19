@@ -1,5 +1,7 @@
 <?php
-class InterNations_Tests_Sniffs_AbstractTestCase extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class InterNations_Tests_Sniffs_AbstractTestCase extends TestCase
 {
     protected static function analyze(array $sniffs, $files)
     {
