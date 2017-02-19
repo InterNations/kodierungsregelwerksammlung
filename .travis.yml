@@ -8,6 +8,10 @@ php:
   - nightly
   - hhvm
 
+matrix:
+  allow_failures:
+    - php: hhvm
+
 before_script:
   - composer install
   - find vendor/phpunit/ -name "build" -exec rm -rf {} \; || true
