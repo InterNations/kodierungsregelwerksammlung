@@ -8,7 +8,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
 {
     public function register()
     {
-        return [T_STRING, T_STATIC];
+        return [T_STRING, T_STATIC, T_SELF];
     }
 
     public function process(CodeSnifferFile $file, $stackPtr)
