@@ -56,6 +56,21 @@ class InterNations_Tests_Sniffs_Formatting_ExpressionSniffTest extends InterNati
         $this->assertReportCount(0, 0, $errors, $file);
     }
 
+    public function testMultiLineInvocationsReturnType()
+    {
+        $file = __DIR__ . '/Fixtures/MultiLineInvocationReturnType.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Formatting/ExpressionFormattingSniff'], [$file]);
+
+        $this->assertReportCount(1, 0, $errors, $file);
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Expression "function methodCall4($arg = \'444444444444444444444444444444444\', '
+            . '$arg2 = 555555555555555555555555555555555555): ?Clazz" should be in one line'
+        );
+    }
+
     public function testClosureInvocations()
     {
         $file = __DIR__ . '/Fixtures/ClosureInvocations.php';
