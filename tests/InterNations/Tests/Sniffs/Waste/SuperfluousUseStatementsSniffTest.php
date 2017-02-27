@@ -121,4 +121,18 @@ class InterNations_Tests_Sniffs_Waste_SuperfluousUseStatementsSniffTest
             'Superfluous use-statement found for symbol "Foo\Bar\Superfluous", but no use statement needed as namespaces match'
         );
     }
+
+    public function testUseStatementReturnTypes()
+    {
+        $file = __DIR__ . '/Fixtures/SuperfluousUseStatements/ReturnTypes.php';
+
+        $errors = $this->analyze(['InterNations/Sniffs/Waste/SuperfluousUseStatementsSniff'], [$file]);
+        $this->assertReportCount(1, 0, $errors, $file);
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Superfluous use-statement found for symbol "UnusedSymbol", but no further reference'
+        );
+    }
 }

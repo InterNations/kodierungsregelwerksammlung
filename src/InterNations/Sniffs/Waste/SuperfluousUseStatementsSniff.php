@@ -7,6 +7,7 @@ require_once __DIR__ . '/../NamespaceSniffTrait.php';
 use InterNations\Sniffs\NamespaceSniffTrait;
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use const T_RETURN_TYPE;
 
 class SuperfluousUseStatementsSniff implements CodeSnifferSniff
 {
@@ -78,7 +79,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
             if (!isset(static::$namespaceUsages[$fileName])) {
                 static::$namespaceUsages[$fileName] = [];
                 $strPtr = $stackPtr;
-                while ($strPtr = $file->findNext([T_STRING, T_TRUE, T_FALSE], $strPtr + 1)) {
+                while ($strPtr = $file->findNext([T_STRING, T_TRUE, T_FALSE, T_RETURN_TYPE], $strPtr + 1)) {
                     $namespaceUsed = $this->getNamespaceUsage($strPtr, $file);
                     if ($namespaceUsed) {
                         static::$namespaceUsages[$fileName][$strPtr] = $namespaceUsed;
@@ -134,7 +135,8 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
     {
         $tokens = $file->getTokens();
         $namespace = '';
-        while ($stackPtr = $file->findNext([T_STRING, T_NS_SEPARATOR, T_TRUE, T_FALSE], $stackPtr, $stackPtr + 1)) {
+        $types = [T_STRING, T_NS_SEPARATOR, T_TRUE, T_FALSE, T_RETURN_TYPE];
+        while ($stackPtr = $file->findNext($types, $stackPtr, $stackPtr + 1)) {
 
             if (in_array($tokens[$stackPtr]['code'], [T_TRUE, T_FALSE], true)) {
                 if ($tokens[$stackPtr + 1]['code'] !== T_OPEN_PARENTHESIS) {
