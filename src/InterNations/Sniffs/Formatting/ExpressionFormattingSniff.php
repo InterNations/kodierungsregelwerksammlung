@@ -140,10 +140,21 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
 
         $endPtr = $expressionPtr;
 
-        do {
+        while ($tokens[$stackPtr]['line'] === $tokens[$endPtr]['line']) {
             ++$endPtr;
+        }
 
-        } while ($tokens[$stackPtr]['line'] === $tokens[$endPtr]['line']);
+        $nextPtr = $endPtr + 1;
+        while ($tokens[$nextPtr]['code'] === T_WHITESPACE) {
+            ++$nextPtr;
+        }
+
+        if ($tokens[$nextPtr]['code'] === T_COLON) {
+            $endPtr = $nextPtr;
+            do {
+                ++$endPtr;
+            } while ($tokens[$endPtr]['code'] !== T_RETURN_TYPE);
+        }
 
         $before = static::composeExpression($tokens, $startPtr + 1, $stackPtr + 1);
         $after = static::composeExpression($tokens, $expressionPtr, $endPtr);

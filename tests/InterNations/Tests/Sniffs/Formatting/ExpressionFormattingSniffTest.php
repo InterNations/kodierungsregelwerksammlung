@@ -196,7 +196,7 @@ class InterNations_Tests_Sniffs_Formatting_ExpressionSniffTest extends InterNati
         $file = __DIR__ . '/Fixtures/Declarations.php';
         $errors = $this->analyze(['InterNations/Sniffs/Formatting/ExpressionFormattingSniff'], [$file]);
 
-        $this->assertReportCount(2, 0, $errors, $file);
+        $this->assertReportCount(3, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
@@ -209,6 +209,14 @@ class InterNations_Tests_Sniffs_Formatting_ExpressionSniffTest extends InterNati
             'errors',
             "Expression \"public function __construct(SomeClass \$foo)\" should be in one line"
         );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            "Expression \"public function createTest(array \$fakeVariable, int \$secondFakeArgument, " .
+            "string \$thirdFakeArgument): Test\" should be in one line"
+        );
+
     }
 
     public function testArrayAssignments()
