@@ -50,6 +50,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
             $closingPtr = $openingToken['parenthesis_closer'];
 
             $nextNonWhitespacePos = $file->findNext(T_WHITESPACE, $closingPtr + 1, null, true);
+
             if ($tokens[$nextNonWhitespacePos]['code'] === T_COLON) {
                 $closingPtr = $file->findNext(T_RETURN_TYPE, $nextNonWhitespacePos + 1);
             }
@@ -138,22 +139,24 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
 
         } while ($tokens[$stackPtr]['line'] === $tokens[$startPtr]['line']);
 
-        $endPtr = $expressionPtr;
+        $endPtr = $expressionPtr + 1;
 
-        do {
+        while ($tokens[$stackPtr]['line'] === $tokens[$endPtr]['line']) {
             ++$endPtr;
-        } while ($tokens[$stackPtr]['line'] === $tokens[$endPtr]['line']);
+        }
 
         $nextPtr = $endPtr;
+
         while ($tokens[$nextPtr]['code'] === T_WHITESPACE) {
             ++$nextPtr;
         }
 
         if ($tokens[$nextPtr]['code'] === T_COLON) {
             $endPtr = $nextPtr;
-            do {
+
+            while ($tokens[$endPtr]['code'] !== T_RETURN_TYPE) {
                 ++$endPtr;
-            } while ($tokens[$endPtr]['code'] !== T_RETURN_TYPE);
+            }
         }
 
         $before = static::composeExpression($tokens, $startPtr + 1, $stackPtr + 1);
