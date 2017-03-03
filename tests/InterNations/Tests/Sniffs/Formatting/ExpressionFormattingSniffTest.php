@@ -214,7 +214,7 @@ class InterNations_Tests_Sniffs_Formatting_ExpressionSniffTest extends InterNati
             $file,
             'errors',
             "Expression \"public function createTest(array \$fakeVariable, int \$secondFakeArgument, " .
-            "string \$thirdFakeArgument): Test\" should be in one line"
+            "string \$thirdFakeArgument):Test\" should be in one line"
         );
 
     }

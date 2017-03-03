@@ -140,11 +140,11 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
 
         $endPtr = $expressionPtr;
 
-        while ($tokens[$stackPtr]['line'] === $tokens[$endPtr]['line']) {
+        do {
             ++$endPtr;
-        }
+        } while ($tokens[$stackPtr]['line'] === $tokens[$endPtr]['line']);
 
-        $nextPtr = $endPtr + 1;
+        $nextPtr = $endPtr;
         while ($tokens[$nextPtr]['code'] === T_WHITESPACE) {
             ++$nextPtr;
         }
