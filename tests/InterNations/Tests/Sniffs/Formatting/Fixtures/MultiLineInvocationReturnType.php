@@ -27,3 +27,10 @@ function methodCall4(
 ): ?Clazz {
     return "hi";
 }
+
+
+
+switch (true) {
+    case $this->somePropertyName->someMethodInvocation():
+        break;
+}
