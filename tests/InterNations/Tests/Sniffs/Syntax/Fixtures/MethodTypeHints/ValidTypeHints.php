@@ -12,7 +12,7 @@ class ValidTypeHints
      */
     public function postAction(float $request, string $context, string $entityType, int $entityId): array
     {
-       return;
+        return;
     }
 
     /**
