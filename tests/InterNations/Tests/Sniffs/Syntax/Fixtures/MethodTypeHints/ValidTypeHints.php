@@ -48,4 +48,12 @@ class ValidTypeHints
     {
         return;
     }
+
+    /**
+     * @return Mixed[]
+     */
+    private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
+    {
+
+    }
 }
