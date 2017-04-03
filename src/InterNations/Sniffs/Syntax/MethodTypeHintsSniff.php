@@ -62,12 +62,16 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
         // Comments block
         $paramDoc = $returnDoc = [];
+<<<<<<< HEAD
         $commentEnd = $file->findPrevious(
             [T_WHITESPACE, T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED],
             $stackPtr - 1,
             null,
             true
         );
+=======
+        $commentEnd = $file->findPrevious([T_WHITESPACE, T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED], $stackPtr - 1, null, true);
+>>>>>>> Enforce type hints for new/modified code
 
         if ($tokens[$commentEnd]['code'] === T_DOC_COMMENT_CLOSE_TAG) {
             $commentStart = $file->findPrevious(T_DOC_COMMENT_OPEN_TAG, ($commentEnd - 1));
