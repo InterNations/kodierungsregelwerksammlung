@@ -6,7 +6,7 @@ use PHP_CodeSniffer_File as CodeSnifferFile;
 trait NamespaceSniffTrait
 {
     /**
-     * @return Mixed[]
+     * @return mixed[]
      */
     private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
     {

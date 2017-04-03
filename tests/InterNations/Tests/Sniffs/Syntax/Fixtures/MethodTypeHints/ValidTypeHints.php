@@ -8,7 +8,7 @@ class ValidTypeHints
     }
 
     /**
-     * @return Integer[]
+     * @return int[]
      */
     public function postAction(float $request, string $context, string $entityType, int $entityId): array
     {
@@ -16,7 +16,7 @@ class ValidTypeHints
     }
 
     /**
-     * @return  Mixed[]
+     * @return  mixed[]
      */
     public function deleteAction(int $commentId): array
     {
@@ -24,7 +24,7 @@ class ValidTypeHints
     }
 
     /**
-     * @return Mixed[]
+     * @return mixed[]
      */
     public function indexAction(float $request, string $context, int $entityType, int $entityId): array
     {
@@ -42,7 +42,7 @@ class ValidTypeHints
     }
 
     /**
-     * @return Mixed[]
+     * @return mixed[]
      */
     private function renderForm(string $context, int $entityType, int $entityId): array
     {
@@ -50,7 +50,7 @@ class ValidTypeHints
     }
 
     /**
-     * @return Mixed[]
+     * @return mixed[]
      */
     private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
     {

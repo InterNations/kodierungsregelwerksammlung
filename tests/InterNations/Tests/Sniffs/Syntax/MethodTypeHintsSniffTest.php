@@ -20,7 +20,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $errors,
             $file,
             'errors',
-            'Expected at least one argument for magic method "missingArgument::__construct" found nothing...'
+            'Expected at least one argument for magic method "missingArgument::__construct" found none'
         );
     }
 
@@ -134,7 +134,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $errors,
             $file,
             'errors',
-            'No space should come before colon, exactly one space after colon, expected return type formatting to be "): Attendance" got ") : Attendance"'
+            'No leading space allowed before colon, exactly one space after colon, expected return type formatting to be "): Attendance" got ") : Attendance"'
         );
         $this->assertReportContains(
             $errors,

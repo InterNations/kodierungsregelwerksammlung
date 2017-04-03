@@ -3,7 +3,7 @@
 class MissingParameterTypeHint
 {
     /**
-     * @return Integer[]
+     * @return int[]
      */
     public function postAction(Request $request, $context, $entityType): array
     {

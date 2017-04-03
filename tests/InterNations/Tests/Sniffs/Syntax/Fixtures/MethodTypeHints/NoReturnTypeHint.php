@@ -3,7 +3,7 @@
 class NoReturnTypeHint
 {
     /**
-     * @return array[] $attendance
+     * @return string[] $attendance
      */
     public function __clone(): array
     {
