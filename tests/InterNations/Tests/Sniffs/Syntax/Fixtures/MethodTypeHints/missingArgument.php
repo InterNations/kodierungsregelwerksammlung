@@ -1,7 +1,6 @@
 <?php
 
-class NoArgumentFound
-
+class missingArgument
 {
     public function __construct()
     {

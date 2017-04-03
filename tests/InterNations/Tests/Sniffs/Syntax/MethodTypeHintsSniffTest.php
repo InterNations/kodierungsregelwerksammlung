@@ -13,14 +13,14 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
 
     public function testNoArgumentFound()
     {
-        $file = __DIR__ . '/Fixtures/MethodTypeHints/NoArgumentFound.php';
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/missingArgument.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
         $this->assertReportCount(1, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Expected argument for this magic method "NoArgumentFound::__construct" found nothing...'
+            'Expected at least one argument for magic method "missingArgument::__construct" found nothing...'
         );
     }
 
@@ -39,20 +39,20 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
 
     public function testInvalidParamTypeHints()
     {
-        $file = __DIR__ . '/Fixtures/MethodTypeHints/MissingParameters.php';
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/MissingParameterTypeHint.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
         $this->assertReportCount(2, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Expected Type hint for the parameter "$context" in method "MissingParameters::postAction"'
+            'Expected Type hint for the parameter "$context" in method "MissingParameterTypeHint::postAction"'
         );
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Expected Type hint for the parameter "$entityType" in method "MissingParameters::postAction"'
+            'Expected Type hint for the parameter "$entityType" in method "MissingParameterTypeHint::postAction"'
         );
     }
 
@@ -77,9 +77,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $errors,
             $file,
             'errors',
-            'Return type hint for a method "WrongTypeHint::__call" must be documented to specify
-                    their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list
-                    of integers and so on...'
+            'Return type hint for a method "WrongTypeHint::__call" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
         );
     }
 
@@ -142,36 +140,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $errors,
             $file,
             'errors',
-            'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHing" must be documented to specify
-                    their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list
-                    of integers and so on...'
+            'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHing" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
         );
     }
-
-
-//    public function testInvalidParamTypeHints()
-//    {
-//        $file = __DIR__ . '/Fixtures/MethodTypeHints/InvalidParamTypeHints.php';
-//        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
-//        $this->assertReportCount(1, 0, $errors, $file);
-//        $this->assertReportContains(
-//            $errors,
-//            $file,
-//            'errors',
-//            'Type hint is required for parameter "$x" in method "InvalidParamTypeHints::createFunction"'
-//        );
-//    }
-//
-//    public function testInvalidReturnTypeHints()
-//    {
-//        $file = __DIR__ . '/Fixtures/MethodTypeHints/InvalidReturnTypeHints.php';
-//        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
-//        $this->assertReportCount(1, 0, $errors, $file);
-//        $this->assertReportContains(
-//            $errors,
-//            $file,
-//            'errors',
-//            'Php 7 style return Type hint is required for the method "InvalidReturnTypeHints::createFunction"'
-//        );
-//    }
 }

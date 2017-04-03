@@ -57,23 +57,29 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
         $className = $tokens[$file->findNext(T_WHITESPACE, $classPtr + 1, null, true)]['content'];
 
+        if (strpos($className, 'Sniff') !== false) {
+            return;
+        }
+
         // Comments block
         $paramDoc = $returnDoc = [];
         $commentEnd = $file->findPrevious([T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED], $stackPtr - 1, null, true);
+
         if ($tokens[$commentEnd]['code'] === T_DOC_COMMENT_CLOSE_TAG) {
             $commentStart = $file->findPrevious(T_DOC_COMMENT_OPEN_TAG, ($commentEnd - 1));
 
             for ($j = $commentStart; $j <= $commentEnd; $j++) {
                 if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG && $tokens[$j]['content'] === '@param') {
                     $paramDoc[$j] = preg_split(
-                        "/[\s]+/",
+                        '/[\s]+/',
                         $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content']
                     );
                 }
 
                 if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG
                     && $tokens[$j]['content'] === '@return'
-                    && $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['code'] === T_DOC_COMMENT_STRING
+                    && $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['code'] ===
+                    T_DOC_COMMENT_STRING
                 ) {
                     $returnDoc[$j] =  $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
                 }
@@ -98,7 +104,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
             && self::$whitelist[$methodName][0] !== null
         ) {
             $error = sprintf(
-                'Expected argument for this magic method "%1$s::%2$s" found nothing...',
+                'Expected at least one argument for magic method "%1$s::%2$s" found nothing...',
                 $className,
                 $methodName
             );
@@ -107,11 +113,12 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         $paramCount = -1;
+
         for ($i = $startBracket; $i <= $endBracket; $i++) {
             if ($tokens[$i]['code'] === T_VARIABLE) {
                 $paramCount++;
 
-                $typeHintPtr = $file->findPrevious(array(T_WHITESPACE, T_ELLIPSIS), ($i - 1), null, true);
+                $typeHintPtr = $file->findPrevious([T_WHITESPACE, T_ELLIPSIS], ($i - 1), null, true);
 
                 // Check for no param
                 if (isset(self::$whitelist[$methodName]) && self::$whitelist[$methodName][0] === null) {
@@ -123,6 +130,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                     );
 
                     $file->addError($error, $typeHintPtr, 'WrongArgumentForMethod');
+
                     continue;
                 }
 
@@ -135,6 +143,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                         $methodName
                     );
                     $file->addError($error, $typeHintPtr, 'MissingTypeHint');
+
                     continue;
                 }
 
@@ -145,30 +154,41 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                         && self::$whitelist[$methodName][0][$paramCount] !== false
                     ) {
                         $error = sprintf(
-                            'Expected type hint "%1$s" for parameter "%2$s" found "%3$s" for the magic method "%4$s::%5$s"',
+                            'Expected type hint "%1$s" for parameter "%2$s" found "%3$s" for ',
                             self::$whitelist[$methodName][0][$paramCount],
                             $tokens[$i]['content'],
-                            $tokens[$typeHintPtr]['content'],
+                            $tokens[$typeHintPtr]['content']
+                        );
+                        $error .= sprintf(
+                            'the magic method "%1$s::%2$s"',
                             $className,
                             $methodName
                         );
                         $file->addError($error, $typeHintPtr, 'WrongTypeHint');
+
                         continue;
                     }
                 }
 
                 // If array type hint, enforce more specific documentation at @param
                 if ($tokens[$typeHintPtr]['content'] === 'array') {
-                    if (!$this->in_array_r($tokens[$i]['content'], $paramDoc)) {
+                    if (!$this->inArray($tokens[$i]['content'], $paramDoc)) {
                         $error = sprintf(
-                            'Array type hint for the parameter "%1$s" in method "%2$s::%3$s" must be documented to specify
-                            the exact type. Use "@param Class[] %1$s" for a list of objects of type "Class", use
-                            "@param integer[] %1$s" for a list of integers and so on...',
+                            'Array type hint for the parameter "%1$s" in method "%2$s::%3$s" must be documented to ',
                             $tokens[$i]['content'],
                             $className,
                             $methodName
                         );
+                        $error .= sprintf(
+                            'specify the exact type. Use "@param Class[] %1$s" for a list of objects of type "Class", ',
+                            $tokens[$i]['content']
+                        );
+                        $error .= sprintf(
+                            'use "@param integer[] %1$s" for a list of integers and so on...',
+                            $tokens[$i]['content']
+                        );
                         $file->addError($error, $typeHintPtr, 'MissingParamDoc');
+
                         continue;
                     }
                 }
@@ -201,6 +221,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 $error = 'Superfluous return type doc';
                 $file->addError($error, array_keys($returnDoc)[0], 'superfluousParamDoc');
             }
+
             return;
         }
 
@@ -213,6 +234,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 $methodName
             );
             $file->addError($error, $namePtr, 'MissingReturnTypeHint');
+
             return;
         }
 
@@ -220,10 +242,15 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         if ($file->findNext(T_WHITESPACE, $endBracket) === ($endBracket + 1)
             && $tokens[$endBracket+2]['code'] === T_COLON) {
             $error = sprintf(
-                'No space should come before colon, exactly one space after colon, expected return type formatting to be "): %1$s" got ") : %1$s"',
+                'No space should come before colon, exactly one space after colon, expected return type formatting ',
+                $tokens[$returnTypeHintPtr]['content']
+            );
+            $error .= sprintf(
+                'to be "): %1$s" got ") : %1$s"',
                 $tokens[$returnTypeHintPtr]['content']
             );
             $file->addError($error, $namePtr, 'WrongStyleTypeHint');
+
             return;
         }
 
@@ -235,12 +262,14 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 $methodName
             );
             $file->addError($error, $namePtr, 'MissingReturnTypeHintColon');
+
             return;
         }
 
         if (!in_array($tokens[$file->findNext(T_COLON, $endBracket)+2]['code'], [T_NULLABLE, T_RETURN_TYPE])) {
             $error = 'Expected exactly one space after colon, multiple spaces or no space found for the return type...';
             $file->addError($error, $namePtr, 'WrongStyleTypeHint');
+
             return;
         }
 
@@ -256,19 +285,21 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 self::$whitelist[$methodName][1]
             );
             $file->addError($error, $returnTypeHintPtr, 'WrongReturnTypeHint');
+
             return;
         }
 
         // Check for array return type hing
         if ($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc)) {
             $error = sprintf(
-                'Return type hint for a method "%1$s::%2$s" must be documented to specify
-                    their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list
-                    of integers and so on...',
+                'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ',
                 $className,
                 $methodName
             );
+            $error .= 'Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers ';
+            $error .= 'and so on...';
             $file->addError($error, $returnTypeHintPtr, 'MissingDocForReturnTypeHint');
+
             return;
         }
 
@@ -280,13 +311,14 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
     }
 
-    private function in_array_r($needle, &$paramDoc)
+    private function inArray($needle, &$paramDoc)
     {
         foreach($paramDoc as $key => $param)
         {
             if(in_array($needle, $param, true) && count($param) === 2)
             {
                 unset($paramDoc[$key]);
+
                 return true;
             }
         }
