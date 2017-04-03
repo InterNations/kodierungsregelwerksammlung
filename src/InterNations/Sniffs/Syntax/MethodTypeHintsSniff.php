@@ -81,7 +81,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                     && $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['code'] ===
                     T_DOC_COMMENT_STRING
                 ) {
-                    $returnDoc[$j] =  $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
+                    $returnDoc[$j] = $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
                 }
             }
         }
@@ -159,11 +159,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                             $tokens[$i]['content'],
                             $tokens[$typeHintPtr]['content']
                         );
-                        $error .= sprintf(
-                            'the magic method "%1$s::%2$s"',
-                            $className,
-                            $methodName
-                        );
+                        $error .= sprintf('the magic method "%1$s::%2$s"', $className, $methodName);
                         $file->addError($error, $typeHintPtr, 'WrongTypeHint');
 
                         continue;
@@ -245,10 +241,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 'No space should come before colon, exactly one space after colon, expected return type formatting ',
                 $tokens[$returnTypeHintPtr]['content']
             );
-            $error .= sprintf(
-                'to be "): %1$s" got ") : %1$s"',
-                $tokens[$returnTypeHintPtr]['content']
-            );
+            $error .= sprintf('to be "): %1$s" got ") : %1$s"', $tokens[$returnTypeHintPtr]['content']);
             $file->addError($error, $namePtr, 'WrongStyleTypeHint');
 
             return;
@@ -313,10 +306,9 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
     private function inArray($needle, &$paramDoc)
     {
-        foreach($paramDoc as $key => $param)
+        foreach ($paramDoc as $key => $param)
         {
-            if(in_array($needle, $param, true) && count($param) === 2)
-            {
+            if(in_array($needle, $param, true) && count($param) === 2) {
                 unset($paramDoc[$key]);
 
                 return true;
