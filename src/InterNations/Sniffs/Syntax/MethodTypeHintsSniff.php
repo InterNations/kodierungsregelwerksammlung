@@ -57,7 +57,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
         $className = $tokens[$file->findNext(T_WHITESPACE, $classPtr + 1, null, true)]['content'];
 
-        if (strpos($className, 'Sniff') !== false) {
+        if (preg_match('/Sniff$/', $className)) {
             return;
         }
 
@@ -168,7 +168,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
                 // If array type hint, enforce more specific documentation at @param
                 if ($tokens[$typeHintPtr]['content'] === 'array') {
-                    if (!$this->inArray($tokens[$i]['content'], $paramDoc)) {
+                    if (!$this->ifParamDocExistForArrayParameter($tokens[$i]['content'], $paramDoc)) {
                         $error = sprintf(
                             'Array type hint for the parameter "%1$s" in method "%2$s::%3$s" must be documented to ',
                             $tokens[$i]['content'],
@@ -304,11 +304,10 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
     }
 
-    private function inArray($needle, &$paramDoc)
+    private function ifParamDocExistForArrayParameter($needle, &$paramDoc)
     {
-        foreach ($paramDoc as $key => $param)
-        {
-            if(in_array($needle, $param, true) && count($param) === 2) {
+        foreach ($paramDoc as $key => $param) {
+            if (in_array($needle, $param, true) && count($param) === 2) {
                 unset($paramDoc[$key]);
 
                 return true;
