@@ -51,9 +51,13 @@ class ValidTypeHints
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return mixed[]
 =======
      * @return Mixed[]
+>>>>>>> Enforce type hints for new/modified code
+=======
+     * @return mixed[]
 >>>>>>> Enforce type hints for new/modified code
      */
     private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
