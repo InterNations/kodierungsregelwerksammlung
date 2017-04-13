@@ -103,7 +103,7 @@ class AlwaysUseSniff implements CodeSnifferSniff
             return;
         }
 
-        list($className, $endStackPtr) = $this->getClassName($file, $leftStackPtr);
+        [$className, $endStackPtr] = $this->getClassName($file, $leftStackPtr);
 
 
         if ($className[0] === '\\') {

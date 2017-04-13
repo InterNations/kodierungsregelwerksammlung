@@ -63,7 +63,7 @@ class PhpUnitAssertionsSniff implements CodeSnifferSniff
             return;
         }
 
-        list($alias, $code) = static::getAlias($file, $stackPtr);
+        [$alias, $code] = static::getAlias($file, $stackPtr);
 
         if ($alias !== null) {
             $file->addError(

@@ -17,21 +17,21 @@ class TestStubSniff implements CodeSnifferSniff
         $nextPtr = $startPtr;
 
 
-        list($nextPtr, $expectsMethodToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $expectsMethodToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if ($expectsMethodToken['code'] !== T_STRING || $expectsMethodToken['content'] !== 'expects') {
             return;
         }
 
 
-        list($nextPtr, $expectsMethodOpenToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $expectsMethodOpenToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if ($expectsMethodOpenToken['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
 
 
-        list($nextPtr, $scopeToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $scopeToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if (!in_array($scopeToken['code'], [T_STATIC, T_SELF, T_VARIABLE], true)
             || !in_array($scopeToken['content'], ['static', 'self', '$this'], true)) {
@@ -39,35 +39,35 @@ class TestStubSniff implements CodeSnifferSniff
         }
 
 
-        list($nextPtr, $objectOperatorToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $objectOperatorToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if (!in_array($objectOperatorToken['code'], [T_OBJECT_OPERATOR, T_PAAMAYIM_NEKUDOTAYIM], true)) {
             return;
         }
 
 
-        list($nextPtr, $matcherMethodToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $matcherMethodToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if ($matcherMethodToken['code'] !== T_STRING || $matcherMethodToken['content'] !== 'any') {
             return;
         }
 
 
-        list($nextPtr, $matcherMethodOpenToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $matcherMethodOpenToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if ($matcherMethodOpenToken['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
 
 
-        list($nextPtr, $matcherMethodCloseToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $matcherMethodCloseToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if ($matcherMethodCloseToken['code'] !== T_CLOSE_PARENTHESIS) {
             return;
         }
 
 
-        list($nextPtr, $expectsMethodCloseToken) = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
+        [$nextPtr, $expectsMethodCloseToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if ($expectsMethodCloseToken['code'] !== T_CLOSE_PARENTHESIS) {
             return;
