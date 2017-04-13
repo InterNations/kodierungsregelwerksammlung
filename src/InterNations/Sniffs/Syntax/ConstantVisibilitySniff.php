@@ -21,7 +21,7 @@ class ConstantVisibilitySniff implements CodeSnifferSniff
 
         if (!in_array($tokens[$constVisibilityPtr]['code'], [T_PUBLIC, T_PRIVATE, T_PROTECTED])) {
             $error = sprintf('Expected constant visibility for "%1$s"', $tokens[$constNamePtr]['content']);
-            $file->addError($error, $constVisibilityPtr, 'missingConstantVisibility');
+            $file->addError($error, $stackPtr, 'missingConstantVisibility');
         }
     }
 }
