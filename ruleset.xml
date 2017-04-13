@@ -190,6 +190,8 @@
     <rule ref="./src/InterNations/Sniffs/Whitespace/NamespaceWhitespaceSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Files/LineLengthSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/ShortArraySyntaxSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/ShortListSyntaxSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/ConstantVisibilitySniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/ClosureSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/TypeCastSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/DocBlockTypesSniff.php"/>
