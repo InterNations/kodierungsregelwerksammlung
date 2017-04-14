@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../AbstractTestCase.php';
 
 class InterNations_Tests_Sniffs_Syntax_ConstantVisibilitySniffTest extends InterNations_Tests_Sniffs_AbstractTestCase
@@ -14,6 +15,14 @@ class InterNations_Tests_Sniffs_Syntax_ConstantVisibilitySniffTest extends Inter
     public function testInvalidConstantVisibility()
     {
         $file = __DIR__ . '/Fixtures/ConstantVisibility/InvalidConstants.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/ConstantVisibilitySniff'], [$file]);
+
+        $this->assertReportCount(1, 0, $errors, $file);
+    }
+
+    public function testConstantOutsideClass()
+    {
+        $file = __DIR__ . '/Fixtures/ConstantVisibility/Constant.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/ConstantVisibilitySniff'], [$file]);
 
         $this->assertReportCount(1, 0, $errors, $file);
