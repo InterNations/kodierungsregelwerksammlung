@@ -48,7 +48,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
     private function verifyParameterName(CodeSnifferFile $file, $stackPtr, $methodName, array $methodParameter)
     {
         $name = ltrim($methodParameter['name'], '$');
-        list($fqNs, $className) = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
+        [$fqNs, $className] = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
 
         if (!isset(self::$commonSymbolNames[$fqNs]) || self::$commonSymbolNames[$fqNs] === $name) {
             return;
@@ -71,7 +71,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
     )
     {
         $parameterName = ltrim($methodParameter['name'], '$');
-        list($fqNs, $className) = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
+        [$fqNs, $className] = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
 
         if (!isset(self::$commonSymbolNames[$fqNs], $assignments[$methodParameter['name']])) {
             return;
