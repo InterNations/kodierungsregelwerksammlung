@@ -52,13 +52,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
             $nextNonWhitespacePos = $file->findNext(T_WHITESPACE, $closingPtr + 1, null, true);
             $isCase = $file->findPrevious([T_CASE], $stackPtr - 1, null, false, null, true) !== false;
 
-            if (
-                (
-                    $tokens[$nextNonWhitespacePos]['code'] === T_COLON ||
-                    $tokens[$nextNonWhitespacePos]['code'] === T_INLINE_ELSE
-                ) &&
-                !$isCase
-            ) {
+            if (in_array($tokens[$nextNonWhitespacePos]['code'], [T_COLON, T_INLINE_ELSE], true) && !$isCase) {
                 $closingPtr = $file->findNext(T_RETURN_TYPE, $nextNonWhitespacePos + 1);
             }
 
