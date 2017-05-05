@@ -28,7 +28,15 @@ function methodCall4(
     return "hi";
 }
 
+public function methodCall5(): ?string
+{
+    return $this->getId() ? (string) $this->getId() : null;
+}
 
+public function methodCall6(): ?Clazz
+{
+    return "hi";
+}
 
 switch (true) {
     case $this->somePropertyName->someMethodInvocation():
