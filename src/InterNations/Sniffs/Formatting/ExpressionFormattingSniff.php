@@ -50,10 +50,14 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
             $closingPtr = $openingToken['parenthesis_closer'];
 
             $nextNonWhitespacePos = $file->findNext(T_WHITESPACE, $closingPtr + 1, null, true);
+            $returnTypePos = $file->findNext(T_RETURN_TYPE, $nextNonWhitespacePos + 1);
             $isCase = $file->findPrevious([T_CASE], $stackPtr - 1, null, false, null, true) !== false;
 
-            if (in_array($tokens[$nextNonWhitespacePos]['code'], [T_COLON, T_INLINE_ELSE], true) && !$isCase) {
-                $closingPtr = $file->findNext(T_RETURN_TYPE, $nextNonWhitespacePos + 1);
+            if (in_array($tokens[$nextNonWhitespacePos]['code'], [T_COLON, T_INLINE_ELSE], true) &&
+                $tokens[$returnTypePos]['code'] === T_RETURN_TYPE
+                && !$isCase
+            ) {
+                $closingPtr = $returnTypePos;
             }
 
             $closingToken = $tokens[$closingPtr];
