@@ -76,7 +76,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG && $tokens[$j]['content'] === '@param') {
                     $paramDoc[$j] = preg_split(
                         '/[\s]+/',
-                        $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content']
+                        trim($tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'])
                     );
                 }
 
