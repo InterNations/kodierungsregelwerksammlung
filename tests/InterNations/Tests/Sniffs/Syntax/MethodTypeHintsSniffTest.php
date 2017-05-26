@@ -3,7 +3,7 @@ require_once __DIR__ . '/../AbstractTestCase.php';
 
 class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNations_Tests_Sniffs_AbstractTestCase
 {
-    public function testValidMethodTypeHints()
+    public function testValidMethodTypeHints(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/ValidTypeHints.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
@@ -11,7 +11,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
         $this->assertReportCount(0, 0, $errors, $file);
     }
 
-    public function testNoArgumentFound()
+    public function testNoArgumentFound(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/missingArgument.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
@@ -20,11 +20,11 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $errors,
             $file,
             'errors',
-            'Expected at least one argument for magic method "missingArgument::__construct" found none'
+            'Expected at least one argument for magic method "missingArgument::__isset" found none'
         );
     }
 
-    public function testWrongArgumentForMethod()
+    public function testWrongArgumentForMethod(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/WrongArgumentForMethod.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
@@ -37,7 +37,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
         );
     }
 
-    public function testInvalidParamTypeHints()
+    public function testInvalidParamTypeHints(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/MissingParameterTypeHint.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
@@ -56,7 +56,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
         );
     }
 
-    public function testWrongTypeHints()
+    public function testWrongTypeHints(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/WrongTypeHint.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
@@ -81,7 +81,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
         );
     }
 
-    public function testSuperfluousParamDoc()
+    public function testSuperfluousParamDoc(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/SuperfluousParamDoc.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
@@ -100,7 +100,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
         );
     }
 
-    public function testNoReturnTypeHint()
+    public function testNoReturnTypeHint(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/NoReturnTypeHint.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
@@ -119,11 +119,11 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
         );
     }
 
-    public function testReturnTypeHint()
+    public function testReturnTypeHint(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/ReturnTypeHint.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
-        $this->assertReportCount(3, 0, $errors, $file);
+        $this->assertReportCount(4, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
@@ -142,5 +142,18 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             'errors',
             'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHing" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
         );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHing" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
+        );
+    }
+
+    public function testControllers(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/TestController.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+        $this->assertReportCount(0, 0, $errors, $file);
     }
 }

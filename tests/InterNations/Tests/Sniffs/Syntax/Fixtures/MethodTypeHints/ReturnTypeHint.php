@@ -12,6 +12,11 @@ class ReturnTypeHint
         return;
     }
 
+    /** @return float $test */
+    public function testWrongDocForArrayReturnTypeHing(): array
+    {
+        return;
+    }
 
     public function testMissingDocForArrayReturnTypeHing(): array
     {
