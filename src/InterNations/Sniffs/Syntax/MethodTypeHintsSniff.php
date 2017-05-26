@@ -6,6 +6,8 @@ use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class MethodTypeHintsSniff implements CodeSnifferSniff
 {
+    public $ignoreTypeHintWhitelist;
+
     /*
         '__construct'  (mixed $property) : force no return type
         '__destruct'   force no parameters : force no return type
@@ -25,9 +27,10 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
     */
 
     /* false => mixed
-       null  => force no param/return */
+       null  => force no param/return
+       ''  => no restriction on param */
     private static $whitelist = [
-        '__construct' => [false, null],
+        '__construct' => ['', null],
         '__destruct' => [null, null],
         '__clone' => [null, null],
         '__sleep' => [null, 'array'],
@@ -50,6 +53,12 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
+        if ($this->ignoreTypeHintWhitelist) {
+            foreach ($this->ignoreTypeHintWhitelist as $k => $y) {
+                $this->ignoreTypeHintWhitelist[$k] = explode(':', $y);
+            }
+        }
+
         $tokens = $file->getTokens();
 
         // Class name
@@ -60,8 +69,24 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
             return;
         }
 
+        // Method name
+        $namePtr = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
+        $methodName = $tokens[$namePtr]['content'];
+
+        // Skip invalid statement.
+        if (!isset($tokens[$namePtr + 1]['parenthesis_opener'])) {
+            return;
+        }
+
+        // Ignore whitelisted methods
+        if (isset($this->ignoreTypeHintWhitelist[$className]) &&
+            in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
+        ) {
+            return;
+        }
+
         // Comments block
-        $paramDoc = $returnDoc = [];
+        $paramDoc = $returnDoc = $dataProvider = [];
         $commentEnd = $file->findPrevious(
             [T_WHITESPACE, T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED],
             $stackPtr - 1,
@@ -87,16 +112,13 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 ) {
                     $returnDoc[$j] = $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
                 }
+
+                if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG && $tokens[$j]['content'] === '@dataProvider'
+                ) {
+                    $dataProvider[$j] =
+                        $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
+                }
             }
-        }
-
-        // Method name
-        $namePtr = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
-        $methodName = $tokens[$namePtr]['content'];
-
-        // Skip invalid statement.
-        if (!isset($tokens[$namePtr + 1]['parenthesis_opener'])) {
-            return;
         }
 
         $startBracket = $tokens[$namePtr + 1]['parenthesis_opener'];
@@ -106,6 +128,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         if ($startBracket + 1 === $endBracket
             && isset(self::$whitelist[$methodName])
             && self::$whitelist[$methodName][0] !== null
+            && self::$whitelist[$methodName][0] !== ''
         ) {
             $error = sprintf(
                 'Expected at least one argument for magic method "%1$s::%2$s" found none',
@@ -139,7 +162,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 }
 
                 // Check for mandatory mixed type hints
-                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_ARRAY_HINT])) {
+                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_ARRAY_HINT, T_CALLABLE])) {
                     $error = sprintf(
                         'Expected Type hint for the parameter "%1$s" in method "%2$s::%3$s"',
                         $tokens[$i]['content'],
@@ -174,7 +197,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 }
 
                 // If array type hint, enforce more specific documentation at @param
-                if ($tokens[$typeHintPtr]['content'] === 'array') {
+                if ($tokens[$typeHintPtr]['content'] === 'array' && empty($dataProvider)) {
                     if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
                         $str = 'Array type hint for the parameter "%1$s" in method "%2$s::%3$s" must be documented to ';
                         $str .= 'to specify the exact type. Use "@param Class[] %1$s" for a list of objects of type ';
@@ -215,6 +238,11 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 $file->addError($error, array_keys($returnDoc)[0], 'superfluousParamDoc');
             }
 
+            return;
+        }
+
+        // Escape return type hint check for controller's actions.
+        if (preg_match('/Controller$/D', $className) && preg_match('/Action/D', $methodName)) {
             return;
         }
 
@@ -277,8 +305,10 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
             return;
         }
 
-        // Check for array return type hing
-        if ($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc)) {
+        // Check for array return type hint
+        if (($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc)) ||
+            ($tokens[$returnTypeHintPtr]['content'] === 'array' && strpos(array_values($returnDoc)[0], '[]') === false)
+        ) {
             $str = 'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ';
             $str .= 'Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers ';
             $str .= 'and so on...';
@@ -287,7 +317,6 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
             return;
         }
-
 
         // Catch Superfluous return comment doc
         if ($tokens[$returnTypeHintPtr]['content'] !== 'array' && $returnDoc) {
@@ -300,9 +329,12 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
     {
         foreach ($paramDoc as $key => $param) {
             if (in_array($needle, $param, true) && count($param) === 2) {
-                unset($paramDoc[$key]);
 
-                return true;
+                if (strpos(array_values($param)[0], '[]') !== false) {
+                    unset($paramDoc[$key]);
+
+                    return true;
+                }
             }
         }
 

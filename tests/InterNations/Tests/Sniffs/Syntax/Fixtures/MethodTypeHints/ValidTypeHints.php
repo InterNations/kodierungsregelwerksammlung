@@ -2,7 +2,17 @@
 
 class ValidTypeHints
 {
-    public function __construct(int $x, int $y)
+    /** @dataProvider provideDataForFeedbackEligibility */
+    public function testFeedbackEligibility(array $testCase): void
+    {
+
+    }
+
+    /**
+     * ValidTypeHints constructor.
+     * @param int[] $x
+     */
+    public function __construct(array $x, int $y)
     {
 
     }
@@ -12,7 +22,7 @@ class ValidTypeHints
      */
     public function postAction(float $request, string $context, string $entityType, int $entityId): array
     {
-       return;
+        return;
     }
 
     /**
@@ -31,9 +41,9 @@ class ValidTypeHints
         return;
     }
 
-    private function getNextUrl(float $view, string $context, int $entityType, int $entityId): string
+    private function getNextUrl(?float $view, string $context, int $entityType, int $entityId): string
     {
-        return;
+        return $x;
     }
 
     public function newAction(float $context, int $entityType, int $entityId): Response
@@ -55,5 +65,10 @@ class ValidTypeHints
     private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
     {
 
+    }
+
+    private static function properMap(callable $f): callable
+    {
+        return;
     }
 }
