@@ -5,7 +5,6 @@ class ValidTypeHints
     /** @dataProvider provideDataForFeedbackEligibility */
     public function testFeedbackEligibility(array $testCase): void
     {
-
     }
 
     /**
@@ -14,7 +13,6 @@ class ValidTypeHints
      */
     public function __construct(array $x, int $y)
     {
-
     }
 
     /**
@@ -22,7 +20,6 @@ class ValidTypeHints
      */
     public function postAction(float $request, string $context, string $entityType, int $entityId): array
     {
-        return;
     }
 
     /**
@@ -30,7 +27,6 @@ class ValidTypeHints
      */
     public function deleteAction(int $commentId): array
     {
-        return;
     }
 
     /**
@@ -38,17 +34,14 @@ class ValidTypeHints
      */
     public function indexAction(float $request, string $context, int $entityType, int $entityId): array
     {
-        return;
     }
 
     private function getNextUrl(?float $view, string $context, int $entityType, int $entityId): string
     {
-        return $x;
     }
 
     public function newAction(float $context, int $entityType, int $entityId): Response
     {
-        return;
     }
 
     /**
@@ -56,7 +49,6 @@ class ValidTypeHints
      */
     private function renderForm(string $context, int $entityType, int $entityId): array
     {
-        return;
     }
 
     /**
@@ -64,11 +56,9 @@ class ValidTypeHints
      */
     private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
     {
-
     }
 
     private static function properMap(callable $f): callable
     {
-        return;
     }
 }

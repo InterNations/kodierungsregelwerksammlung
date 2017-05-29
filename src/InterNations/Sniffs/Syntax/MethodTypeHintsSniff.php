@@ -113,8 +113,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                     $returnDoc[$j] = $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
                 }
 
-                if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG && $tokens[$j]['content'] === '@dataProvider'
-                ) {
+                if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG && $tokens[$j]['content'] === '@dataProvider') {
                     $dataProvider[$j] =
                         $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
                 }
