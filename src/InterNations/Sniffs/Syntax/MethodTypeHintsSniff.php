@@ -61,6 +61,9 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
         $tokens = $file->getTokens();
 
+        $namespacePtr = ($file->findNext(T_SEMICOLON, $file->findPrevious(T_NAMESPACE, $stackPtr))) - 1;
+        $namespace = $tokens[$namespacePtr]['content'];
+
         // Class name
         $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
         $className = $tokens[$file->findNext(T_WHITESPACE, $classPtr + 1, null, true)]['content'];
@@ -79,8 +82,8 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Ignore whitelisted methods
-        if (isset($this->ignoreTypeHintWhitelist[$className]) &&
-            in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
+        if (isset($this->ignoreTypeHintWhitelist[$namespace]) &&
+            in_array($methodName, $this->ignoreTypeHintWhitelist[$namespace])
         ) {
             return;
         }
