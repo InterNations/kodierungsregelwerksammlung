@@ -62,6 +62,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         $tokens = $file->getTokens();
 
         $namespace = '';
+        
         if ($file->findPrevious(T_NAMESPACE, $stackPtr)) {
             $namespacePtr = ($file->findNext(T_SEMICOLON, $file->findPrevious(T_NAMESPACE, $stackPtr))) - 1;
             $namespace = $tokens[$namespacePtr]['content'];
