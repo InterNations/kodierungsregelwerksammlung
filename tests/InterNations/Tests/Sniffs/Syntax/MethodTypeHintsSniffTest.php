@@ -140,13 +140,13 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $errors,
             $file,
             'errors',
-            'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHing" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
+            'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHint" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
         );
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHing" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
+            'Return type hint for a method "ReturnTypeHint::testMissingDocForArrayReturnTypeHint" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
         );
     }
 
