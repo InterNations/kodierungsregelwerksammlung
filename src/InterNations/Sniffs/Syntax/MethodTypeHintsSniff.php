@@ -53,20 +53,16 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
-        if ($this->ignoreTypeHintWhitelist) {
+        if ($this->ignoreTypeHintWhitelist && !empty($this->ignoreTypeHintWhitelist)) {
             foreach ($this->ignoreTypeHintWhitelist as $k => $y) {
+                if (!is_string($y)) {
+                    continue;
+                }
                 $this->ignoreTypeHintWhitelist[$k] = explode(':', $y);
             }
         }
 
         $tokens = $file->getTokens();
-
-        $namespace = '';
-        
-        if ($file->findPrevious(T_NAMESPACE, $stackPtr)) {
-            $namespacePtr = ($file->findNext(T_SEMICOLON, $file->findPrevious(T_NAMESPACE, $stackPtr))) - 1;
-            $namespace = $tokens[$namespacePtr]['content'];
-        }
 
         // Class name
         $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
@@ -86,8 +82,8 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Ignore whitelisted methods
-        if (isset($this->ignoreTypeHintWhitelist[$namespace]) &&
-            in_array($methodName, $this->ignoreTypeHintWhitelist[$namespace])
+        if (isset($this->ignoreTypeHintWhitelist[$className]) &&
+            in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
         ) {
             return;
         }
