@@ -60,7 +60,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/WrongTypeHint.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
-        $this->assertReportCount(3, 0, $errors, $file);
+        $this->assertReportCount(4, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
@@ -78,6 +78,12 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $file,
             'errors',
             'Return type hint for a method "WrongTypeHint::__call" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Found return type "ArrayCollection" a for a method "WrongTypeHint::forbidTypeHint", return type "ArrayCollection" and "PersistentCollection" is forbidden, as it’s best practice to always return Collection::toArray()'
         );
     }
 
@@ -155,5 +161,18 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
         $file = __DIR__ . '/Fixtures/MethodTypeHints/TestController.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
         $this->assertReportCount(0, 0, $errors, $file);
+    }
+
+    public function testSelfTypeHints(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/SelfTypeHint.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+        $this->assertReportCount(1, 0, $errors, $file);
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Expected return type "self" a for a method "SelfTypeHint::Y", found "SelfTypeHint"'
+        );
     }
 }

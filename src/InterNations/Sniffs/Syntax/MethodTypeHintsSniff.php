@@ -210,13 +210,25 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                         continue;
                     }
                 }
+
+                // Forbid ArrayCollection
+                if ($tokens[$typeHintPtr]['content'] === 'ArrayCollection') {
+                    $str = 'Found param type "%1$s" a for a method "%2$s::%3$s", ';
+                    $str .= 'param type "ArrayCollection" is forbidden, ';
+                    $error = sprintf($str, $tokens[$typeHintPtr]['content'], $className, $methodName);
+                    $file->addError($error, $typeHintPtr, 'ForbiddenParamTypeHint');
+
+                    return;
+                }
             }
         }
 
         // Catch Superfluous parameter docs..
-        foreach ($paramDoc as $key => $value) {
-            $error = 'Superfluous parameter comment doc';
-            $file->addError($error, $key, 'superfluousParamDoc');
+        if (empty($dataProvider)) {
+            foreach ($paramDoc as $key => $value) {
+                $error = 'Superfluous parameter comment doc';
+                $file->addError($error, $key, 'superfluousParamDoc');
+            }
         }
 
         // Check return type hints for functions
@@ -320,8 +332,29 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
             return;
         }
 
+        // Make self as a strict type
+        if ($className === $tokens[$returnTypeHintPtr]['content']) {
+            $str = 'Expected return type "self" a for a method "%1$s::%2$s", found "%3$s"';
+            $error = sprintf($str, $className, $methodName, $tokens[$returnTypeHintPtr]['content']);
+            $file->addError($error, $returnTypeHintPtr, 'StrictReturnSelf');
+
+            return;
+        }
+
+        // Forbid ArrayCollection or PersistentCollection
+        if (in_array($tokens[$returnTypeHintPtr]['content'], ['ArrayCollection', 'PersistentCollection'])) {
+            $str = 'Found return type "%1$s" a for a method "%2$s::%3$s", ';
+            $str .= 'return type "ArrayCollection" and "PersistentCollection" is forbidden, ';
+            $str .= 'as it’s best practice to always return Collection::toArray()';
+            $error = sprintf($str, $tokens[$returnTypeHintPtr]['content'], $className, $methodName);
+            $file->addError($error, $returnTypeHintPtr, 'ForbiddenReturnTypeHint');
+
+            return;
+        }
+
         // Catch Superfluous return comment doc
-        if ($tokens[$returnTypeHintPtr]['content'] !== 'array' && $returnDoc) {
+        if (!in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject']) && $returnDoc)
+        {
             $error = 'Superfluous return type doc';
             $file->addError($error, array_keys($returnDoc)[0], 'superfluousParamDoc');
         }

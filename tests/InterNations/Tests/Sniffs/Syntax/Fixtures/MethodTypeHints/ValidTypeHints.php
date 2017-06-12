@@ -3,7 +3,10 @@ namespace InterNations\Test\Sniff\Syntax\Fixtures\MethodTypeHints;
 
 class ValidTypeHints
 {
-    /** @dataProvider provideDataForFeedbackEligibility */
+    /**
+     * @dataProvider provideDataForFeedbackEligibility
+     * @param string[] $testCase
+     */
     public function testFeedbackEligibility(array $testCase): void
     {
         return;
@@ -69,6 +72,12 @@ class ValidTypeHints
     }
 
     private static function properMap(callable $f): callable
+    {
+        return;
+    }
+
+    /** @return User|MockObject */
+    private function createParticipantMock(): MockObject
     {
         return;
     }
