@@ -214,11 +214,23 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 // Forbid ArrayCollection
                 if ($tokens[$typeHintPtr]['content'] === 'ArrayCollection') {
                     $str = 'Found param type "%1$s" a for a method "%2$s::%3$s", ';
-                    $str .= 'param type "ArrayCollection" is forbidden, ';
+                    $str .= 'param type "ArrayCollection" is forbidden, use Collection|Class[] instead';
                     $error = sprintf($str, $tokens[$typeHintPtr]['content'], $className, $methodName);
                     $file->addError($error, $typeHintPtr, 'ForbiddenParamTypeHint');
 
-                    return;
+                    continue;
+                }
+
+                // Have strict nullable operator for default null parameters
+                if ($tokens[$typeHintPtr-1]['code'] !== T_NULLABLE &&
+                    $tokens[$typeHintPtr+4]['code'] === T_EQUAL &&
+                    $tokens[$typeHintPtr+6]['code'] === T_NULL
+                ) {
+                    $str = 'Expected type hint "?%1$s" a for a method "%2$s::%3$s", found "%1$s"';
+                    $error = sprintf($str, $tokens[$typeHintPtr]['content'], $className, $methodName);
+                    $file->addError($error, $typeHintPtr, 'nullableParamTypeHint');
+
+                    continue;
                 }
             }
         }
@@ -345,7 +357,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         if (in_array($tokens[$returnTypeHintPtr]['content'], ['ArrayCollection', 'PersistentCollection'])) {
             $str = 'Found return type "%1$s" a for a method "%2$s::%3$s", ';
             $str .= 'return type "ArrayCollection" and "PersistentCollection" is forbidden, ';
-            $str .= 'as it’s best practice to always return Collection::toArray()';
+            $str .= 'use Collection::toArray() instead';
             $error = sprintf($str, $tokens[$returnTypeHintPtr]['content'], $className, $methodName);
             $file->addError($error, $returnTypeHintPtr, 'ForbiddenReturnTypeHint');
 
@@ -353,8 +365,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Catch Superfluous return comment doc
-        if (!in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject']) && $returnDoc)
-        {
+        if (!in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject']) && $returnDoc) {
             $error = 'Superfluous return type doc';
             $file->addError($error, array_keys($returnDoc)[0], 'superfluousParamDoc');
         }

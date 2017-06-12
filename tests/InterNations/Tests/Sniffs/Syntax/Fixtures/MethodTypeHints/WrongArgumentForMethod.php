@@ -6,4 +6,9 @@ class WrongArgumentForMethod
     {
         echo 'blah..';
     }
+
+    public function test(int $x string $y = null, float $z = null): void
+    {
+        echo 'blah..';
+    }
 }

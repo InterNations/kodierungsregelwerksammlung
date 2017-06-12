@@ -7,7 +7,7 @@ class ValidTypeHints
      * @dataProvider provideDataForFeedbackEligibility
      * @param string[] $testCase
      */
-    public function testFeedbackEligibility(array $testCase): void
+    public function testFeedbackEligibility(array $testCase, ?int $x = null): void
     {
         return;
     }
