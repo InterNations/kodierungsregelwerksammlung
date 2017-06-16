@@ -4,7 +4,7 @@ class missingArgument
 {
     public function __isset(): bool
     {
-       parent::__construct();
+        parent::__construct();
     }
 
     /**

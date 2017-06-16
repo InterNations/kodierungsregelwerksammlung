@@ -18,6 +18,6 @@ class ValidConstants
      */
     public function postAction(float $request, string $context, string $entityType, int $entityId): array
     {
-        return;
+       return;
     }
 }

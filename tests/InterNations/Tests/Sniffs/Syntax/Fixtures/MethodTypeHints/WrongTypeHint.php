@@ -6,4 +6,9 @@ class WrongTypeHint
     {
         return;
     }
+
+    public function forbidTypeHint(): ArrayCollection
+    {
+        return;
+    }
 }

@@ -2,10 +2,13 @@
 
 class ValidTypeHints
 {
-    /** @dataProvider provideDataForFeedbackEligibility */
-    public function testFeedbackEligibility(array $testCase): void
+    /**
+     * @dataProvider provideDataForFeedbackEligibility
+     * @param string[] $testCase
+     */
+    public function testFeedbackEligibility(array $testCase, ?int $x = null): void
     {
-
+        return;
     }
 
     /**
@@ -14,7 +17,7 @@ class ValidTypeHints
      */
     public function __construct(array $x, int $y)
     {
-
+        return;
     }
 
     /**
@@ -43,7 +46,7 @@ class ValidTypeHints
 
     private function getNextUrl(?float $view, string $context, int $entityType, int $entityId): string
     {
-        return $x;
+        return;
     }
 
     public function newAction(float $context, int $entityType, int $entityId): Response
@@ -64,10 +67,16 @@ class ValidTypeHints
      */
     private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
     {
-
+        return;
     }
 
     private static function properMap(callable $f): callable
+    {
+        return;
+    }
+
+    /** @return User|MockObject */
+    private function createParticipantMock(): MockObject
     {
         return;
     }
