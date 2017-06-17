@@ -196,6 +196,7 @@
     <rule ref="./src/InterNations/Sniffs/Syntax/TypeCastSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/DocBlockTypesSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/MethodTypeHintsSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Syntax/VarTypeHintsSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/QueryParamSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/RequestParamSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Syntax/BracesSniff.php"/>
@@ -205,6 +206,7 @@
     <rule ref="./src/InterNations/Sniffs/Naming/NamespaceNameSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Formatting/EmptyLineBeforeControlStructureFormattingSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Architecture/ControllerMethodsConventionSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Architecture/TestMethodsConventionSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/PhpUnitAssertionsSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousFormatStringSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/BestPractice/ExceptionTestSniff.php"/>
