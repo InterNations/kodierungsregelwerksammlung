@@ -42,6 +42,9 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
         $namePtr = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
         $methodName = $tokens[$namePtr]['content'];
 
+        // Visibility
+        $visibilityPtr = $file->findPrevious([T_FUNCTION, T_WHITESPACE, T_STATIC], $namePtr - 1, null, true);
+
         // Skip invalid statement.
         if (!isset($tokens[$namePtr + 1]['parenthesis_opener'])) {
             return;
@@ -57,12 +60,14 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
             return;
         }
 
-        $file->addError(
-            'All public methods in a PHPUnit test must either start with test* or be data providers. '
-            . 'This is for to make sure, we are not accidentally skipping a test because for example a typo '
-            . '(tsetSomething()).',
-            $stackPtr,
-            'verbLimit'
-        );
+        if ($tokens[$visibilityPtr]['code'] === T_PUBLIC) {
+            $file->addError(
+                'All public methods in a PHPUnit test must either start with test* or be data providers. '
+                . 'This is for to make sure, we are not accidentally skipping a test because for example a typo '
+                . '(tsetSomething()).',
+                $stackPtr,
+                'verbLimit'
+            );
+        }
     }
 }

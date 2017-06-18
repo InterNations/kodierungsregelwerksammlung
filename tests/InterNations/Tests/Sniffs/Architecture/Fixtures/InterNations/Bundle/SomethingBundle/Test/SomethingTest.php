@@ -17,7 +17,7 @@ class SomethingTest
         return [];
     }
 
-    public function findSomething()
+    public function findSomethingX()
     {
         return [];
     }
@@ -34,5 +34,15 @@ class SomethingTest
     public function testSomethingZ()
     {
         $this->assertTrue(true);
+    }
+
+    private function findSomethingY()
+    {
+        return [];
+    }
+
+    protected function findSomethingZ()
+    {
+        return [];
     }
 }
