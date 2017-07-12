@@ -141,7 +141,7 @@ class ConstantNameSniff implements CodeSnifferSniff
                 return;
             }
 
-            if ($tokens[$nextPtr][code] === T_ELLIPSIS) {
+            if ($tokens[$nextPtr]['code'] === T_ELLIPSIS) {
                 return;
             }
 
