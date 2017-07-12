@@ -187,4 +187,61 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             'Expected return type "self" a for a method "SelfTypeHint::Y", found "SelfTypeHint"'
         );
     }
+
+    public function testMissingParamDoc(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/missingParamDoc.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+        $this->assertReportCount(3, 0, $errors, $file);
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Array type hint for the parameter "$a" in method "missingParamDoc::x" must be documented to specify the exact type. Use "@param Class[] $a" for a list of objects of type "Class", use "@param integer[] $a" for a list of integers and so on...'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Iterable type hint for the parameter "$a" in method "missingParamDoc::y" must be documented to specify the exact type. Use "@param Class[] $a" for a list of objects of type "Class", use "@param integer[] $a" for a list of integers and so on...'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Collection type hint for the parameter "$b" in method "missingParamDoc::z" must be documented to to specify the exact type. Use Collection|Class[]'
+        );
+    }
+
+    public function testMissingReturnTypeHintDoc(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/missingDocForReturnTypeHint.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+        $this->assertReportCount(3, 0, $errors, $file);
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Return type hint for a method "missingDocForReturnTypeHint::x" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Return type hint for a method "missingDocForReturnTypeHint::y" must be documented to specify their exact type, Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers and so on...'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Return type hint for a method "missingDocForReturnTypeHint::z" must be documented to specify their exact type, use Collection::toArray() instead'
+        );
+    }
+
+    public function testTrait(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/ValidTypeHintsTrait.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+        $this->assertReportCount(0, 0, $errors, $file);
+    }
 }

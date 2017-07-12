@@ -54,11 +54,11 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
     public function process(CodeSnifferFile $file, $stackPtr)
     {
         if ($this->ignoreTypeHintWhitelist && !empty($this->ignoreTypeHintWhitelist)) {
-            foreach ($this->ignoreTypeHintWhitelist as $k => $y) {
-                if (!is_string($y)) {
+            foreach ($this->ignoreTypeHintWhitelist as $classes => $methodsToBeWhitelisted) {
+                if (!is_string($methodsToBeWhitelisted)) {
                     continue;
                 }
-                $this->ignoreTypeHintWhitelist[$k] = explode(':', $y);
+                $this->ignoreTypeHintWhitelist[$classes] = explode(':', $methodsToBeWhitelisted);
             }
         }
 
@@ -66,7 +66,28 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
         // Class name
         $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
+        if(!$classPtr) {
+            $classPtr = $file->findPrevious(T_TRAIT, $stackPtr);
+        }
         $className = $tokens[$file->findNext(T_WHITESPACE, $classPtr + 1, null, true)]['content'];
+
+        $parentClassPtr = $file->findPrevious(T_EXTENDS, $stackPtr);
+        $parentClassName = null;
+        if ($parentClassPtr) {
+            $parentClassName = $tokens[$file->findNext(T_WHITESPACE, $parentClassPtr + 1, null, true)]['content'];
+        }
+
+        $interfacePtr = $file->findPrevious(T_IMPLEMENTS, $stackPtr);
+        $interfaces = null;
+        if ($interfacePtr) {
+            $phpOpenCurlyBracket = $file->findNext(T_OPEN_CURLY_BRACKET, $interfacePtr);
+
+            for ($j = $interfacePtr; $j < $phpOpenCurlyBracket; $j++) {
+                if ($tokens[$j]['code'] === T_STRING) {
+                    $interfaces[] = $tokens[$j]['content'];
+                }
+            }
+        }
 
         if (preg_match('/Sniff$/D', $className)) {
             return;
@@ -81,17 +102,37 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
             return;
         }
 
-        // Ignore whitelisted methods
+        // Ignore whitelisted methods by class
         if (isset($this->ignoreTypeHintWhitelist[$className]) &&
             in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
         ) {
             return;
         }
 
+        // Ignore whitelisted methods by parent class
+        if ($parentClassName &&
+            isset($this->ignoreTypeHintWhitelist[$parentClassName]) &&
+            in_array($methodName, $this->ignoreTypeHintWhitelist[$parentClassName])
+        ) {
+            return;
+        }
+
+        // Ignore whitelisted methods by interface
+        if ($interfaces)
+        {
+            foreach ($interfaces as $interface) {
+
+                if (isset($this->ignoreTypeHintWhitelist[$interface]) &&
+                    in_array($methodName, $this->ignoreTypeHintWhitelist[$interface])) {
+                    return;
+                }
+            }
+        }
+
         // Comments block
         $paramDoc = $returnDoc = $dataProvider = [];
         $commentEnd = $file->findPrevious(
-            [T_WHITESPACE, T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED],
+            [T_WHITESPACE, T_STATIC, T_PUBLIC, T_PRIVATE, T_PROTECTED, T_ABSTRACT],
             $stackPtr - 1,
             null,
             true
@@ -104,7 +145,8 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG && $tokens[$j]['content'] === '@param') {
                     $paramDoc[$j] = preg_split(
                         '/[\s]+/',
-                        trim($tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'])
+                        trim($tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content']),
+                        3
                     );
                 }
 
@@ -113,7 +155,12 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                     && $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['code'] ===
                     T_DOC_COMMENT_STRING
                 ) {
-                    $returnDoc[$j] = $tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content'];
+                    $returnDoc[$j] = preg_split(
+                        '/[\s]+/',
+                        trim($tokens[$file->findNext(T_DOC_COMMENT_WHITESPACE, $j + 1, null, true)]['content']),
+                        2
+                    );
+
                 }
 
                 if ($tokens[$j]['code'] === T_DOC_COMMENT_TAG && $tokens[$j]['content'] === '@dataProvider') {
@@ -202,8 +249,33 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 if ($tokens[$typeHintPtr]['content'] === 'array' && empty($dataProvider)) {
                     if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
                         $str = 'Array type hint for the parameter "%1$s" in method "%2$s::%3$s" must be documented to ';
+                        $str .= 'specify the exact type. Use "@param Class[] %1$s" for a list of objects of type ';
+                        $str .= '"Class", use "@param integer[] %1$s" for a list of integers and so on...';
+                        $error = sprintf($str, $tokens[$i]['content'], $className, $methodName);
+                        $file->addError($error, $typeHintPtr, 'MissingParamDoc');
+
+                        continue;
+                    }
+                }
+
+                // If iterable type hint, enforce more specific documentation at @param
+                if ($tokens[$typeHintPtr]['content'] === 'iterable' && empty($dataProvider)) {
+                    if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
+                        $str = 'Iterable type hint for the parameter "%1$s" in method "%2$s::%3$s" must be documented ';
                         $str .= 'to specify the exact type. Use "@param Class[] %1$s" for a list of objects of type ';
                         $str .= '"Class", use "@param integer[] %1$s" for a list of integers and so on...';
+                        $error = sprintf($str, $tokens[$i]['content'], $className, $methodName);
+                        $file->addError($error, $typeHintPtr, 'MissingParamDoc');
+
+                        continue;
+                    }
+                }
+
+                // If Collection type hint, enforce more specific documentation at @param
+                if ($tokens[$typeHintPtr]['content'] === 'Collection' && empty($dataProvider)) {
+                    if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
+                        $str = 'Collection type hint for the parameter "%1$s" in method "%2$s::%3$s" must be ';
+                        $str .= 'documented to to specify the exact type. Use Collection|Class[]';
                         $error = sprintf($str, $tokens[$i]['content'], $className, $methodName);
                         $file->addError($error, $typeHintPtr, 'MissingParamDoc');
 
@@ -238,6 +310,11 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         // Catch Superfluous parameter docs..
         if (empty($dataProvider)) {
             foreach ($paramDoc as $key => $value) {
+
+                if (count($value) === 3) {
+                    continue;
+                }
+
                 $error = 'Superfluous parameter comment doc';
                 $file->addError($error, $key, 'superfluousParamDoc');
             }
@@ -333,11 +410,35 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
         // Check for array return type hint
         if (($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc)) ||
-            ($tokens[$returnTypeHintPtr]['content'] === 'array' && strpos(array_values($returnDoc)[0], '[]') === false)
+            ($tokens[$returnTypeHintPtr]['content'] === 'array' &&
+                strpos(array_values($returnDoc)[0][0], '[]') === false
+            ) ||
+            ($tokens[$returnTypeHintPtr]['content'] === 'array' && count(array_values($returnDoc)[0]) === 2)
         ) {
             $str = 'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ';
             $str .= 'Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers ';
             $str .= 'and so on...';
+            $error = sprintf($str, $className, $methodName);
+            $file->addError($error, $returnTypeHintPtr, 'MissingDocForReturnTypeHint');
+
+            return;
+        }
+
+        // Check for iterable return type hint
+        if ($tokens[$returnTypeHintPtr]['content'] === 'iterable' && empty($returnDoc)) {
+            $str = 'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ';
+            $str .= 'Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers ';
+            $str .= 'and so on...';
+            $error = sprintf($str, $className, $methodName);
+            $file->addError($error, $returnTypeHintPtr, 'MissingDocForReturnTypeHint');
+
+            return;
+        }
+
+        // Check for Collection return type hint
+        if ($tokens[$returnTypeHintPtr]['content'] === 'Collection' && empty($returnDoc)) {
+            $str = 'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ';
+            $str .= 'use Collection::toArray() instead';
             $error = sprintf($str, $className, $methodName);
             $file->addError($error, $returnTypeHintPtr, 'MissingDocForReturnTypeHint');
 
@@ -365,7 +466,10 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Catch Superfluous return comment doc
-        if (!in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject']) && $returnDoc) {
+        if ($returnDoc &&
+            !in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject', 'iterable', 'Collection']) &&
+            count(array_values($returnDoc)[0]) < 2
+        ) {
             $error = 'Superfluous return type doc';
             $file->addError($error, array_keys($returnDoc)[0], 'superfluousParamDoc');
         }
@@ -374,7 +478,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
     private function unsetrParamType($needle, &$paramDoc): bool
     {
         foreach ($paramDoc as $key => $param) {
-            if (in_array($needle, $param, true) && count($param) === 2) {
+            if (in_array($needle, $param, true) && count($param) >= 2) {
 
                 if (strpos(array_values($param)[0], '[]') !== false) {
                     unset($paramDoc[$key]);
