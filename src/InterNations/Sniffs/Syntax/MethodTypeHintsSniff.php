@@ -66,19 +66,22 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
         // Class name
         $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
-        if(!$classPtr) {
+
+        if (!$classPtr) {
             $classPtr = $file->findPrevious(T_TRAIT, $stackPtr);
         }
         $className = $tokens[$file->findNext(T_WHITESPACE, $classPtr + 1, null, true)]['content'];
 
         $parentClassPtr = $file->findPrevious(T_EXTENDS, $stackPtr);
         $parentClassName = null;
+
         if ($parentClassPtr) {
             $parentClassName = $tokens[$file->findNext(T_WHITESPACE, $parentClassPtr + 1, null, true)]['content'];
         }
 
         $interfacePtr = $file->findPrevious(T_IMPLEMENTS, $stackPtr);
         $interfaces = null;
+
         if ($interfacePtr) {
             $phpOpenCurlyBracket = $file->findNext(T_OPEN_CURLY_BRACKET, $interfacePtr);
 
@@ -118,8 +121,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Ignore whitelisted methods by interface
-        if ($interfaces)
-        {
+        if ($interfaces) {
             foreach ($interfaces as $interface) {
 
                 if (isset($this->ignoreTypeHintWhitelist[$interface]) &&
