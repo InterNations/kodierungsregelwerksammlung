@@ -32,13 +32,13 @@ class PhpUnitStaticallyCalledMethodsSniff implements CodeSnifferSniff
     /** @param integer $stackPtr */
     public function process(CodeSnifferFile $file, $stackPtr): void
     {
-        $tokens = $file->getTokens();
-        $classNameToken = static::findCurrentClassNameToken($file, $stackPtr, $tokens);
+        $classNameToken = static::findCurrentClassNameToken($file, $stackPtr);
 
         if (!$classNameToken || !preg_match('/^.+Test(?:Case)?$/', $classNameToken['content'])) {
             return;
         }
 
+        $tokens = $file->getTokens();
         $previousStackPtr = $file->findPrevious([T_WHITESPACE, T_COMMENT], $stackPtr - 1, null, true);
         $previousToken = $tokens[$previousStackPtr];
 
@@ -113,17 +113,16 @@ class PhpUnitStaticallyCalledMethodsSniff implements CodeSnifferSniff
         }
     }
 
-    /**
-     * @param mixed[] $tokens
-     * @return mixed[]
-     */
-    private static function findCurrentClassNameToken(CodeSnifferFile $file, int $stackPtr, array $tokens): ?array
+    /** @return mixed[] */
+    private static function findCurrentClassNameToken(CodeSnifferFile $file, int $stackPtr): ?array
     {
         $classStackPtr = $file->findPrevious(T_CLASS, $stackPtr);
 
         if (!$classStackPtr) {
             return null;
         }
+
+        $tokens = $file->getTokens();
 
         return $tokens[$file->findNext([T_WHITESPACE, T_COMMENT], $classStackPtr + 1, null, true)];
     }
