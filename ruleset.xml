@@ -206,6 +206,7 @@
     <rule ref="./src/InterNations/Sniffs/Formatting/EmptyLineBeforeControlStructureFormattingSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Architecture/ControllerMethodsConventionSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/PhpUnitAssertionsSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Waste/PhpUnitStaticallyCalledMethodsSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousFormatStringSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/BestPractice/ExceptionTestSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/BestPractice/TestStubSniff.php"/>
