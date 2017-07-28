@@ -43,7 +43,8 @@ class RestViewSniff implements CodeSnifferSniff
 
     private function isApiMethod($stackPtr, &$tokens)
     {
-        if($tokens[$stackPtr - 2]['type'] === 'T_PUBLIC' && preg_match('/Action$/', $tokens[$stackPtr + 2]['content'])) {
+        if ($tokens[$stackPtr - 2]['type'] === 'T_PUBLIC'
+            && preg_match('/Action$/', $tokens[$stackPtr + 2]['content'])) {
             return true;
         }
 
@@ -52,7 +53,7 @@ class RestViewSniff implements CodeSnifferSniff
 
     private function isApi()
     {
-        if(strpos($this->nameSpace, '\\Api\\') !== false && preg_match('/Controller$/', $this->className)) {
+        if (strpos($this->nameSpace, '\\Api\\') !== false && preg_match('/Controller$/', $this->className)) {
             return true;
         }
 
