@@ -108,13 +108,13 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             $errors,
             $file,
             'errors',
-            'Superfluous parameter comment doc'
+            'Superfluous parameter comment doc: Activity $activity'
         );
         $this->assertReportContains(
             $errors,
             $file,
             'errors',
-            'Superfluous parameter comment doc'
+            'Superfluous parameter comment doc: User $attendee'
         );
     }
 
@@ -236,6 +236,20 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
             'errors',
             'Return type hint for a method "missingDocForReturnTypeHint::z" must be documented to specify their exact type, use Collection::toArray() instead'
         );
+    }
+
+    public function testMixedTypeHint(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/MixedTypeHint.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+        $this->assertReportCount(0, 0, $errors, $file);
+    }
+
+    public function testUnionTypeHint(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/UnionTypeHint.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+        $this->assertReportCount(3, 0, $errors, $file);
     }
 
     public function testTrait(): void

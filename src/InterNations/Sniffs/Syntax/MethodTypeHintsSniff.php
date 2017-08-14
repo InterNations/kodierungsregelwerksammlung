@@ -6,6 +6,9 @@ use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class MethodTypeHintsSniff implements CodeSnifferSniff
 {
+    private const NATIVE_TYPES = ['string', 'bool', 'array', 'float', 'resource', 'int', 'integer', 'double'];
+    private const NON_NATIVE_UNION_TYPES = ['mixed', 'object'];
+
     public $ignoreTypeHintWhitelist;
 
     /*
@@ -196,7 +199,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
             if ($tokens[$i]['code'] === T_VARIABLE) {
                 $paramCount++;
 
-                $typeHintPtr = $file->findPrevious([T_WHITESPACE, T_ELLIPSIS], ($i - 1), null, true);
+                $typeHintPtr = $file->findPrevious([T_WHITESPACE, T_ELLIPSIS], $i - 1, null, true);
 
                 // Check for no param
                 if (isset(self::$whitelist[$methodName]) && self::$whitelist[$methodName][0] === null) {
@@ -213,7 +216,14 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 }
 
                 // Check for mandatory mixed type hints
-                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_ARRAY_HINT, T_CALLABLE])) {
+                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_ARRAY_HINT, T_CALLABLE], true)) {
+
+                    $docBlockType = $this->getDocBlockType($tokens[$i]['content'], $paramDoc);
+
+                    if (self::isWhitelistedDocBlockType($docBlockType)) {
+                        continue;
+                    }
+
                     $error = sprintf(
                         'Expected Type hint for the parameter "%1$s" in method "%2$s::%3$s"',
                         $tokens[$i]['content'],
@@ -317,7 +327,11 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                     continue;
                 }
 
-                $error = 'Superfluous parameter comment doc';
+                if (self::isWhitelistedDocBlockType($value[0])) {
+                    continue;
+                }
+
+                $error = 'Superfluous parameter comment doc: ' . implode(' ', $value);
                 $file->addError($error, $key, 'superfluousParamDoc');
             }
         }
@@ -347,19 +361,23 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Escape return type hint check for controller's actions.
-        if (preg_match('/Controller$/D', $className) && preg_match('/Action/D', $methodName)) {
+        if (preg_match('/Controller$/D', $className) && preg_match('/Action$/D', $methodName)) {
             return;
         }
 
         // PHP7 return type hint check
         if (!$returnTypeHint) {
 
-            $error = sprintf(
-                'PHP 7 style return type hint is required for method "%1$s::%2$s"',
-                $className,
-                $methodName
-            );
-            $file->addError($error, $namePtr, 'MissingReturnTypeHint');
+            if (!self::isWhitelistedDocBlockType(array_values($returnDoc)[0][0] ?? null)) {
+
+                $error = sprintf(
+                    'PHP 7 style return type hint is required for method "%1$s::%2$s"',
+                    $className,
+                    $methodName
+                );
+                $file->addError($error, $namePtr, 'MissingReturnTypeHint');
+
+            }
 
             return;
         }
@@ -491,5 +509,40 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         return false;
+    }
+
+    private function getDocBlockType(string $variableName, array $docBlocks): ?string
+    {
+        foreach ($docBlocks as [$type, $docBlockVariableName]) {
+
+            if ($docBlockVariableName === $variableName) {
+                return $type;
+            }
+        }
+
+        return null;
+    }
+
+    private static function isWhitelistedDocBlockType(?string $compoundType)
+    {
+        $types = explode('|', $compoundType);
+
+        if (count($types) === 1) {
+            return in_array($types[0], self::NON_NATIVE_UNION_TYPES, true);
+        }
+
+        if (count($types) === 2) {
+
+            // We want string|null to replaced with a native type hint
+            $index = array_search('null', $types, true);
+
+            if ($index !== false) {
+                unset($types[$index]);
+
+                return !in_array(current($types), self::NATIVE_TYPES, true);
+            }
+        }
+
+        return true;
     }
 }
