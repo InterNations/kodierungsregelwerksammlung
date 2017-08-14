@@ -103,7 +103,7 @@ class InterNations_Tests_Sniffs_Syntax_MethodTypeHintsSniffTest extends InterNat
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/SuperfluousParamDoc.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
-        $this->assertReportCount(2, 0, $errors, $file);
+        $this->assertReportCount(5, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,

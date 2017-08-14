@@ -513,7 +513,13 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
     private function getDocBlockType(string $variableName, array $docBlocks): ?string
     {
-        foreach ($docBlocks as [$type, $docBlockVariableName]) {
+        foreach ($docBlocks as $block) {
+
+            if (count($block) === 1) {
+                continue;
+            }
+
+            [$type, $docBlockVariableName] = $block;
 
             if ($docBlockVariableName === $variableName) {
                 return $type;
