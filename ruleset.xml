@@ -210,6 +210,7 @@
     <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousFormatStringSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/BestPractice/ExceptionTestSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/BestPractice/TestStubSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Security/ControllerContentTypeSniff.php"/>
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <rule ref="Squiz.Strings.EchoedStrings"/>

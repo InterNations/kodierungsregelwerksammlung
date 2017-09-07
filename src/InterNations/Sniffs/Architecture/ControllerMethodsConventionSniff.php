@@ -1,6 +1,7 @@
 <?php
 namespace InterNations\Sniffs\Architecture;
 
+use InterNations\Sniffs\Util;
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
@@ -27,11 +28,7 @@ class ControllerMethodsConventionSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
-        if (strpos($file->getFilename(), '/Controller/') === false) {
-            return;
-        }
-
-        if (strpos($file->getFilename(), 'Controller.php') === false) {
+        if (!Util::isController($file)) {
             return;
         }
 
