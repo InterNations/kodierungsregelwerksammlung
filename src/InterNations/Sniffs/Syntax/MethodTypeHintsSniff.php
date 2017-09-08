@@ -6,7 +6,18 @@ use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class MethodTypeHintsSniff implements CodeSnifferSniff
 {
-    private const NATIVE_TYPES = ['string', 'bool', 'array', 'float', 'resource', 'int', 'integer', 'double'];
+    private const NATIVE_TYPES = [
+        'string',
+        'bool',
+        'array',
+        'float',
+        'resource',
+        'int',
+        'integer',
+        'double',
+        'callable',
+        'iterable',
+    ];
     private const NON_NATIVE_UNION_TYPES = ['mixed', 'object'];
 
     public $ignoreTypeHintWhitelist;
