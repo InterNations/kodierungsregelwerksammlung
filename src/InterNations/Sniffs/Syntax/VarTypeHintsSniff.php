@@ -39,7 +39,7 @@ class VarTypeHintsSniff implements CodeSnifferSniff
             );
 
             if (preg_match('/^ArrayCollection/D', $varDoc[0])) {
-                $str = 'Found type "%1$s" for a variable "%2$s", ';
+                $str = 'Found type "%1$s" for property "%2$s", ';
                 $str .= '"@var ArrayCollection" is forbidden, use "@var Collection|Class[]" instead';
                 $error = sprintf($str, $varDoc[0], $tokens[$stackPtr]['content']);
                 $file->addError($error, $j, 'ForbiddenVarTypeHint');

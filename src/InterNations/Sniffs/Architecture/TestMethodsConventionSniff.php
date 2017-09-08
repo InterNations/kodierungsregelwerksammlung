@@ -51,7 +51,7 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
         }
 
         // Skip test methods
-        if (preg_match('/^test/D', $methodName)) {
+        if (strpos($methodName, 'test') === 0) {
             return;
         }
 
@@ -66,7 +66,7 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
                 . 'This is for to make sure, we are not accidentally skipping a test because for example a typo '
                 . '(tsetSomething()).',
                 $stackPtr,
-                'verbLimit'
+                'testMethodConvention'
             );
         }
     }
