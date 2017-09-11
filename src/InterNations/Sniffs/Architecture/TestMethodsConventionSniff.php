@@ -32,7 +32,8 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
 
         // Class name
         $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
-        $className = $tokens[$file->findNext(T_WHITESPACE, $classPtr + 1, null, true)]['content'];
+
+        $className = $file->getDeclarationName($classPtr);
 
         if (!preg_match('/Test$/D', $className)) {
             return;

@@ -3,6 +3,11 @@ namespace InterNations\Bundle\SomethingBundle\Test;
 
 class SomethingTest
 {
+    protected function setUp()
+    {
+        $this->roleExtension = new RoleExtension();
+    }
+
     /**
      * @dataProvider provideSomethingX
      * @param $setter
