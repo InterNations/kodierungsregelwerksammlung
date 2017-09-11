@@ -3,7 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 class InterNations_Tests_Sniffs_AbstractTestCase extends TestCase
 {
-    protected static function analyze(array $sniffs, $files)
+    protected static function analyze(array $sniffs, $files, array $sniffProperties = []): array
     {
         $sniffs = array_map(
             static function ($sniff) {
@@ -25,6 +25,12 @@ class InterNations_Tests_Sniffs_AbstractTestCase extends TestCase
         $codeSniffer->registerSniffs($sniffs, [], []);
         $codeSniffer->cli->setCommandLineValues(['--showSources=false', '--report=checkstyle']);
         $codeSniffer->populateTokenListeners();
+
+        foreach ($sniffProperties as $sniff => $properties) {
+            foreach ($properties as $propertyName => $propertyValue) {
+                $codeSniffer->setSniffProperty($sniff, $propertyName, $propertyValue);
+            }
+        }
 
         $report = [];
         foreach ($files as $file) {

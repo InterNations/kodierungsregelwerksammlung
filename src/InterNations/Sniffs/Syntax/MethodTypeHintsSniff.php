@@ -1,8 +1,11 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
+use InterNations\Sniffs\Util;
 use PHP_CodeSniffer_File as CodeSnifferFile;
 use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 
 class MethodTypeHintsSniff implements CodeSnifferSniff
 {
@@ -86,26 +89,6 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
         $className = $tokens[$file->findNext(T_WHITESPACE, $classPtr + 1, null, true)]['content'];
 
-        $parentClassPtr = $file->findPrevious(T_EXTENDS, $stackPtr);
-        $parentClassName = null;
-
-        if ($parentClassPtr) {
-            $parentClassName = $tokens[$file->findNext(T_WHITESPACE, $parentClassPtr + 1, null, true)]['content'];
-        }
-
-        $interfacePtr = $file->findPrevious(T_IMPLEMENTS, $stackPtr);
-        $interfaces = null;
-
-        if ($interfacePtr) {
-            $phpOpenCurlyBracket = $file->findNext(T_OPEN_CURLY_BRACKET, $interfacePtr);
-
-            for ($j = $interfacePtr; $j < $phpOpenCurlyBracket; $j++) {
-                if ($tokens[$j]['code'] === T_STRING) {
-                    $interfaces[] = $tokens[$j]['content'];
-                }
-            }
-        }
-
         if (preg_match('/Sniff$/D', $className)) {
             return;
         }
@@ -119,31 +102,32 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
             return;
         }
 
-        // Ignore whitelisted methods by class
-        if (isset($this->ignoreTypeHintWhitelist[$className]) &&
-            in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
-        ) {
-            return;
+
+        $namespace = '';
+        $namespaceTokenPtr = $file->findPrevious(T_NAMESPACE, $stackPtr - 1);
+        if ($namespaceTokenPtr) {
+            $namespacePtr = $file->findNext(T_STRING, $namespaceTokenPtr);
+            $endPtr = $file->findNext(T_SEMICOLON, $namespacePtr + 1);
+            $namespace =$file->getTokensAsString($namespacePtr, $endPtr - $namespacePtr) . '\\';
         }
 
-        // Ignore whitelisted methods by parent class
-        if ($parentClassName &&
-            isset($this->ignoreTypeHintWhitelist[$parentClassName]) &&
-            in_array($methodName, $this->ignoreTypeHintWhitelist[$parentClassName])
-        ) {
-            return;
-        }
-
-        // Ignore whitelisted methods by interface
-        if ($interfaces) {
-            foreach ($interfaces as $interface) {
-
-                if (isset($this->ignoreTypeHintWhitelist[$interface]) &&
-                    in_array($methodName, $this->ignoreTypeHintWhitelist[$interface])) {
+        try {
+            $reflectedClass = Util::reflectClass($namespace . $className);
+            do {
+                if ($this->isWhitelisted($reflectedClass, $methodName)) {
                     return;
                 }
-            }
+
+                foreach ($reflectedClass->getInterfaces() as $reflectedInterface) {
+                    if ($this->isWhitelisted($reflectedInterface, $methodName)) {
+                        return;
+                    }
+                }
+            } while ($reflectedClass = $reflectedClass->getParentClass());
+        } catch (IdentifierNotFound $e) {
+            // There is nothing we can do
         }
+
 
         // Comments block
         $paramDoc = $returnDoc = $dataProvider = [];
@@ -561,5 +545,10 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         return true;
+    }
+
+    private function isWhitelisted(ReflectionClass $class, string $methodName): bool
+    {
+        return in_array($methodName, $this->ignoreTypeHintWhitelist[$class->getName()] ?? [], true);
     }
 }
