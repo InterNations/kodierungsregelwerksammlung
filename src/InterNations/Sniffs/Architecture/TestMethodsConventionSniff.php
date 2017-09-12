@@ -15,6 +15,10 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
     {
         $tokens = $file->getTokens();
 
+        if (strpos($file->getFilename(), '/Test/') === false) {
+            return;
+        }
+
         $dataProvider = [];
 
         for ($i = 0; $i < count($tokens); $i++) {
@@ -28,15 +32,6 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
                     }
                 }
             }
-        }
-
-        // Class name
-        $classPtr = $file->findPrevious(T_CLASS, $stackPtr);
-
-        $className = $file->getDeclarationName($classPtr);
-
-        if (!preg_match('/Test$/D', $className)) {
-            return;
         }
 
         // Method name
