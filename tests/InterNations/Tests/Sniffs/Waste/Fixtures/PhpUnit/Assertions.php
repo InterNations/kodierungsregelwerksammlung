@@ -1,4 +1,7 @@
 <?php
+
+$this->assertSame(1, preg_match('/^[abc]{2}$/', 'kslfjdsklj4654656abc'));
+
 $this->assertSomething("something");
 
 $this->assertSame(true, true);

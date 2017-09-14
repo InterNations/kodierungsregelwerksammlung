@@ -9,7 +9,7 @@ class InterNations_Tests_Sniffs_Waste_PhpUnitAssertionsSniffTest
         $file = __DIR__ . '/Fixtures/PhpUnit/Assertions.php';
         $errors = $this->analyze(['InterNations/Sniffs/Waste/PhpUnitAssertionsSniff'], [$file]);
 
-        $this->assertReportCount(25, 0, $errors, $file);
+        $this->assertReportCount(26, 0, $errors, $file);
 
         // Exists three times
         $this->assertReportContains(
@@ -17,6 +17,12 @@ class InterNations_Tests_Sniffs_Waste_PhpUnitAssertionsSniffTest
             $file,
             'errors',
             'There is a better alternative for the assertion. Use "assertTrue()" instead of "assertSame(true, …)"'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'There is a better alternative for the assertion. Use "assertRegExp()" instead of "assertSame(1, preg_match(), …)"'
         );
         $this->assertReportContains(
             $errors,
