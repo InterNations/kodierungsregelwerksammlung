@@ -1,5 +1,4 @@
 <?php
-namespace InterNations\Test\Sniff\Syntax\Fixtures\MethodTypeHints;
 
 class ValidTypeHints extends TestClass
 {
