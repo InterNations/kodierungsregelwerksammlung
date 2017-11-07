@@ -15,7 +15,7 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
     {
         $tokens = $file->getTokens();
 
-        if (strpos($file->getFilename(), '/Test/') === false) {
+        if (strpos($file->getFilename(), 'Test') === false) {
             return;
         }
 
