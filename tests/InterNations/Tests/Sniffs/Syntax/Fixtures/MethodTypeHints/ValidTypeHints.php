@@ -1,7 +1,17 @@
 <?php
 
-class ValidTypeHints
+class ValidTypeHints extends TestClass
 {
+    /**
+     * @param string[] $x List of role names
+     * @param int|null $y Test for phpdoc param
+     * @return ?string The description of the most relevant role
+     */
+    public static function getData(array $x, ?int $y, bool $z): ?string
+    {
+        return;
+    }
+
     /**
      * @dataProvider provideDataForFeedbackEligibility
      * @param string[] $testCase

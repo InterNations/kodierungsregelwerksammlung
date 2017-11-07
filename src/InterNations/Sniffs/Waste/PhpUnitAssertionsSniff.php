@@ -11,7 +11,7 @@ class PhpUnitAssertionsSniff implements CodeSnifferSniff
             T_TRUE                     => 'assertTrue',
             T_FALSE                    => 'assertFalse',
             T_NULL                     => 'assertNull',
-            T_LNUMBER                  => ['count' => 'assertCount'],
+            T_LNUMBER                  => ['count' => 'assertCount', 'preg_match' => 'assertRegExp'],
             T_VARIABLE                 => [
                 'count'     => 'assertCount',
                 'get_class' => 'assertInstanceOf',

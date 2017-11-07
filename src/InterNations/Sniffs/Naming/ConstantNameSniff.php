@@ -141,6 +141,10 @@ class ConstantNameSniff implements CodeSnifferSniff
                 return;
             }
 
+            if ($tokens[$nextPtr]['code'] === T_ELLIPSIS) {
+                return;
+            }
+
             // Is it the second part of a trait use statement with aliasing ("bar" in foo as bar)?
             $prevPtr = $file->findPrevious(
                 [T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED],

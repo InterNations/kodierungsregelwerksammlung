@@ -10,4 +10,11 @@ class superfluousParamDoc
     {
         return;
     }
+
+    /**
+     * @param $var1 This is a description
+     * @param $var2
+     */
+    public function something($var1, $var2): void
+    {}
 }

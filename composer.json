@@ -18,7 +18,8 @@
     ],
     "require": {
         "php": "~7.1",
-        "squizlabs/php_codesniffer": "~2"
+        "squizlabs/php_codesniffer": "~2",
+        "doctrine/annotations": "^1.4"
     },
     "require-dev": {
         "phpunit/phpunit": "~6"

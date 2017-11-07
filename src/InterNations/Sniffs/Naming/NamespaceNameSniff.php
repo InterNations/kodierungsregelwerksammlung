@@ -43,7 +43,7 @@ class NamespaceNameSniff implements CodeSnifferSniff
                 array_slice(explode('\\', $namespace), substr_count($path, DIRECTORY_SEPARATOR))
             );
 
-            if (strrpos($namespace, $partialNamespace) + strlen($partialNamespace) === strlen($namespace)) {
+            if (strrpos($namespace, $partialNamespace) + strlen($partialNamespace) === strlen($path)) {
                 return;
             }
         }
