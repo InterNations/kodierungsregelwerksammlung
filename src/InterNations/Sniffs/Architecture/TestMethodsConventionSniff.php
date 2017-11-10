@@ -6,6 +6,8 @@ use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
 class TestMethodsConventionSniff implements CodeSnifferSniff
 {
+    public $ignoreMandatoryPublicMethods;
+
     public function register()
     {
         return [T_FUNCTION];
@@ -13,9 +15,13 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
+        if ($this->ignoreMandatoryPublicMethods && !empty($this->ignoreMandatoryPublicMethods)) {
+            $ignoreMandatoryPublicMethods = explode(':', $this->ignoreMandatoryPublicMethods);
+        }
+
         $tokens = $file->getTokens();
 
-        if (strpos($file->getFilename(), '/Test/') === false) {
+        if (strpos($file->getFilename(), 'Test.php') === false) {
             return;
         }
 
@@ -51,8 +57,8 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
             return;
         }
 
-        // Skip @dataProvider
-        if (in_array($methodName, $dataProvider)) {
+        // Skip @dataProvider + public methods
+        if (in_array($methodName, array_merge($dataProvider,$ignoreMandatoryPublicMethods))) {
             return;
         }
 

@@ -6,7 +6,7 @@ class InterNations_Tests_Sniffs_Architecture_TestMethodsConventionSniffTest
 {
     public function testWebControllerConventions()
     {
-        $file = __DIR__ . '/Fixtures/InterNations/Bundle/SomethingBundle/Test/SomethingTest.php';
+        $file = __DIR__ . '/Fixtures/InterNations/Bundle/PhpunitTestBundle/Test/PhpunitMethodConventionTest.php';
         $errors = $this->analyze(['InterNations/Sniffs/Architecture/TestMethodsConventionSniff'], [$file]);
         $this->assertReportCount(1, 0, $errors, $file);
         $this->assertReportContains(
