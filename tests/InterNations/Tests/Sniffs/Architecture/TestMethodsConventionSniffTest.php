@@ -4,7 +4,7 @@ require_once __DIR__ . '/../AbstractTestCase.php';
 class InterNations_Tests_Sniffs_Architecture_TestMethodsConventionSniffTest
     extends InterNations_Tests_Sniffs_AbstractTestCase
 {
-    public function testWebControllerConventions()
+    public function testPhpunitTestsMethodsConventions()
     {
         $file = __DIR__ . '/Fixtures/InterNations/Bundle/PhpunitTestBundle/Test/PhpunitMethodConventionTest.php';
         $errors = $this->analyze(['InterNations/Sniffs/Architecture/TestMethodsConventionSniff'], [$file]);

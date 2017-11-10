@@ -15,6 +15,7 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
 
     public function process(CodeSnifferFile $file, $stackPtr)
     {
+        $ignoreMandatoryPublicMethods = [];
         if ($this->ignoreMandatoryPublicMethods && !empty($this->ignoreMandatoryPublicMethods)) {
             $ignoreMandatoryPublicMethods = explode(':', $this->ignoreMandatoryPublicMethods);
         }

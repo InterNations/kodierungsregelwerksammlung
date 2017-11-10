@@ -22,26 +22,26 @@ class PhpunitMethodConventionTest
         return [];
     }
 
-    /** @dataProvider provideY */
+    /** @dataProvider providerY */
     public function testY()
     {
         $this->assertTrue(true);
     }
 
     /**
-     * @dataProvider provideZ
+     * @dataProvider providerZ
      */
     public function testZ()
     {
         $this->assertTrue(true);
     }
 
-    private function findY()
+    public function providerY()
     {
         return [];
     }
 
-    protected function findZ()
+    public function providerZ()
     {
         return [];
     }
