@@ -28,8 +28,7 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
         }
 
         // Ignore anonymous classes
-        if (in_array(T_ANON_CLASS, $tokens[$stackPtr]['conditions']))
-        {
+        if (in_array(T_ANON_CLASS, $tokens[$stackPtr]['conditions'])) {
             return;
         }
 
