@@ -83,63 +83,63 @@ class ExpressionFormattingSniff implements Sniff
             $currentToken = $tokens[$expressionPtr];
 
             switch ($currentToken['code']) {
-            case T_WHITESPACE:
-                if (static::nextSignificantTokenClosesArray($file, $expressionPtr)) {
+                case T_WHITESPACE:
+                    if (static::nextSignificantTokenClosesArray($file, $expressionPtr)) {
+                        $needsWhitespace = false;
+                        break;
+                    }
+                    static::append($argumentsLine, ' ', $whitespaceCount, $needsWhitespace);
+                    break;
+
+                case T_OPEN_SHORT_ARRAY:
+                case T_ARRAY:
+                case T_OPEN_PARENTHESIS:
+                    static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
+                    $nestingLevel++;
                     $needsWhitespace = false;
                     break;
-                }
-                static::append($argumentsLine, ' ', $whitespaceCount, $needsWhitespace);
-                break;
 
-            case T_OPEN_SHORT_ARRAY:
-            case T_ARRAY:
-            case T_OPEN_PARENTHESIS:
-                static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
-                $nestingLevel++;
-                $needsWhitespace = false;
-                break;
+                case T_CLOSE_SHORT_ARRAY:
+                case T_CLOSE_PARENTHESIS:
+                    static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
+                    $nestingLevel--;
+                    $needsWhitespace = static::nextSignificantTokenConcatsString($file, $expressionPtr + 1);
+                    break;
 
-            case T_CLOSE_SHORT_ARRAY:
-            case T_CLOSE_PARENTHESIS:
-                static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
-                $nestingLevel--;
-                $needsWhitespace = static::nextSignificantTokenConcatsString($file, $expressionPtr + 1);
-                break;
+                case T_CONSTANT_ENCAPSED_STRING:
+                case T_VARIABLE:
+                    if (strpos($currentToken['content'], "\n") !== false) {
+                        // Ignore strings spanning multiple lines
+                        return;
+                    }
+                    static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
+                    break;
 
-            case T_CONSTANT_ENCAPSED_STRING:
-            case T_VARIABLE:
-                if (strpos($currentToken['content'], "\n") !== false) {
-                    // Ignore strings spanning multiple lines
+                case T_HEREDOC:
+                case T_NOWDOC:
+                case T_CLOSURE:
+                case T_COMMENT:
+                case T_DOC_COMMENT:
+                case T_DOC_COMMENT_OPEN_TAG:
+                case T_DOC_COMMENT_CLOSE_TAG:
+                case T_DOC_COMMENT_STAR:
+                case T_DOC_COMMENT_TAG:
+                case T_DOC_COMMENT_STRING:
+                    // Don’t continue checking
                     return;
-                }
-                static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
-                break;
+                        break;
 
-            case T_HEREDOC:
-            case T_NOWDOC:
-            case T_CLOSURE:
-            case T_COMMENT:
-            case T_DOC_COMMENT:
-            case T_DOC_COMMENT_OPEN_TAG:
-            case T_DOC_COMMENT_CLOSE_TAG:
-            case T_DOC_COMMENT_STAR:
-            case T_DOC_COMMENT_TAG:
-            case T_DOC_COMMENT_STRING:
-                // Don’t continue checking
-                return;
+                case T_COMMA:
+                    if (static::nextSignificantTokenClosesArray($file, $expressionPtr)) {
+                        $needsWhitespace = false;
+                        break;
+                    }
+                    static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
                     break;
 
-            case T_COMMA:
-                if (static::nextSignificantTokenClosesArray($file, $expressionPtr)) {
-                    $needsWhitespace = false;
+                default:
+                    static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
                     break;
-                }
-                static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
-                break;
-
-            default:
-                static::append($argumentsLine, $currentToken['content'], $whitespaceCount, $needsWhitespace);
-                break;
             }
         }
 

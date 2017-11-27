@@ -50,24 +50,23 @@ class ExceptionTestSniff implements Sniff
             $parameter = trim($tokens[$file->findNext(T_DOC_COMMENT_STRING, $docBlockOpenTagPtr)]['content']);
 
             switch ($annotation) {
+                case '@expectedExceptionMessage':
+                    $arguments['message'] = var_export($parameter, true);
+                    break;
 
-            case '@expectedExceptionMessage':
-                $arguments['message'] = var_export($parameter, true);
-                break;
+                case '@expectedExceptionMessageRegExp':
+                    $method = 'setExpectedExceptionRegExp';
+                    $arguments['message'] = var_export('/' . str_replace('/', '\/', $parameter) . '/', true);
+                    break;
 
-            case '@expectedExceptionMessageRegExp':
-                $method = 'setExpectedExceptionRegExp';
-                $arguments['message'] = var_export('/' . str_replace('/', '\/', $parameter) . '/', true);
-                break;
+                case '@expectedExceptionCode':
+                    $arguments['code'] = is_numeric($parameter) ? $parameter : var_export($parameter, true);
+                    break;
 
-            case '@expectedExceptionCode':
-                $arguments['code'] = is_numeric($parameter) ? $parameter : var_export($parameter, true);
-                break;
-
-            case '@expectedException':
-            default:
-                $arguments['class'] = $parameter . '::class';
-                break;
+                case '@expectedException':
+                default:
+                    $arguments['class'] = $parameter . '::class';
+                    break;
             }
         }
 

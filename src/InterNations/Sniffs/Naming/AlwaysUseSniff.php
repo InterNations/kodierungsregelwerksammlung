@@ -28,52 +28,52 @@ class AlwaysUseSniff implements Sniff
 
         while (--$stackPtr > 0) {
             switch ($tokens[$stackPtr]['code']) {
-            case T_NS_SEPARATOR:
-            case T_STRING:
-                continue 2;
+                case T_NS_SEPARATOR:
+                case T_STRING:
+                    continue 2;
 
-            case T_WHITESPACE:
-                switch ($tokens[$stackPtr - 1]['code']) {
-                case T_NEW:
-                    $stackPtr--;
-                    $type = 'New';
-                    break;
+                case T_WHITESPACE:
+                    switch ($tokens[$stackPtr - 1]['code']) {
+                        case T_NEW:
+                            $stackPtr--;
+                            $type = 'New';
+                            break;
 
-                case T_IMPLEMENTS:
-                    $stackPtr--;
-                    $type = 'Implements';
-                    break;
+                        case T_IMPLEMENTS:
+                            $stackPtr--;
+                            $type = 'Implements';
+                            break;
 
-                case T_EXTENDS:
-                    $stackPtr--;
-                    $type = 'Extends';
-                    break;
+                        case T_EXTENDS:
+                            $stackPtr--;
+                            $type = 'Extends';
+                            break;
 
-                case T_INSTANCEOF:
-                    $stackPtr--;
-                    $type = 'InstanceOf';
-                    break;
+                        case T_INSTANCEOF:
+                            $stackPtr--;
+                            $type = 'InstanceOf';
+                            break;
 
-                default:
-                    // Fall through
-                    break;
-                }
+                        default:
+                            // Fall through
+                            break;
+                    }
                 break 2;
 
-            case T_OPEN_PARENTHESIS:
-                if ($tokens[$stackPtr - 3]['code'] === T_FUNCTION || $tokens[$stackPtr - 2]['code'] === T_CLOSURE) {
+                case T_OPEN_PARENTHESIS:
+                    if ($tokens[$stackPtr - 3]['code'] === T_FUNCTION || $tokens[$stackPtr - 2]['code'] === T_CLOSURE) {
+                        $type = 'TypeHint';
+                        break 2;
+                    }
+                    break 2;
+
+                case T_COMMA:
                     $type = 'TypeHint';
                     break 2;
-                }
-                break 2;
 
-            case T_COMMA:
-                $type = 'TypeHint';
-                break 2;
-
-            default:
-                // Do nothing
-                break 2;
+                default:
+                    // Do nothing
+                    break 2;
             }
         }
 

@@ -36,22 +36,22 @@ trait NamespaceSniffTrait
             }
 
             switch ($tokens[$currentPtr]['code']) {
-            case T_STRING:
-            case T_NS_SEPARATOR:
-            case T_PAAMAYIM_NEKUDOTAYIM:
-                if (!$isAlias) {
-                    $namespace .= $tokens[$currentPtr]['content'];
-                }
-                $symbolName = $tokens[$currentPtr]['content'];
-                break;
+                case T_STRING:
+                case T_NS_SEPARATOR:
+                case T_PAAMAYIM_NEKUDOTAYIM:
+                    if (!$isAlias) {
+                        $namespace .= $tokens[$currentPtr]['content'];
+                    }
+                    $symbolName = $tokens[$currentPtr]['content'];
+                    break;
 
-            case T_AS:
-                $isAlias = true;
-                break;
+                case T_AS:
+                    $isAlias = true;
+                    break;
 
-            default:
-                // Just continue
-                break;
+                default:
+                    // Just continue
+                    break;
             }
         }
 
