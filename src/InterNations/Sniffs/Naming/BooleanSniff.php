@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Naming;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class BooleanSniff implements CodeSnifferSniff
+class BooleanSniff implements Sniff
 {
     public function register()
     {
         return [T_TRUE, T_FALSE];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 

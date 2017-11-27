@@ -1,10 +1,10 @@
 <?php
 namespace InterNations\Sniffs\BestPractice;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class CommonDependenciesSniff implements CodeSnifferSniff
+class CommonDependenciesSniff implements Sniff
 {
     private static $commonSymbolNames = [
         'Doctrine\ORM\EntityManager' => 'em',
@@ -22,7 +22,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
         return [T_FUNCTION];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $methodName = $file->getDeclarationName($stackPtr);
 
@@ -45,7 +45,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
         }
     }
 
-    private function verifyParameterName(CodeSnifferFile $file, $stackPtr, $methodName, array $methodParameter)
+    private function verifyParameterName(File $file, $stackPtr, $methodName, array $methodParameter)
     {
         $name = ltrim($methodParameter['name'], '$');
         [$fqNs, $className] = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
@@ -62,13 +62,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
         );
     }
 
-    private function verifyPropertyName(
-        CodeSnifferFile $file,
-        $stackPtr,
-        $methodName,
-        array $methodParameter,
-        array $assignments
-    )
+    private function verifyPropertyName(File $file, $stackPtr, $methodName, array $methodParameter, array $assignments)
     {
         $parameterName = ltrim($methodParameter['name'], '$');
         [$fqNs, $className] = $this->getFullQualifiedName($file, $methodParameter['type_hint']);
@@ -93,7 +87,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
         );
     }
 
-    private function getPropertyAssignments(CodeSnifferFile $file, $stackPtr)
+    private function getPropertyAssignments(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
         $currentToken = $tokens[$stackPtr];
@@ -141,7 +135,7 @@ class CommonDependenciesSniff implements CodeSnifferSniff
         return $assignments;
     }
 
-    private function getFullQualifiedName(CodeSnifferFile $file, $symbolName)
+    private function getFullQualifiedName(File $file, $symbolName)
     {
         $tokens = $file->getTokens();
 

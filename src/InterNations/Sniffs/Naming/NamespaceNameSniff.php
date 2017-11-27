@@ -5,10 +5,10 @@ namespace InterNations\Sniffs\Naming;
 require_once __DIR__ . '/../NamespaceSniffTrait.php';
 
 use InterNations\Sniffs\NamespaceSniffTrait;
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class NamespaceNameSniff implements CodeSnifferSniff
+class NamespaceNameSniff implements Sniff
 {
     use NamespaceSniffTrait;
 
@@ -17,7 +17,7 @@ class NamespaceNameSniff implements CodeSnifferSniff
         return [T_NAMESPACE];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         list(, , $fqNs) = static::getNamespace($stackPtr, $file);
 

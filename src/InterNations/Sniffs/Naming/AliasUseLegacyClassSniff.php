@@ -5,10 +5,10 @@ namespace InterNations\Sniffs\Naming;
 require_once __DIR__ . '/../NamespaceSniffTrait.php';
 
 use InterNations\Sniffs\NamespaceSniffTrait;
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class AliasUseLegacyClassSniff implements CodeSnifferSniff
+class AliasUseLegacyClassSniff implements Sniff
 {
     use NamespaceSniffTrait;
 
@@ -17,7 +17,7 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
         return [T_USE];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -77,7 +77,7 @@ class AliasUseLegacyClassSniff implements CodeSnifferSniff
         }
     }
 
-    private static function addError(CodeSnifferFile $file, $namespacePtr, $alias, $symbol, $namespace, $isAlias)
+    private static function addError(File $file, $namespacePtr, $alias, $symbol, $namespace, $isAlias)
     {
         if ($isAlias) {
             $file->addError(

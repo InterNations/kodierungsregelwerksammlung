@@ -1,10 +1,10 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class MethodTypeHintsSniff implements CodeSnifferSniff
+class MethodTypeHintsSniff implements Sniff
 {
     private const NATIVE_TYPES = [
         'string',
@@ -65,7 +65,7 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         return [T_FUNCTION];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         if ($this->ignoreTypeHintWhitelist && !empty($this->ignoreTypeHintWhitelist)) {
             foreach ($this->ignoreTypeHintWhitelist as $classes => $methodsToBeWhitelisted) {
@@ -120,16 +120,16 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Ignore whitelisted methods by class
-        if (isset($this->ignoreTypeHintWhitelist[$className]) &&
-            in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
+        if (isset($this->ignoreTypeHintWhitelist[$className]) 
+            && in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
         ) {
             return;
         }
 
         // Ignore whitelisted methods by parent class
-        if ($parentClassName &&
-            isset($this->ignoreTypeHintWhitelist[$parentClassName]) &&
-            in_array($methodName, $this->ignoreTypeHintWhitelist[$parentClassName])
+        if ($parentClassName 
+            && isset($this->ignoreTypeHintWhitelist[$parentClassName]) 
+            && in_array($methodName, $this->ignoreTypeHintWhitelist[$parentClassName])
         ) {
             return;
         }
@@ -138,8 +138,9 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         if ($interfaces) {
             foreach ($interfaces as $interface) {
 
-                if (isset($this->ignoreTypeHintWhitelist[$interface]) &&
-                    in_array($methodName, $this->ignoreTypeHintWhitelist[$interface])) {
+                if (isset($this->ignoreTypeHintWhitelist[$interface]) 
+                    && in_array($methodName, $this->ignoreTypeHintWhitelist[$interface])
+                ) {
                     return;
                 }
             }
@@ -317,9 +318,9 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
                 }
 
                 // Have strict nullable operator for default null parameters
-                if ($tokens[$typeHintPtr-1]['code'] !== T_NULLABLE &&
-                    $tokens[$typeHintPtr+4]['code'] === T_EQUAL &&
-                    $tokens[$typeHintPtr+6]['code'] === T_NULL
+                if ($tokens[$typeHintPtr-1]['code'] !== T_NULLABLE 
+                    && $tokens[$typeHintPtr+4]['code'] === T_EQUAL 
+                    && $tokens[$typeHintPtr+6]['code'] === T_NULL
                 ) {
                     $str = 'Expected type hint "?%1$s" a for a method "%2$s::%3$s", found "%1$s"';
                     $error = sprintf($str, $tokens[$typeHintPtr]['content'], $className, $methodName);
@@ -395,7 +396,8 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
 
         // PHP7 return type style check
         if ($file->findNext(T_WHITESPACE, $endBracket) === ($endBracket + 1)
-            && $tokens[$endBracket+2]['code'] === T_COLON) {
+            && $tokens[$endBracket+2]['code'] === T_COLON
+        ) {
             $str = 'No leading space allowed before colon, exactly one space after colon, expected return type ';
             $str .= 'formatting to be "): %1$s" got ") : %1$s"';
             $error = sprintf($str, $tokens[$returnTypeHintPtr]['content']);
@@ -440,11 +442,10 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Check for array return type hint
-        if (($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc)) ||
-            ($tokens[$returnTypeHintPtr]['content'] === 'array' &&
-                strpos(array_values($returnDoc)[0][0], '[]') === false
-            ) ||
-            ($tokens[$returnTypeHintPtr]['content'] === 'array' && count(array_values($returnDoc)[0]) === 2)
+        if (($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc)) 
+            || ($tokens[$returnTypeHintPtr]['content'] === 'array' 
+            && strpos(array_values($returnDoc)[0][0], '[]') === false) 
+            || ($tokens[$returnTypeHintPtr]['content'] === 'array' && count(array_values($returnDoc)[0]) === 2)
         ) {
             $str = 'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ';
             $str .= 'Use "@return Class[]" for a list of classes, use "@return integer[]" for a list of integers ';
@@ -497,9 +498,9 @@ class MethodTypeHintsSniff implements CodeSnifferSniff
         }
 
         // Catch Superfluous return comment doc
-        if ($returnDoc &&
-            !in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject', 'iterable', 'Collection']) &&
-            count(array_values($returnDoc)[0]) < 2
+        if ($returnDoc 
+            && !in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject', 'iterable', 'Collection']) 
+            && count(array_values($returnDoc)[0]) < 2
         ) {
             $error = 'Superfluous return type doc';
             $file->addError($error, array_keys($returnDoc)[0], 'superfluousParamDoc');

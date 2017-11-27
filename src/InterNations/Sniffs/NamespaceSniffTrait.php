@@ -1,14 +1,14 @@
 <?php
 namespace InterNations\Sniffs;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
+use PHP_CodeSniffer\Files\File;
 
 trait NamespaceSniffTrait
 {
     /**
      * @return mixed[]
      */
-    private static function getNamespace(int $stackPtr, CodeSnifferFile $file): array
+    private static function getNamespace(int $stackPtr, File $file): array
     {
         $namespace = '';
         $symbolName = null;
@@ -30,27 +30,28 @@ trait NamespaceSniffTrait
             $nextPtr = $currentPtr + 1;
 
             if ($tokens[$currentPtr]['code'] === T_STRING
-                && in_array($tokens[$currentPtr]['content'], ['const', 'function'], true)) {
+                && in_array($tokens[$currentPtr]['content'], ['const', 'function'], true)
+            ) {
                 continue;
             }
 
             switch ($tokens[$currentPtr]['code']) {
-                case T_STRING:
-                case T_NS_SEPARATOR:
-                case T_PAAMAYIM_NEKUDOTAYIM:
-                    if (!$isAlias) {
-                        $namespace .= $tokens[$currentPtr]['content'];
-                    }
-                    $symbolName = $tokens[$currentPtr]['content'];
-                    break;
+            case T_STRING:
+            case T_NS_SEPARATOR:
+            case T_PAAMAYIM_NEKUDOTAYIM:
+                if (!$isAlias) {
+                    $namespace .= $tokens[$currentPtr]['content'];
+                }
+                $symbolName = $tokens[$currentPtr]['content'];
+                break;
 
-                case T_AS:
-                    $isAlias = true;
-                    break;
+            case T_AS:
+                $isAlias = true;
+                break;
 
-                default:
-                    // Just continue
-                    break;
+            default:
+                // Just continue
+                break;
             }
         }
 

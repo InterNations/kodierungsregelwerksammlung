@@ -1,8 +1,8 @@
 <?php
 namespace InterNations\Sniffs\Naming;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as Sniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
 class AlternativeFunctionSniff implements Sniff
 {
@@ -40,10 +40,10 @@ class AlternativeFunctionSniff implements Sniff
     }
 
     /**
-     * @param CodeSnifferFile $file
+     * @param File    $file
      * @param integer $stackPtr
      */
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -105,7 +105,7 @@ class AlternativeFunctionSniff implements Sniff
         }
     }
 
-    private function createError(CodeSnifferFile $file, $stackPtr, $functionName, $symbol, $alternative = false)
+    private function createError(File $file, $stackPtr, $functionName, $symbol, $alternative = false)
     {
         $message = sprintf('%s "%s" is not allowed. ', $symbol, $functionName);
         $message .= $alternative ? sprintf('Use "%s" instead', $alternative) : 'Please remove it';

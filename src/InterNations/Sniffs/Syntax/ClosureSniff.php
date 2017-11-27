@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class ClosureSniff implements CodeSnifferSniff
+class ClosureSniff implements Sniff
 {
     public function register()
     {
         return [T_CLOSURE];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -67,7 +67,8 @@ class ClosureSniff implements CodeSnifferSniff
         if (($isStaticClosure && strlen($afterQualifierWs) !== 1)
             || $afterClosureWs !==  ' '
             || $beforeUseWs !== ' '
-            || $afterUseWs !== ' ') {
+            || $afterUseWs !== ' '
+        ) {
 
             $file->addError(
                 sprintf(

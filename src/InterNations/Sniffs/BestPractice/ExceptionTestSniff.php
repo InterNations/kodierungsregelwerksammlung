@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\BestPractice;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class ExceptionTestSniff implements CodeSnifferSniff
+class ExceptionTestSniff implements Sniff
 {
     public function register()
     {
         return [T_DOC_COMMENT_TAG];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -51,23 +51,23 @@ class ExceptionTestSniff implements CodeSnifferSniff
 
             switch ($annotation) {
 
-                case '@expectedExceptionMessage':
-                    $arguments['message'] = var_export($parameter, true);
-                    break;
+            case '@expectedExceptionMessage':
+                $arguments['message'] = var_export($parameter, true);
+                break;
 
-                case '@expectedExceptionMessageRegExp':
-                    $method = 'setExpectedExceptionRegExp';
-                    $arguments['message'] = var_export('/' . str_replace('/', '\/', $parameter) . '/', true);
-                    break;
+            case '@expectedExceptionMessageRegExp':
+                $method = 'setExpectedExceptionRegExp';
+                $arguments['message'] = var_export('/' . str_replace('/', '\/', $parameter) . '/', true);
+                break;
 
-                case '@expectedExceptionCode':
-                    $arguments['code'] = is_numeric($parameter) ? $parameter : var_export($parameter, true);
-                    break;
+            case '@expectedExceptionCode':
+                $arguments['code'] = is_numeric($parameter) ? $parameter : var_export($parameter, true);
+                break;
 
-                case '@expectedException':
-                default:
-                    $arguments['class'] = $parameter . '::class';
-                    break;
+            case '@expectedException':
+            default:
+                $arguments['class'] = $parameter . '::class';
+                break;
             }
         }
 
@@ -81,6 +81,6 @@ class ExceptionTestSniff implements CodeSnifferSniff
 
         $message = 'Annotation @expectedException found. Using annotations in test cases is error-prone because a '
             . 'simple typo can lead to false positives. Use %s(%s) instead';
-        $file->addError($message, $stackPtr, 'BestPractice.ExceptionAnnotation', [$method, implode(', ', $arguments)]);
+        $file->addError($message, $stackPtr, 'BestPractice_ExceptionAnnotation', [$method, implode(', ', $arguments)]);
     }
 }

@@ -1,10 +1,10 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class QueryParamSniff implements CodeSnifferSniff
+class QueryParamSniff implements Sniff
 {
     private static $requiredAttributes = [
         'description',
@@ -16,7 +16,7 @@ class QueryParamSniff implements CodeSnifferSniff
         return [T_DOC_COMMENT_TAG];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $regex = '/^@[^\(]*QueryParam\(.*/';
 

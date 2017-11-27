@@ -1,11 +1,13 @@
 <?php
 namespace InterNations\Sniffs\Files;
 
-/** Based on Generic_Sniffs_Files_LineLengthSniff */
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+/**
+ * Based on Generic_Sniffs_Files_LineLengthSniff 
+*/
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class LineLengthSniff implements CodeSnifferSniff
+class LineLengthSniff implements Sniff
 {
     public $lineLimit = 120;
 
@@ -16,7 +18,7 @@ class LineLengthSniff implements CodeSnifferSniff
         return [T_OPEN_TAG];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -48,7 +50,7 @@ class LineLengthSniff implements CodeSnifferSniff
         $this->checkLineLength($file, $tokenCount - 1, $currentLineContent);
     }
 
-    protected function checkLineLength(CodeSnifferFile $phpcsFile, $stackPtr, $lineContent)
+    protected function checkLineLength(File $phpcsFile, $stackPtr, $lineContent)
     {
         // If the content is a CVS or SVN id in a version tag, or it is
         // a license tag with a name and URL, there is nothing the

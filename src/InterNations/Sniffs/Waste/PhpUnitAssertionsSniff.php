@@ -1,10 +1,10 @@
 <?php
 namespace InterNations\Sniffs\Waste;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class PhpUnitAssertionsSniff implements CodeSnifferSniff
+class PhpUnitAssertionsSniff implements Sniff
 {
     private static $aliasMap = [
         'assertSame'    => [
@@ -51,7 +51,7 @@ class PhpUnitAssertionsSniff implements CodeSnifferSniff
         return [T_OBJECT_OPERATOR, T_PAAMAYIM_NEKUDOTAYIM];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -75,7 +75,7 @@ class PhpUnitAssertionsSniff implements CodeSnifferSniff
         }
     }
 
-    private static function getAlias(CodeSnifferFile $file, $stackPtr)
+    private static function getAlias(File $file, $stackPtr)
     {
         $nextPtr = $stackPtr;
         $alias = static::$aliasMap;
@@ -117,7 +117,7 @@ class PhpUnitAssertionsSniff implements CodeSnifferSniff
         ];
     }
 
-    private static function getClosing(CodeSnifferFile $file, $ptr)
+    private static function getClosing(File $file, $ptr)
     {
         $tokens = $file->getTokens();
 

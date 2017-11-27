@@ -5,10 +5,10 @@ namespace InterNations\Sniffs\ControlStructures;
 require_once __DIR__ . '/../NamespaceSniffTrait.php';
 
 use InterNations\Sniffs\NamespaceSniffTrait;
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class CatchUndefinedExceptionSniff implements CodeSnifferSniff
+class CatchUndefinedExceptionSniff implements Sniff
 {
     use NamespaceSniffTrait;
 
@@ -19,7 +19,7 @@ class CatchUndefinedExceptionSniff implements CodeSnifferSniff
         return [T_USE, T_CATCH];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
         $fileName = $file->getFilename();
@@ -63,7 +63,8 @@ class CatchUndefinedExceptionSniff implements CodeSnifferSniff
         if (!in_array($exceptionName, static::$aliases[$fileName], false)) {
             $file->addError(
                 sprintf('Trying to catch an undefined exception. Please add use-statement for "%s"', $exceptionName),
-                $exceptionPtr
+                $exceptionPtr,
+                'UndefinedException'
             );
         }
     }

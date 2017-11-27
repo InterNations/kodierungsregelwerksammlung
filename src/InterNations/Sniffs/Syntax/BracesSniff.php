@@ -1,21 +1,21 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class BracesSniff implements CodeSnifferSniff
+class BracesSniff implements Sniff
 {
     public function register()
     {
         return [T_CLASS, T_INTERFACE, T_TRAIT, T_FUNCTION];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
-        if ($tokens[$stackPtr]['code'] === T_FUNCTION && $file->isAnonymousFunction($stackPtr)) {
+        if ($tokens[$stackPtr]['code'] === T_FUNCTION && $file->getDeclarationName($stackPtr) === NULL) {
             return;
         }
 

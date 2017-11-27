@@ -1,10 +1,10 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class DocBlockTypesSniff implements CodeSnifferSniff
+class DocBlockTypesSniff implements Sniff
 {
     private static $typeMap = [
         'bool'   => 'boolean',
@@ -22,7 +22,7 @@ class DocBlockTypesSniff implements CodeSnifferSniff
         return [T_DOC_COMMENT_TAG];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $content = $file->getTokensAsString($stackPtr, 3);
         $regex = '/@(?<annotation>var|param|return)\s+(?<types>[^\s]+)(?:\s+|$)/xi';

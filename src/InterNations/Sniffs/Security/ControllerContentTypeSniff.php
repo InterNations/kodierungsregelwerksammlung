@@ -6,11 +6,11 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
 use Exception;
 use InterNations\Sniffs\Util;
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration;
 
-class ControllerContentTypeSniff implements CodeSnifferSniff
+class ControllerContentTypeSniff implements Sniff
 {
     private $docParser;
 
@@ -31,7 +31,7 @@ class ControllerContentTypeSniff implements CodeSnifferSniff
         return [T_FUNCTION];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr): void
+    public function process(File $file, $stackPtr): void
     {
         if (!Util::isController($file)) {
             return;

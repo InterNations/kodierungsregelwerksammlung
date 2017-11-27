@@ -30,11 +30,11 @@ namespace InterNations\Sniffs\Waste;
  * @version   Release: 1.4.4
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Tokens as CodeSnifferTokens;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Util\Tokens;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class NonExecutableCodeSniff implements CodeSnifferSniff
+class NonExecutableCodeSniff implements Sniff
 {
 
 
@@ -58,18 +58,18 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param integer $stackPtr The position of the current token in the stack passed in $tokens.
+     * @param File    $phpcsFile The file being scanned.
+     * @param integer $stackPtr  The position of the current token in the stack passed in $tokens.
      *
      * @return null
      */
-    public function process(CodeSnifferFile $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
         // If this token is preceded with an "or", it only relates to one line
         // and should be ignored. For example: fopen() or die().
-        $prev = $phpcsFile->findPrevious(CodeSnifferTokens::$emptyTokens, ($stackPtr - 1), null, true);
+        $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 1), null, true);
 
         if ($tokens[$prev]['code'] === T_LOGICAL_OR) {
             return;
@@ -80,7 +80,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
             if ($tokens[$i]['code'] === T_CLOSE_PARENTHESIS) {
                 $i = $tokens[$i]['parenthesis_opener'];
                 continue;
-            } elseif (in_array($tokens[$i]['code'], CodeSnifferTokens::$emptyTokens) === true) {
+            } elseif (in_array($tokens[$i]['code'], Tokens::$emptyTokens) === true) {
                 continue;
             }
 
@@ -130,7 +130,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
                     $lastLine = $tokens[$end]['line'];
 
                     for ($i = ($end + 1); $i < $next; $i++) {
-                        if (in_array($tokens[$i]['code'], CodeSnifferTokens::$emptyTokens) === true) {
+                        if (in_array($tokens[$i]['code'], Tokens::$emptyTokens) === true) {
                             continue;
                         }
 
@@ -166,7 +166,7 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
         // This token may be part of an inline condition.
         // If we find a closing parenthesis that belongs to a condition
         // we should ignore this token.
-        $prev = $phpcsFile->findPrevious(CodeSnifferTokens::$emptyTokens, ($stackPtr - 1), null, true);
+        $prev = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($stackPtr - 1), null, true);
 
         if (isset($tokens[$prev]['parenthesis_owner']) === true) {
             $owner = $tokens[$prev]['parenthesis_owner'];
@@ -261,8 +261,8 @@ class NonExecutableCodeSniff implements CodeSnifferSniff
 
         for ($i = ($start + 1); $i < $end; $i++) {
 
-            if (in_array($tokens[$i]['code'], CodeSnifferTokens::$emptyTokens) === true
-                || in_array($tokens[$i]['code'], CodeSnifferTokens::$bracketTokens) === true
+            if (in_array($tokens[$i]['code'], Tokens::$emptyTokens) === true
+                || in_array($tokens[$i]['code'], Tokens::$bracketTokens) === true
             ) {
                 continue;
             }

@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Naming;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class FinalSniff implements CodeSnifferSniff
+class FinalSniff implements Sniff
 {
     public function register()
     {
         return [T_CLASS];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $isFinal = (bool) $file->findPrevious(T_FINAL, $stackPtr - 1, $stackPtr - 3);
         $className = $file->getDeclarationName($stackPtr);
