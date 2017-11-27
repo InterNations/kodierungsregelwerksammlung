@@ -58,7 +58,7 @@ class AlwaysUseSniff implements Sniff
                             // Fall through
                             break;
                     }
-                break 2;
+                    break 2;
 
                 case T_OPEN_PARENTHESIS:
                     if ($tokens[$stackPtr - 3]['code'] === T_FUNCTION || $tokens[$stackPtr - 2]['code'] === T_CLOSURE) {
@@ -84,17 +84,17 @@ class AlwaysUseSniff implements Sniff
 
             while (++$stackPtr > 0) {
                 switch ($tokens[$stackPtr]['code']) {
-                case T_NS_SEPARATOR:
-                case T_STRING:
-                    continue 2;
+                    case T_NS_SEPARATOR:
+                    case T_STRING:
+                        continue 2;
 
-                case T_PAAMAYIM_NEKUDOTAYIM:
-                    $type = 'Static';
-                    break 2;
+                    case T_PAAMAYIM_NEKUDOTAYIM:
+                        $type = 'Static';
+                        break 2;
 
-                default:
-                    $type = null;
-                    break 2;
+                    default:
+                        $type = null;
+                        break 2;
                 }
             }
         }
@@ -137,17 +137,17 @@ class AlwaysUseSniff implements Sniff
 
         while (++$stackPtr) {
             switch ($tokens[$stackPtr]['code']) {
-            case T_WHITESPACE;
-                continue 2;
+                case T_WHITESPACE;
+                    continue 2;
 
-            case T_NS_SEPARATOR:
-            case T_STRING:
-                $className .= $tokens[$stackPtr]['content'];
-                continue 2;
+                case T_NS_SEPARATOR:
+                case T_STRING:
+                    $className .= $tokens[$stackPtr]['content'];
+                    continue 2;
 
-            default:
-                // End of class name reached
-                break 2;
+                default:
+                    // End of class name reached
+                    break 2;
             }
         }
 

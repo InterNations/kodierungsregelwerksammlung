@@ -2,8 +2,6 @@
 namespace InterNations\Sniffs\Waste;
 
 // @codingStandardsIgnoreFile
-require_once __DIR__ . '/../NamespaceSniffTrait.php';
-
 use InterNations\Sniffs\NamespaceSniffTrait;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
