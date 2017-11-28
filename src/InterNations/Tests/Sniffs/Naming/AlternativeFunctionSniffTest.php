@@ -25,7 +25,6 @@ class AlternativeFunctionSniffTest extends AbstractTestCase
      */
     public function testFunctionNames(string $method, ?string $alternative = null): void
     {
-        $this->markTestSkipped('Skipped for now');
         $file = __DIR__ . '/Fixtures/AlternativeFunction/FunctionNames.php';
         $errors = $this->analyze(['InterNations/Sniffs/Naming/AlternativeFunctionSniff'], [$file]);
 
