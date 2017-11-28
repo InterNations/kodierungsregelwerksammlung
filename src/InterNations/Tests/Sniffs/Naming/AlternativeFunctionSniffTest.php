@@ -38,7 +38,7 @@ class AlternativeFunctionSniffTest extends AbstractTestCase
             $file,
             'errors',
             $message,
-            '..InterNations\Sniffs\Naming\AlternativeFunction.UseAlternative',
+            'InterNations.Naming.AlternativeFunction.UseAlternative',
             5
         );
     }
@@ -53,7 +53,7 @@ class AlternativeFunctionSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Statement "echo" is not allowed. Please remove it',
-            '..InterNations\Sniffs\Naming\AlternativeFunction.UseAlternative',
+            'InterNations.Naming.AlternativeFunction.UseAlternative',
             5
         );
     }
@@ -67,7 +67,7 @@ class AlternativeFunctionSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Statement "print" is not allowed. Please remove it',
-            '..InterNations\Sniffs\Naming\AlternativeFunction.UseAlternative',
+            'InterNations.Naming.AlternativeFunction.UseAlternative',
             5
         );
     }
@@ -81,7 +81,7 @@ class AlternativeFunctionSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Statement "eval" is not allowed. Please remove it',
-            '..InterNations\Sniffs\Naming\AlternativeFunction.UseAlternative',
+            'InterNations.Naming.AlternativeFunction.UseAlternative',
             5
         );
     }

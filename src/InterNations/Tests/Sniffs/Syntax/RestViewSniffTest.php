@@ -17,7 +17,7 @@ class RestViewSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Missing @Rest\View annotation for method indexAction',
-            '..InterNations\Sniffs\Syntax\RestView.RestAnnotationError',
+            'InterNations.Syntax.RestView.RestAnnotationError',
             5
         );
 
@@ -26,7 +26,7 @@ class RestViewSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Missing @Rest\View annotation for method getAction',
-            '..InterNations\Sniffs\Syntax\RestView.RestAnnotationError',
+            'InterNations.Syntax.RestView.RestAnnotationError',
             5
         );
 
@@ -35,7 +35,7 @@ class RestViewSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Missing @Rest\View annotation for method putAction',
-            '..InterNations\Sniffs\Syntax\RestView.RestAnnotationError',
+            'InterNations.Syntax.RestView.RestAnnotationError',
             5
         );
 
@@ -44,7 +44,7 @@ class RestViewSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Missing @Rest\View annotation for method deleteAction',
-            '..InterNations\Sniffs\Syntax\RestView.RestAnnotationError',
+            'InterNations.Syntax.RestView.RestAnnotationError',
             5
         );
     }
@@ -61,7 +61,7 @@ class RestViewSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Missing @Rest\View annotation for method indexAction',
-            '..InterNations\Sniffs\Syntax\RestView.RestAnnotationError',
+            'InterNations.Syntax.RestView.RestAnnotationError',
             5
         );
     }

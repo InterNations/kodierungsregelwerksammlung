@@ -25,7 +25,7 @@ class RequestParamSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Attribute "description" is missing for RequestParam',
-            '..InterNations\Sniffs\Syntax\RequestParam.RequestParameterAttributeMissing',
+            'InterNations.Syntax.RequestParam.RequestParameterAttributeMissing',
             5
         );
     }
@@ -50,7 +50,7 @@ class RequestParamSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Attribute "description" is missing for RequestParam',
-            '..InterNations\Sniffs\Syntax\RequestParam.RequestParameterAttributeMissing',
+            'InterNations.Syntax.RequestParam.RequestParameterAttributeMissing',
             5
         );
     }

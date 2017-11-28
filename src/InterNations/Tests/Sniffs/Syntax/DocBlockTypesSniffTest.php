@@ -16,7 +16,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@var void", expected "@var null"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -24,7 +24,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@var binary", expected "@var string"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -32,7 +32,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@var bool", expected "@var boolean"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -40,7 +40,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@var int", expected "@var integer"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -48,7 +48,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@var this", expected "@var self"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -56,7 +56,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@var $this", expected "@var self"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -64,7 +64,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@var real", expected "@var float"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -73,7 +73,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param void", expected "@param null"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -81,7 +81,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return void", expected "@return null"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -90,7 +90,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param binary", expected "@param string"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -98,7 +98,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return binary", expected "@return string"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -107,7 +107,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param double", expected "@param float"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -115,7 +115,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return double", expected "@return float"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -124,7 +124,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param real", expected "@param float"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -132,7 +132,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return real", expected "@return float"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -141,7 +141,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param bool", expected "@param boolean"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -149,7 +149,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return bool", expected "@return boolean"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -158,7 +158,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param int", expected "@param integer"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -166,7 +166,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return int", expected "@return integer"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -175,7 +175,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param $this", expected "@param self"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -183,7 +183,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return $this", expected "@return self"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -192,7 +192,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param this", expected "@param self"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -200,7 +200,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return this", expected "@return self"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
 
@@ -209,7 +209,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@param int|null", expected "@param integer|null"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
         $this->assertReportContains(
@@ -217,7 +217,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Found "@return void|integer", expected "@return null|integer"',
-            '..InterNations\Sniffs\Syntax\DocBlockTypes.ShortDocCommentTypes',
+            'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
     }

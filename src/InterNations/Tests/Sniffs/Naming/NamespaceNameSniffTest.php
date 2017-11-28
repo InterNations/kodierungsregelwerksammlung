@@ -16,7 +16,7 @@ class NamespaceNameSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Namespace of class "Fixtures\\WrongNamespaceName\\WrongNamespaceName" does not match file "Fixtures/NamespaceName/WrongNamespaceName.php"',
-            '..InterNations\Sniffs\Naming\NamespaceName.InvalidNamespaceName',
+            'InterNations.Naming.NamespaceName.InvalidNamespaceName',
             5
         );
     }
@@ -32,7 +32,7 @@ class NamespaceNameSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Namespace of class "Fixtures\\NamespaceName\\ClassName" does not match file "Fixtures/NamespaceName/WrongClassName.php"',
-            '..InterNations\Sniffs\Naming\NamespaceName.InvalidNamespaceName',
+            'InterNations.Naming.NamespaceName.InvalidNamespaceName',
             5
         );
     }
@@ -48,7 +48,7 @@ class NamespaceNameSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Namespace of interface "Fixtures\\NamespaceName\\InterfaceName" does not match file "Fixtures/NamespaceName/WrongInterfaceName.php"',
-            '..InterNations\Sniffs\Naming\NamespaceName.InvalidNamespaceName',
+            'InterNations.Naming.NamespaceName.InvalidNamespaceName',
             5
         );
     }
@@ -64,7 +64,7 @@ class NamespaceNameSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Namespace of trait "Fixtures\\NamespaceName\\TraitName" does not match file "Fixtures/NamespaceName/WrongTraitName.php"',
-            '..InterNations\Sniffs\Naming\NamespaceName.InvalidNamespaceName',
+            'InterNations.Naming.NamespaceName.InvalidNamespaceName',
             5
         );
     }

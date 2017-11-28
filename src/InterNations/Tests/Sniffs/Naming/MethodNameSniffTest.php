@@ -16,7 +16,7 @@ class MethodNameSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Method name "getIsSomething()" is not allowed. Use "isSomething()" or "hasSomething()" instead',
-            '..InterNations\Sniffs\Naming\MethodName.BadIsser',
+            'InterNations.Naming.MethodName.BadIsser',
             5
         );
         $this->assertReportContains(
@@ -24,7 +24,7 @@ class MethodNameSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Method name "doesSomething()" is not allowed. Use "isSomething()" or "hasSomething()" instead',
-            '..InterNations\Sniffs\Naming\MethodName.BadIsser',
+            'InterNations.Naming.MethodName.BadIsser',
             5
         );
     }
@@ -40,7 +40,7 @@ class MethodNameSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Method name "setIsSomething()" is not allowed. Use "setSomething()" instead',
-            '..InterNations\Sniffs\Naming\MethodName.BadSetter',
+            'InterNations.Naming.MethodName.BadSetter',
             5
         );
     }

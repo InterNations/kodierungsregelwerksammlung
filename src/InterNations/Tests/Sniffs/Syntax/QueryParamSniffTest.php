@@ -25,7 +25,7 @@ class QueryParamSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Attribute "description" is missing for QueryParam',
-            '..InterNations\Sniffs\Syntax\QueryParam.QueryParameterAttributeMissing',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
             5
         );
     }
@@ -42,7 +42,7 @@ class QueryParamSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Attribute "strict" is missing for QueryParam',
-            '..InterNations\Sniffs\Syntax\QueryParam.QueryParameterAttributeMissing',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
             5
         );
     }
@@ -67,7 +67,7 @@ class QueryParamSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Attribute "description" is missing for QueryParam',
-            '..InterNations\Sniffs\Syntax\QueryParam.QueryParameterAttributeMissing',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
             5
         );
 
@@ -76,7 +76,7 @@ class QueryParamSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Attribute "strict" is missing for QueryParam',
-            '..InterNations\Sniffs\Syntax\QueryParam.QueryParameterAttributeMissing',
+            'InterNations.Syntax.QueryParam.QueryParameterAttributeMissing',
             5
         );
     }

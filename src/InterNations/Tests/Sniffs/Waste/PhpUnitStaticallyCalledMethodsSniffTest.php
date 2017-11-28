@@ -16,7 +16,7 @@ class PhpUnitStaticallyCalledMethodsSniffTest extends AbstractTestCase
             $fixture,
             'errors',
             'Call PHPUnit methods statically, replace $this->assertNull() with self::assertNull()',
-            '..InterNations\Sniffs\Waste\PhpUnitStaticallyCalledMethods.StaticallyCallPhpUnitMethods',
+            'InterNations.Waste.PhpUnitStaticallyCalledMethods.StaticallyCallPhpUnitMethods',
             5
         );
 
@@ -25,7 +25,7 @@ class PhpUnitStaticallyCalledMethodsSniffTest extends AbstractTestCase
             $fixture,
             'errors',
             'Call PHPUnit methods statically, replace static::assertNull() with self::assertNull()',
-            '..InterNations\Sniffs\Waste\PhpUnitStaticallyCalledMethods.StaticallyCallPhpUnitMethods',
+            'InterNations.Waste.PhpUnitStaticallyCalledMethods.StaticallyCallPhpUnitMethods',
             5
         );
     }

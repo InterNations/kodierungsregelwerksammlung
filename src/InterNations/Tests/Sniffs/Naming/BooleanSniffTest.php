@@ -16,7 +16,7 @@ class BooleanSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Expected boolean to be defined as "true", got "True"',
-            '..InterNations\Sniffs\Naming\Boolean.InvalidBoolean',
+            'InterNations.Naming.Boolean.InvalidBoolean',
             5
         );
         $this->assertReportContains(
@@ -24,7 +24,7 @@ class BooleanSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Expected boolean to be defined as "true", got "TRUE"',
-            '..InterNations\Sniffs\Naming\Boolean.InvalidBoolean',
+            'InterNations.Naming.Boolean.InvalidBoolean',
             5
         );
         $this->assertReportContains(
@@ -32,7 +32,7 @@ class BooleanSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Expected boolean to be defined as "true", got "TrUe"',
-            '..InterNations\Sniffs\Naming\Boolean.InvalidBoolean',
+            'InterNations.Naming.Boolean.InvalidBoolean',
             5
         );
         $this->assertReportContains(
@@ -40,7 +40,7 @@ class BooleanSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Expected boolean to be defined as "false", got "False"',
-            '..InterNations\Sniffs\Naming\Boolean.InvalidBoolean',
+            'InterNations.Naming.Boolean.InvalidBoolean',
             5
         );
         $this->assertReportContains(
@@ -48,7 +48,7 @@ class BooleanSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Expected boolean to be defined as "false", got "FALSE"',
-            '..InterNations\Sniffs\Naming\Boolean.InvalidBoolean',
+            'InterNations.Naming.Boolean.InvalidBoolean',
             5
         );
         $this->assertReportContains(
@@ -56,7 +56,7 @@ class BooleanSniffTest extends AbstractTestCase
             $file,
             'errors',
             'Expected boolean to be defined as "false", got "FaLsE"',
-            '..InterNations\Sniffs\Naming\Boolean.InvalidBoolean',
+            'InterNations.Naming.Boolean.InvalidBoolean',
             5
         );
     }
