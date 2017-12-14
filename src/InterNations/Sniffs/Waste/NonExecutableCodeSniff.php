@@ -46,12 +46,12 @@ class NonExecutableCodeSniff implements Sniff
     public function register()
     {
         return [
-                T_BREAK,
-                T_CONTINUE,
-                T_RETURN,
-                T_THROW,
-                T_EXIT,
-               ];
+            T_BREAK,
+            T_CONTINUE,
+            T_RETURN,
+            T_THROW,
+            T_EXIT,
+        ];
     }//end register()
 
 

@@ -45,11 +45,7 @@ class SwitchDeclarationSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = [
-                                   'PHP',
-                                   'JS',
-                                  ];
-
+    public $supportedTokenizers = ['PHP', 'JS',];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -108,10 +104,7 @@ class SwitchDeclarationSniff implements Sniff
             if ($tokens[$nextCase]['content'] !== strtolower($tokens[$nextCase]['content'])) {
                 $expected = strtolower($tokens[$nextCase]['content']);
                 $error = strtoupper($type) . ' keyword must be lowercase; expected "%s" but found "%s"';
-                $data = [
-                             $expected,
-                             $tokens[$nextCase]['content'],
-                            ];
+                $data = [$expected, $tokens[$nextCase]['content']];
                 $file->addError($error, $nextCase, $type . 'NotLower', $data);
             }
 
