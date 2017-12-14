@@ -1,22 +1,23 @@
 <?php
 namespace InterNations\Sniffs\Naming;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class TypeNameSniff implements CodeSnifferSniff
+class TypeNameSniff implements Sniff
 {
     public function register()
     {
         return [T_INTERFACE, T_ABSTRACT, T_TRAIT];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
         if ($tokens[$stackPtr]['code'] === T_ABSTRACT
-            && !$file->findNext(T_CLASS, $stackPtr + 1, $stackPtr + 3)) {
+            && !$file->findNext(T_CLASS, $stackPtr + 1, $stackPtr + 3)
+        ) {
             return;
         }
 

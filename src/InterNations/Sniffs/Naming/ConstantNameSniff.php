@@ -11,10 +11,10 @@ namespace InterNations\Sniffs\Naming;
  * @copyright 2006 Squiz Pty Ltd (ABN 77 084 670 600)
  * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
  */
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class ConstantNameSniff implements CodeSnifferSniff
+class ConstantNameSniff implements Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -29,11 +29,11 @@ class ConstantNameSniff implements CodeSnifferSniff
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param CodeSnifferFile $file The file being scanned.
-     * @param integer $stackPtr The position of the current token in the stack passed in $tokens.
+     * @param  File    $file     The file being scanned.
+     * @param  integer $stackPtr The position of the current token in the stack passed in $tokens.
      * @return null
      */
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
         $constName = $tokens[$stackPtr]['content'];

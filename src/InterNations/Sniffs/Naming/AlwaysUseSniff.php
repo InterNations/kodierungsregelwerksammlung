@@ -1,10 +1,10 @@
 <?php
 namespace InterNations\Sniffs\Naming;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class AlwaysUseSniff implements CodeSnifferSniff
+class AlwaysUseSniff implements Sniff
 {
     private $analyzed = [];
 
@@ -13,7 +13,7 @@ class AlwaysUseSniff implements CodeSnifferSniff
         return [T_STRING];
     }
 
-    public function process(CodeSnifferFile $file, $originalStackPtr)
+    public function process(File $file, $originalStackPtr)
     {
         $fileName = $file->getFilename();
 
@@ -122,14 +122,14 @@ class AlwaysUseSniff implements CodeSnifferSniff
             $file->addError(
                 'Legacy namespaces are prohibited (' . $className . '). Introduce a "use"-statement and alias properly',
                 $originalStackPtr,
-                'LegacyNamespace.' . $type
+                'LegacyNamespace_' . $type
             );
         }
 
         $this->analyzed[$fileName] = $endStackPtr;
     }
 
-    private function getClassName(CodeSnifferFile $phpcsFile, $stackPtr)
+    private function getClassName(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 

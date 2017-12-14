@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Waste;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class SuperfluousFormatStringSniff implements CodeSnifferSniff
+class SuperfluousFormatStringSniff implements Sniff
 {
     public function register()
     {
         return [T_STRING];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 

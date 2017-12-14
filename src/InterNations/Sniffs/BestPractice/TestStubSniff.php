@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\BestPractice;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class TestStubSniff implements CodeSnifferSniff
+class TestStubSniff implements Sniff
 {
     public function register()
     {
         return [T_OBJECT_OPERATOR];
     }
 
-    public function process(CodeSnifferFile $file, $startPtr)
+    public function process(File $file, $startPtr)
     {
         $tokens = $file->getTokens();
         $nextPtr = $startPtr;
@@ -34,7 +34,8 @@ class TestStubSniff implements CodeSnifferSniff
         [$nextPtr, $scopeToken] = $this->findNextNonWhitespaceToken($file, $nextPtr, $tokens);
 
         if (!in_array($scopeToken['code'], [T_STATIC, T_SELF, T_VARIABLE], true)
-            || !in_array($scopeToken['content'], ['static', 'self', '$this'], true)) {
+            || !in_array($scopeToken['content'], ['static', 'self', '$this'], true)
+        ) {
             return;
         }
 
@@ -81,7 +82,7 @@ class TestStubSniff implements CodeSnifferSniff
         );
     }
 
-    private function findNextNonWhitespaceToken(CodeSnifferFile $file, $stackPtr, array $tokens)
+    private function findNextNonWhitespaceToken(File $file, $stackPtr, array $tokens)
     {
         $nextPtr = $stackPtr + 1;
 

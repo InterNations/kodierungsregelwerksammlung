@@ -2,10 +2,10 @@
 namespace InterNations\Sniffs\Architecture;
 
 use InterNations\Sniffs\Util;
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class ControllerMethodsConventionSniff implements CodeSnifferSniff
+class ControllerMethodsConventionSniff implements Sniff
 {
     private static $whitelist = [
         '__construct',
@@ -26,7 +26,7 @@ class ControllerMethodsConventionSniff implements CodeSnifferSniff
         return [T_FUNCTION];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         if (!Util::isController($file)) {
             return;
@@ -89,7 +89,7 @@ class ControllerMethodsConventionSniff implements CodeSnifferSniff
 
         return array_map(
             static function ($verb) {
-                return $verb . 'Action';
+            return $verb . 'Action';
             },
             $actions
         );

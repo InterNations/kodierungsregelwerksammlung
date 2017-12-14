@@ -1,10 +1,10 @@
 <?php
 namespace InterNations\Sniffs\Architecture;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class TestMethodsConventionSniff implements CodeSnifferSniff
+class TestMethodsConventionSniff implements Sniff
 {
     public $ignoreMandatoryPublicMethods;
 
@@ -13,7 +13,7 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
         return [T_FUNCTION];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $ignoreMandatoryPublicMethods = [];
         
@@ -65,7 +65,7 @@ class TestMethodsConventionSniff implements CodeSnifferSniff
         }
 
         // Skip @dataProvider + public methods
-        if (in_array($methodName, array_merge($dataProvider,$ignoreMandatoryPublicMethods))) {
+        if (in_array($methodName, array_merge($dataProvider, $ignoreMandatoryPublicMethods))) {
             return;
         }
 

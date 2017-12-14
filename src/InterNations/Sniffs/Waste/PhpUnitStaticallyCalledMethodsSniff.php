@@ -2,14 +2,16 @@
 namespace InterNations\Sniffs\Waste;
 
 use InvalidArgumentException;
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
 
-/** Identifying and fixing non-statically called PHPUnit Methods */
-class PhpUnitStaticallyCalledMethodsSniff implements CodeSnifferSniff
+/**
+ * Identifying and fixing non-statically called PHPUnit Methods 
+ */
+class PhpUnitStaticallyCalledMethodsSniff implements Sniff
 {
     private const VALID_MODIFIERS = [
         ReflectionMethod::IS_STATIC,
@@ -20,17 +22,23 @@ class PhpUnitStaticallyCalledMethodsSniff implements CodeSnifferSniff
         ReflectionMethod::IS_FINAL,
     ];
 
-    /** @var string[] */
+    /**
+     * @var string[] 
+     */
     private static $testCasePublicStaticMethods;
 
-    /** @return integer[] */
+    /**
+     * @return integer[] 
+     */
     public function register(): array
     {
         return [T_OBJECT_OPERATOR, T_DOUBLE_COLON];
     }
 
-    /** @param integer $stackPtr */
-    public function process(CodeSnifferFile $file, $stackPtr): void
+    /**
+     * @param integer $stackPtr 
+     */
+    public function process(File $file, $stackPtr): void
     {
         $classNameToken = static::findCurrentClassNameToken($file, $stackPtr);
 
@@ -97,7 +105,9 @@ class PhpUnitStaticallyCalledMethodsSniff implements CodeSnifferSniff
         return array_unique($methods);
     }
 
-    /** @param integer[] $methodModifiers */
+    /**
+     * @param integer[] $methodModifiers 
+     */
     private static function validateMethodModifiers(array $methodModifiers): void
     {
         $diff = array_diff($methodModifiers, static::VALID_MODIFIERS);
@@ -113,8 +123,10 @@ class PhpUnitStaticallyCalledMethodsSniff implements CodeSnifferSniff
         }
     }
 
-    /** @return mixed[] */
-    private static function findCurrentClassNameToken(CodeSnifferFile $file, int $stackPtr): ?array
+    /**
+     * @return mixed[] 
+     */
+    private static function findCurrentClassNameToken(File $file, int $stackPtr): ?array
     {
         $classStackPtr = $file->findPrevious(T_CLASS, $stackPtr);
 

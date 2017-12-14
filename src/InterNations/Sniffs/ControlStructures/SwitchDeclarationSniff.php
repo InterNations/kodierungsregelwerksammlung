@@ -22,21 +22,22 @@ namespace InterNations\Sniffs\ControlStructures;
  * Ensures all the breaks and cases are aligned correctly according to their
  * parent switch's alignment and enforces other switch formatting.
  *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Greg Sherwood <gsherwood@squiz.net>
- * @author    Marc McIntyre <mmcintyre@squiz.net>
- * @copyright 2006 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
- * @version   Release: 1.3.1
- * @link      http://pear.php.net/package/PHP_CodeSniffer
+ * @category              PHP
+ * @package               PHP_CodeSniffer
+ * @author                Greg Sherwood <gsherwood@squiz.net>
+ * @author                Marc McIntyre <mmcintyre@squiz.net>
+ * @copyright             2006 Squiz Pty Ltd (ABN 77 084 670 600)
+ * @license               http://matrix.squiz.net/developer/tools/php_cs/licence BSD Licence
+ * @version               Release: 1.3.1
+ * @link                  http://pear.php.net/package/PHP_CodeSniffer
  * @SuppressWarnings(PMD)
  */
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Tokens as CodeSnifferTokens;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
 
-class SwitchDeclarationSniff implements CodeSnifferSniff
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Util\Tokens;
+use PHP_CodeSniffer\Files\File;
+
+class SwitchDeclarationSniff implements Sniff
 {
 
     /**
@@ -64,13 +65,13 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $file The file being scanned.
-     * @param integer                  $stackPtr  The position of the current token in the
-     *                                        stack passed in $tokens.
+     * @param File    $file     The file being scanned.
+     * @param integer $stackPtr The position of the current token in the
+     *                          stack passed in $tokens.
      *
      * @return null
      */
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -145,7 +146,8 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
             }
 
             if ($tokens[$nextBreak]['code'] === T_BREAK
-                || ($breakAfterThrow && $tokens[$breakAfterThrow]['code'] === T_BREAK)) {
+                || ($breakAfterThrow && $tokens[$breakAfterThrow]['code'] === T_BREAK)
+            ) {
 
                 if ($tokens[$nextBreak]['scope_condition'] === $nextCase) {
                     // Only need to check a couple of things once, even if the
@@ -227,7 +229,7 @@ class SwitchDeclarationSniff implements CodeSnifferSniff
                                 continue;
                             }
 
-                            if (in_array($tokens[$i]['code'], CodeSnifferTokens::$emptyTokens) === false) {
+                            if (in_array($tokens[$i]['code'], Tokens::$emptyTokens) === false) {
                                 $foundContent = true;
                                 break;
                             }

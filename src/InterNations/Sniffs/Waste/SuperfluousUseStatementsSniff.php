@@ -2,14 +2,12 @@
 namespace InterNations\Sniffs\Waste;
 
 // @codingStandardsIgnoreFile
-require_once __DIR__ . '/../NamespaceSniffTrait.php';
-
 use InterNations\Sniffs\NamespaceSniffTrait;
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 use const T_RETURN_TYPE;
 
-class SuperfluousUseStatementsSniff implements CodeSnifferSniff
+class SuperfluousUseStatementsSniff implements Sniff
 {
     use NamespaceSniffTrait;
 
@@ -22,7 +20,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         return [T_USE];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -131,7 +129,7 @@ class SuperfluousUseStatementsSniff implements CodeSnifferSniff
         }
     }
 
-    private static function getNamespaceUsage($stackPtr, CodeSnifferFile $file)
+    private static function getNamespaceUsage($stackPtr, File $file)
     {
         $tokens = $file->getTokens();
         $namespace = '';

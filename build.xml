@@ -30,7 +30,7 @@
             <arg value="--standard=ruleset.xml"/>
             <arg value="--report=checkstyle" />
             <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-            <arg value="./src/"/>
+            <arg value="./src/InterNations/Sniffs"/>
          </exec>
     </target>
 </project>

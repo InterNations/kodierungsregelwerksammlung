@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Architecture;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class FormTypeConventionSniff implements CodeSnifferSniff
+class FormTypeConventionSniff implements Sniff
 {
     public function register()
     {
         return [T_CLASS];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         if (!preg_match('@/[^/]+Bundle/Form/@', $file->getFilename())) {
             return;
@@ -27,7 +27,7 @@ class FormTypeConventionSniff implements CodeSnifferSniff
             $file->addError(
                 sprintf('Form types are expected to be named "<Something>FormType", "%s" found', $className),
                 $stackPtr,
-                'Architecture.FormTypeConvention'
+                'FormTypeConvention'
             );
         }
     }

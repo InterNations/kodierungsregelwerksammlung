@@ -1,11 +1,11 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 use InterNations\Sniffs\NamespaceSniffTrait;
 
-class RestViewSniff implements CodeSnifferSniff
+class RestViewSniff implements Sniff
 {
     use NamespaceSniffTrait;
 
@@ -18,7 +18,7 @@ class RestViewSniff implements CodeSnifferSniff
         return [T_CLASS, T_NAMESPACE, T_FUNCTION];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -44,7 +44,8 @@ class RestViewSniff implements CodeSnifferSniff
     private function isApiMethod($stackPtr, &$tokens)
     {
         if ($tokens[$stackPtr - 2]['type'] === 'T_PUBLIC'
-            && preg_match('/Action$/', $tokens[$stackPtr + 2]['content'])) {
+            && preg_match('/Action$/', $tokens[$stackPtr + 2]['content'])
+        ) {
             return true;
         }
 
@@ -60,7 +61,7 @@ class RestViewSniff implements CodeSnifferSniff
         return false;
     }
 
-    private function isAnnotationDefined($start, &$tokens, CodeSnifferFile $file)
+    private function isAnnotationDefined($start, &$tokens, File $file)
     {
         for ($currentIndex = $start; $currentIndex > 0, $tokens[$currentIndex]['content'] !== '/**'; $currentIndex--) {
             if ($tokens[$currentIndex]['content'] === '@Rest\View') {

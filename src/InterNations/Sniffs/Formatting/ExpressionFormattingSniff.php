@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Formatting;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class ExpressionFormattingSniff implements CodeSnifferSniff
+class ExpressionFormattingSniff implements Sniff
 {
     public function register()
     {
         return [T_STRING, T_STATIC, T_SELF];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         $tokens = $file->getTokens();
 
@@ -36,7 +36,8 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
         }
 
         if (isset($tokens[$stackPtr - 2])
-            && in_array($tokens[$stackPtr - 2]['code'], [T_CLASS, T_INTERFACE, T_TRAIT], true)) {
+            && in_array($tokens[$stackPtr - 2]['code'], [T_CLASS, T_INTERFACE, T_TRAIT], true)
+        ) {
             return;
         }
 
@@ -126,7 +127,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
                 case T_DOC_COMMENT_STRING:
                     // Don’t continue checking
                     return;
-                    break;
+                        break;
 
                 case T_COMMA:
                     if (static::nextSignificantTokenClosesArray($file, $expressionPtr)) {
@@ -214,7 +215,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
         $needsWhitespace = true;
     }
 
-    private static function nextSignificantTokenClosesArray(CodeSnifferFile $file, $ptr)
+    private static function nextSignificantTokenClosesArray(File $file, $ptr)
     {
         $tokens = $file->getTokens();
         $nextSignificantToken = $file->findNext(T_WHITESPACE, $ptr + 1, null, true);
@@ -226,7 +227,7 @@ class ExpressionFormattingSniff implements CodeSnifferSniff
         return in_array($tokens[$nextSignificantToken]['code'], [T_CLOSE_SHORT_ARRAY, T_CLOSE_PARENTHESIS], true);
     }
 
-    private static function nextSignificantTokenConcatsString(CodeSnifferFile $file, $ptr)
+    private static function nextSignificantTokenConcatsString(File $file, $ptr)
     {
         $tokens = $file->getTokens();
         $nextSignificantToken = $file->findNext(T_WHITESPACE, $ptr + 1, null, true);

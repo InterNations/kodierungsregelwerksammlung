@@ -1,17 +1,17 @@
 <?php
 namespace InterNations\Sniffs\Syntax;
 
-use PHP_CodeSniffer_File as CodeSnifferFile;
-use PHP_CodeSniffer_Sniff as CodeSnifferSniff;
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
-class TypeCastSniff implements CodeSnifferSniff
+class TypeCastSniff implements Sniff
 {
     public function register()
     {
         return [T_INT_CAST, T_BOOL_CAST, T_DOUBLE_CAST, T_STRING_CAST];
     }
 
-    public function process(CodeSnifferFile $file, $stackPtr)
+    public function process(File $file, $stackPtr)
     {
         switch (strtolower($file->getTokens()[$stackPtr]['content'])) {
             case '(integer)':
