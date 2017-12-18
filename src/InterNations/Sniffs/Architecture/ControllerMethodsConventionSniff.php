@@ -53,7 +53,7 @@ class ControllerMethodsConventionSniff implements Sniff
             $file->addError(
                 'Public methods in %s controllers are limited to "%s()" but "%s()" found. '
                 . 'This is often a hint that you are dealing with a sub resource of the current resource '
-                . 'that justifies it’s own controller and should be extracted into it’s own controller.',
+                . 'that justifies its own controller and should be extracted into its own controller.',
                 $stackPtr,
                 'verbLimit',
                 [$isWebController ? 'web' : 'API', implode('()", "', $actions), $name]
