@@ -25,6 +25,8 @@ class TestController
 
     public function indexAction() { }
 
+    public function headAction() { }
+
     public function invalidAction() { }
 
     protected function whateverProtected() { }

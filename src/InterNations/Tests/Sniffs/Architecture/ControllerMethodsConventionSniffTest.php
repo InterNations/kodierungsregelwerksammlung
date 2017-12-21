@@ -15,7 +15,7 @@ class ControllerMethodsConventionSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Public methods in web controllers are limited to "deleteAction()", "editAction()", "getAction()", "indexAction()", "newAction()", "patchAction()", "postAction()", "putAction()" but "invalidAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
+            'Public methods in web controllers are limited to "deleteAction()", "editAction()", "getAction()", "headAction()", "indexAction()", "newAction()", "patchAction()", "postAction()", "putAction()" but "invalidAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
         );
     }
 
@@ -37,19 +37,19 @@ class ControllerMethodsConventionSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Public methods in API controllers are limited to "deleteAction()", "getAction()", "indexAction()", "patchAction()", "postAction()", "putAction()" but "newAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
+            'Public methods in API controllers are limited to "deleteAction()", "getAction()", "headAction()", "indexAction()", "patchAction()", "postAction()", "putAction()" but "newAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
         );
         static::assertReportContains(
             $errors,
             $file,
             'errors',
-            'Public methods in API controllers are limited to "deleteAction()", "getAction()", "indexAction()", "patchAction()", "postAction()", "putAction()" but "editAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
+            'Public methods in API controllers are limited to "deleteAction()", "getAction()", "headAction()", "indexAction()", "patchAction()", "postAction()", "putAction()" but "editAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
         );
         static::assertReportContains(
             $errors,
             $file,
             'errors',
-            'Public methods in API controllers are limited to "deleteAction()", "getAction()", "indexAction()", "patchAction()", "postAction()", "putAction()" but "invalidAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
+            'Public methods in API controllers are limited to "deleteAction()", "getAction()", "headAction()", "indexAction()", "patchAction()", "postAction()", "putAction()" but "invalidAction()" found. This is often a hint that you are dealing with a sub resource of the current resource that justifies its own controller and should be extracted into its own controller.'
         );
     }
 }

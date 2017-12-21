@@ -13,7 +13,7 @@ class ControllerMethodsConventionSniff implements Sniff
         'set*'
     ];
 
-    private static $apiVerbs = ['index', 'get', 'post', 'put', 'patch', 'delete'];
+    private static $apiVerbs = ['index', 'get', 'post', 'put', 'patch', 'delete', 'head'];
 
     private static $webVerbs = ['new', 'edit'];
 
