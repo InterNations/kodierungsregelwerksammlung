@@ -221,6 +221,12 @@ class ConstantNameSniff implements Sniff
                 return;
             }
 
+            // Is it a catch block
+            $prevPtrCatch = $file->findPrevious([T_WHITESPACE, T_OPEN_PARENTHESIS], ($stackPtr - 1), null, true);
+            if ($tokens[$prevPtrCatch]['code'] === T_CATCH) {
+                return;
+            }
+
             // This is a real constant.
             if (strtoupper($constName) !== $constName) {
                 $error = 'Constants must be uppercase; expected %s but found %s';

@@ -59,4 +59,12 @@ class ConstantNameSniffTest extends AbstractTestCase
             'Class constants for event types must be camelcase and start with "on", "before" or "after". Found onAfterInvalid'
         );
     }
+
+    public function testMultipleCatchBlocks(): void
+    {
+        $file = __DIR__ . '/Fixtures/ConstantName/MultipleCatchBlocks.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Naming/ConstantNameSniff'], [$file]);
+
+        $this->assertReportCount(0, 0, $errors, $file);
+    }
 }
