@@ -223,6 +223,7 @@ class ConstantNameSniff implements Sniff
 
             // Is it a catch block
             $prevPtrCatch = $file->findPrevious([T_WHITESPACE, T_OPEN_PARENTHESIS], ($stackPtr - 1), null, true);
+            
             if ($tokens[$prevPtrCatch]['code'] === T_CATCH) {
                 return;
             }
