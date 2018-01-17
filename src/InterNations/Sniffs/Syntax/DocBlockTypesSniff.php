@@ -7,14 +7,14 @@ use PHP_CodeSniffer\Files\File;
 class DocBlockTypesSniff implements Sniff
 {
     private static $typeMap = [
-        'bool'   => 'boolean',
-        'real'   => 'float',
+        'boolean' => 'bool',
+        'real' => 'float',
         'double' => 'float',
         'binary' => 'string',
-        'int'    => 'integer',
-        'void'   => 'null',
-        '$this'  => 'self',
-        'this'   => 'self',
+        'integer' => 'int',
+        'void' => 'null',
+        '$this' => 'self',
+        'this' => 'self',
     ];
 
     public function register()
@@ -24,6 +24,7 @@ class DocBlockTypesSniff implements Sniff
 
     public function process(File $file, $stackPtr)
     {
+        $tokens = $file->getTokens();
         $content = $file->getTokensAsString($stackPtr, 3);
         $regex = '/@(?<annotation>var|param|return)\s+(?<types>[^\s]+)(?:\s+|$)/xi';
 
@@ -37,7 +38,7 @@ class DocBlockTypesSniff implements Sniff
                 continue;
             }
 
-            $file->addError(
+            $file->addFixableError(
                 sprintf(
                     'Found "@%1$s %2$s", expected "@%1$s %3$s"',
                     $matches['annotation'],
@@ -47,6 +48,12 @@ class DocBlockTypesSniff implements Sniff
                 $stackPtr,
                 'ShortDocCommentTypes'
             );
+
+            $commentStrPtr = $file->findNext([T_WHITESPACE, T_DOC_COMMENT_WHITESPACE], ($stackPtr + 1), null, true);
+
+            $file->fixer->beginChangeset();
+            $file->fixer->replaceToken($commentStrPtr, str_replace($type, static::$typeMap[$type], $tokens[$commentStrPtr]['content']));
+            $file->fixer->endChangeset();
         }
     }
 }
