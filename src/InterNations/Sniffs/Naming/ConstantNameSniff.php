@@ -103,7 +103,7 @@ class ConstantNameSniff implements Sniff
                 if ($this->isEventClassName($tokens[$className]['content'])) {
                     if (!$this->isValidEventConstName($constName)) {
                         $error = 'Class constants for event types must be camelcase and start with '
-                               . '"on", "before" or "after". Found %s';
+                            . '"on", "before" or "after". Found %s';
                         $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                     }
 
@@ -213,7 +213,7 @@ class ConstantNameSniff implements Sniff
 
                     if (!$this->isValidEventConstName($constName)) {
                         $error = 'Class constants for event types must be camelcase and start with '
-                               . '"on", "before" or "after". Found %s';
+                            . '"on", "before" or "after". Found %s';
                         $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                     }
                 }
@@ -221,10 +221,8 @@ class ConstantNameSniff implements Sniff
                 return;
             }
 
-            // Is it a catch block
-            $prevPtrCatch = $file->findPrevious([T_WHITESPACE, T_OPEN_PARENTHESIS], ($stackPtr - 1), null, true);
-            
-            if ($tokens[$prevPtrCatch]['code'] === T_CATCH) {
+            // Is it a catch block or an Exception
+            if ($this->isAnException($tokens[$stackPtr]['content'])) {
                 return;
             }
 
@@ -283,6 +281,11 @@ class ConstantNameSniff implements Sniff
     private static function isEventClassName($className)
     {
         return preg_match('/^.*Events$/', $className);
+    }
+
+    private static function isAnException($exception)
+    {
+        return preg_match('/^.*Exception$/', $exception);
     }
 
     private static function isValidEventConstName($constantName)
