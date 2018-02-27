@@ -61,8 +61,8 @@ class SwitchDeclarationSniff implements Sniff
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param File    $file     The file being scanned.
-     * @param integer $stackPtr The position of the current token in the
+     * @param File$file The file being scanned.
+     * @param int $stackPtr The position of the current token in the
      *                          stack passed in $tokens.
      *
      * @return null
@@ -251,7 +251,10 @@ class SwitchDeclarationSniff implements Sniff
                         }
                     }//end if
                 }//end if
-            } elseif ($type === 'Default' && $tokens[$nextBreak]['type'] !== 'T_THROW' && $tokens[$nextBreak]['type'] !== 'T_RETURN') {
+            } elseif ($type === 'Default' &&
+                $tokens[$nextBreak]['type'] !== 'T_THROW' &&
+                $tokens[$nextBreak]['type'] !== 'T_RETURN'
+            ) {
                 $error = 'DEFAULT case must have a breaking statement';
                 $file->addError($error, $nextCase, 'DefaultNoBreak');
             }//end if

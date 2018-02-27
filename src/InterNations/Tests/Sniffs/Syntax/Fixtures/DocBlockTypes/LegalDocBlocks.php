@@ -17,9 +17,9 @@ class LegalDocBlocks
     private $array;
 
     /**
-     * @var boolean
+     * @var bool
      */
-    private $boolean;
+    private $bool;
 
     /**
      * @var self
@@ -59,10 +59,10 @@ class LegalDocBlocks
     }
 
     /**
-     * @param boolean $var
-     * @return boolean
+     * @param bool $var
+     * @return bool
      */
-    public function booleanMethod($var)
+    public function boolMethod($var)
     {
     }
 
@@ -75,7 +75,7 @@ class LegalDocBlocks
     }
 
     /**
-     * @param string|integer $var
+     * @param string|int $var
      * @return LegalDocBlocks|null
      */
     public function multipleTypeMethods($var)

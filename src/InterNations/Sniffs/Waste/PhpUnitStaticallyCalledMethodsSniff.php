@@ -36,7 +36,7 @@ class PhpUnitStaticallyCalledMethodsSniff implements Sniff
     }
 
     /**
-     * @param integer $stackPtr 
+     * @param int $stackPtr
      */
     public function process(File $file, $stackPtr): void
     {
@@ -81,7 +81,7 @@ class PhpUnitStaticallyCalledMethodsSniff implements Sniff
     }
 
     /**
-     * @param integer[] $andMethodModifiers
+     * @param int[] $andMethodModifiers
      * @return string[]
      */
     private static function findClassMethods(string $className, array $andMethodModifiers): array
@@ -106,7 +106,7 @@ class PhpUnitStaticallyCalledMethodsSniff implements Sniff
     }
 
     /**
-     * @param integer[] $methodModifiers 
+     * @param int[] $methodModifiers
      */
     private static function validateMethodModifiers(array $methodModifiers): void
     {

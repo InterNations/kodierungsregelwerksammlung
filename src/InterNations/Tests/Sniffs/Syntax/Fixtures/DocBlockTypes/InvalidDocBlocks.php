@@ -12,14 +12,14 @@ class InvalidDocBlocks
     private $string;
 
     /**
-     * @var bool
+     * @var boolean
      */
-    private $bool;
+    private $boolean;
 
     /**
-     * @var int
+     * @var integer
      */
-    private $int;
+    private $integer;
 
     /**
      * @var $this
@@ -74,18 +74,18 @@ class InvalidDocBlocks
     }
 
     /**
-     * @param bool $var
-     * @return bool
+     * @param boolean $var
+     * @return boolean
      */
-    public function boolMethod($var)
+    public function booleanMethod($var)
     {
     }
 
     /**
-     * @param int $var
-     * @return int
+     * @param integer $var
+     * @return integer
      */
-    public function intMethod($var)
+    public function integerMethod($var)
     {
     }
 
@@ -106,7 +106,7 @@ class InvalidDocBlocks
     }
 
     /**
-     * @param int|null
+     * @param integer|null
      * @return void|integer
      */
     public function combinedParam($var)

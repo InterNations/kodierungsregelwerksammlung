@@ -40,8 +40,8 @@ class AlternativeFunctionSniff implements Sniff
     }
 
     /**
-     * @param File    $file
-     * @param integer $stackPtr
+     * @param File $file
+     * @param int  $stackPtr
      */
     public function process(File $file, $stackPtr)
     {

@@ -52,7 +52,10 @@ class DocBlockTypesSniff implements Sniff
             $commentStrPtr = $file->findNext([T_WHITESPACE, T_DOC_COMMENT_WHITESPACE], ($stackPtr + 1), null, true);
 
             $file->fixer->beginChangeset();
-            $file->fixer->replaceToken($commentStrPtr, str_replace($type, static::$typeMap[$type], $tokens[$commentStrPtr]['content']));
+            $file->fixer->replaceToken(
+                $commentStrPtr,
+                str_replace($type, static::$typeMap[$type], $tokens[$commentStrPtr]['content'])
+            );
             $file->fixer->endChangeset();
         }
     }

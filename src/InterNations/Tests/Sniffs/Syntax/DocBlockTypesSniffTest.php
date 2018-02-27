@@ -10,7 +10,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
         $file = __DIR__ . '/Fixtures/DocBlockTypes/InvalidDocBlocks.php';
         $errors = $this->analyze(['InterNations/Sniffs/Syntax/DocBlockTypesSniff'], [$file]);
 
-        $this->assertReportCount(26, 0, $errors, $file);
+        $this->assertReportCount(27, 0, $errors, $file);
         $this->assertReportContains(
             $errors,
             $file,
@@ -31,7 +31,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Found "@var bool", expected "@var boolean"',
+            'Found "@var boolean", expected "@var bool"',
             'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
@@ -39,7 +39,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Found "@var int", expected "@var integer"',
+            'Found "@var integer", expected "@var int"',
             'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
@@ -140,7 +140,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Found "@param bool", expected "@param boolean"',
+            'Found "@param boolean", expected "@param bool"',
             'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
@@ -148,7 +148,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Found "@return bool", expected "@return boolean"',
+            'Found "@return boolean", expected "@return bool"',
             'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
@@ -157,7 +157,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Found "@param int", expected "@param integer"',
+            'Found "@param integer", expected "@param int"',
             'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
@@ -165,7 +165,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Found "@return int", expected "@return integer"',
+            'Found "@return integer", expected "@return int"',
             'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
@@ -208,7 +208,7 @@ class DocBlockTypesSniffTest extends AbstractTestCase
             $errors,
             $file,
             'errors',
-            'Found "@param int|null", expected "@param integer|null"',
+            'Found "@param integer|null", expected "@param int|null"',
             'InterNations.Syntax.DocBlockTypes.ShortDocCommentTypes',
             5
         );
