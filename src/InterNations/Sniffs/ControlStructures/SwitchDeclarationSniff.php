@@ -115,7 +115,7 @@ class SwitchDeclarationSniff implements Sniff
 
             if ($type === 'Case'
                 && ($tokens[($nextCase + 1)]['type'] !== 'T_WHITESPACE'
-                || $tokens[($nextCase + 1)]['content'] !== ' ')
+                    || $tokens[($nextCase + 1)]['content'] !== ' ')
             ) {
                 $error = 'CASE keyword must be followed by a single space';
                 $file->addError($error, $nextCase, 'SpacingAfterCase');
@@ -201,16 +201,10 @@ class SwitchDeclarationSniff implements Sniff
                             break;
                         }
                     }
-
-                    if ($nextLine !== ($caseLine + 1)) {
-                        $error = 'Blank lines are not allowed after ' . strtoupper($type) . ' statements';
-                        $file->addError($error, $nextCase, 'SpacingAfter' . $type);
-                    }
                 }//end if
 
                 if ($tokens[$nextBreak]['code'] === T_BREAK) {
                     if ($type === 'Case') {
-                        // Ensure empty CASE statements are not allowed.
                         // They must have some code content in them. A comment is not enough.
                         // But count RETURN statements as valid content if they also
                         // happen to close the CASE statement.
@@ -226,11 +220,6 @@ class SwitchDeclarationSniff implements Sniff
                                 $foundContent = true;
                                 break;
                             }
-                        }
-
-                        if ($foundContent === false) {
-                            $error = 'Empty CASE statements are not allowed';
-                            $file->addError($error, $nextCase, 'EmptyCase');
                         }
                     } else {
                         // Ensure empty DEFAULT statements are not allowed.

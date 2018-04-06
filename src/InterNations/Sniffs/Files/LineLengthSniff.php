@@ -78,6 +78,16 @@ class LineLengthSniff implements Sniff
             return;
         }
 
+        // Allow overlong Twig file paths
+        if (strpos($lineContent, '.twig') !== false) {
+            return;
+        }
+
+        // Allow overlong scope (constants, functions etc..)
+        if (strpos($lineContent, '::') !== false) {
+            return;
+        }
+
         $lineLength = mb_strlen($lineContent, 'UTF-8');
 
         if ($this->absoluteLineLimit > 0 && $lineLength > $this->absoluteLineLimit) {

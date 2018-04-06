@@ -53,6 +53,8 @@ class SuperfluousUseStatementsSniff implements Sniff
         $namespaceExpression = preg_quote($namespaceAlias, '/');
         $namespaceRegex = '/
             (
+                @ ' . $namespaceExpression . '                                       # Annotation (@ORM\Foo, @Foo)
+                |
                 @ ' . $namespaceExpression . '(\\\\|\(|$)                            # Annotation (@ORM\Foo, @Foo)
                 |
                 ^(                                                                   # Virtual method (@method)
