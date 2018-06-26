@@ -127,7 +127,6 @@
         <exclude name="Squiz.PHP.DisallowComparisonAssignment"/>
         <exclude name="Squiz.PHP.DisallowInlineIf"/>
         <exclude name="Squiz.PHP.DisallowMultipleAssignments"/>
-        <exclude name="Squiz.PHP.DisallowObEndFlush"/>
         <exclude name="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
         <exclude name="Squiz.PHP.EmbeddedPhp"/>
         <exclude name="Squiz.PHP.Heredoc"/>
