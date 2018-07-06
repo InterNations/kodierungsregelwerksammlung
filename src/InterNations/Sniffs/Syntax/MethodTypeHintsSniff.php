@@ -420,8 +420,8 @@ class MethodTypeHintsSniff implements Sniff
 
         if (!in_array(
             $tokens[$file->findNext(T_COLON, $endBracket)+2]['code'],
-            [T_NULLABLE, T_STRING, T_CALLABLE, T_SELF])
-        ) {
+            [T_NULLABLE, T_STRING, T_CALLABLE, T_SELF]
+        )) {
             $error = 'Expected exactly one space after colon, multiple spaces or no space found for the return type';
             $file->addError($error, $namePtr, 'WrongStyleTypeHint');
 

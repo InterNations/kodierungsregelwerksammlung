@@ -60,6 +60,7 @@ class ExpressionFormattingSniff implements Sniff
                     null,
                     true
                 );
+
                 if (in_array($tokens[$returnTypePos]['code'], [T_STRING, T_CALLABLE, T_SELF])) {
                     $closingPtr = $returnTypePos;
                 }
@@ -163,6 +164,7 @@ class ExpressionFormattingSniff implements Sniff
 
         if ($tokens[$nextPtr]['code'] === T_COLON) {
             $endPtr = $nextPtr;
+
             while (!in_array($tokens[$endPtr]['code'], [T_STRING, T_CALLABLE, T_SELF])) {
                 ++$endPtr;
             }

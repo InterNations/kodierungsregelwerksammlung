@@ -198,6 +198,13 @@ class ConstantNameSniff implements Sniff
                 return;
             }
 
+            // Is this a return type
+            $prevPtrColon = $file->findPrevious([T_WHITESPACE, T_NULLABLE], ($stackPtr - 1), null, true);
+
+            if ($tokens[$prevPtrColon]['code'] === T_COLON) {
+                return;
+            }
+
             // Is this a goto label target?
             if ($tokens[$nextPtr]['code'] === T_COLON) {
                 if (in_array($tokens[$prevPtr]['code'], [T_SEMICOLON, T_OPEN_CURLY_BRACKET, T_COLON], true)) {
