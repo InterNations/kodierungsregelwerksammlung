@@ -5,7 +5,6 @@ namespace InterNations\Sniffs\Waste;
 use InterNations\Sniffs\NamespaceSniffTrait;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
-use const T_RETURN_TYPE;
 
 class SuperfluousUseStatementsSniff implements Sniff
 {
@@ -79,7 +78,7 @@ class SuperfluousUseStatementsSniff implements Sniff
             if (!isset(static::$namespaceUsages[$fileName])) {
                 static::$namespaceUsages[$fileName] = [];
                 $strPtr = $stackPtr;
-                while ($strPtr = $file->findNext([T_STRING, T_TRUE, T_FALSE, T_RETURN_TYPE], $strPtr + 1)) {
+                while ($strPtr = $file->findNext([T_STRING, T_TRUE, T_FALSE], $strPtr + 1)) {
                     $namespaceUsed = $this->getNamespaceUsage($strPtr, $file);
                     if ($namespaceUsed) {
                         static::$namespaceUsages[$fileName][$strPtr] = $namespaceUsed;
@@ -135,7 +134,7 @@ class SuperfluousUseStatementsSniff implements Sniff
     {
         $tokens = $file->getTokens();
         $namespace = '';
-        $types = [T_STRING, T_NS_SEPARATOR, T_TRUE, T_FALSE, T_RETURN_TYPE];
+        $types = [T_STRING, T_NS_SEPARATOR, T_TRUE, T_FALSE];
         while ($stackPtr = $file->findNext($types, $stackPtr, $stackPtr + 1)) {
 
             if (in_array($tokens[$stackPtr]['code'], [T_TRUE, T_FALSE], true)) {

@@ -228,7 +228,7 @@ class MethodTypeHintsSniff implements Sniff
                 }
 
                 // Check for mandatory mixed type hints
-                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_ARRAY_HINT, T_CALLABLE], true)) {
+                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_CALLABLE], true)) {
 
                     $docBlockType = $this->getDocBlockType($tokens[$i]['content'], $paramDoc);
 
@@ -351,7 +351,7 @@ class MethodTypeHintsSniff implements Sniff
         // Check return type hints for functions
         $returnTypeHintPtr = $file->findNext([T_WHITESPACE, T_COLON, T_NULLABLE], $endBracket + 1, null, true);
 
-        $returnTypeHint = $tokens[$returnTypeHintPtr]['code'] === T_RETURN_TYPE;
+        $returnTypeHint = $file->getMethodProperties($stackPtr)['return_type'];
 
         if (isset(self::$whitelist[$methodName]) && self::$whitelist[$methodName][1] === null) {
             if ($returnTypeHint) {
@@ -418,7 +418,10 @@ class MethodTypeHintsSniff implements Sniff
             return;
         }
 
-        if (!in_array($tokens[$file->findNext(T_COLON, $endBracket)+2]['code'], [T_NULLABLE, T_RETURN_TYPE])) {
+        if (!in_array(
+            $tokens[$file->findNext(T_COLON, $endBracket)+2]['code'],
+            [T_NULLABLE, T_STRING, T_CALLABLE, T_SELF])
+        ) {
             $error = 'Expected exactly one space after colon, multiple spaces or no space found for the return type';
             $file->addError($error, $namePtr, 'WrongStyleTypeHint');
 
