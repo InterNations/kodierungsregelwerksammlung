@@ -62,7 +62,7 @@ class MethodTypeHintsSniff implements Sniff
 
     public function register()
     {
-        return [T_FUNCTION];
+        return [T_FUNCTION, T_CLOSURE];
     }
 
     public function process(File $file, $stackPtr)
@@ -110,12 +110,17 @@ class MethodTypeHintsSniff implements Sniff
             return;
         }
 
+        // Is Closure
+        $isClosure = $tokens[$stackPtr]['code'] == T_CLOSURE;
+
         // Method name
         $namePtr = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
         $methodName = $tokens[$namePtr]['content'];
 
+        $parenthesisPtr = $isClosure ? $namePtr : $namePtr + 1;
+
         // Skip invalid statement.
-        if (!isset($tokens[$namePtr + 1]['parenthesis_opener'])) {
+        if (!isset($tokens[$parenthesisPtr]['parenthesis_opener'])) {
             return;
         }
 
@@ -187,8 +192,8 @@ class MethodTypeHintsSniff implements Sniff
             }
         }
 
-        $startBracket = $tokens[$namePtr + 1]['parenthesis_opener'];
-        $endBracket = $tokens[$namePtr + 1]['parenthesis_closer'];
+        $startBracket = $tokens[$parenthesisPtr]['parenthesis_opener'];
+        $endBracket = $tokens[$parenthesisPtr]['parenthesis_closer'];
 
         // Check, if no arguments for specific magic methods
         if ($startBracket + 1 === $endBracket
@@ -236,12 +241,14 @@ class MethodTypeHintsSniff implements Sniff
                         continue;
                     }
 
-                    $error = sprintf(
-                        'Expected Type hint for the parameter "%1$s" in method "%2$s::%3$s"',
-                        $tokens[$i]['content'],
-                        $className,
-                        $methodName
-                    );
+                    $error = $isClosure
+                        ? sprintf('Expected Type hint for the parameter "%1$s" in closure', $tokens[$i]['content'])
+                        : sprintf(
+                            'Expected Type hint for the parameter "%1$s" in method "%2$s::%3$s"',
+                            $tokens[$i]['content'],
+                            $className,
+                            $methodName
+                            );
                     $file->addError($error, $typeHintPtr, 'MissingTypeHint');
 
                     continue;
@@ -349,9 +356,9 @@ class MethodTypeHintsSniff implements Sniff
         }
 
         // Check return type hints for functions
-        $returnTypeHintPtr = $file->findNext([T_WHITESPACE, T_COLON, T_NULLABLE], $endBracket + 1, null, true);
-
-        $returnTypeHint = $file->getMethodProperties($stackPtr)['return_type'];
+        $methodProperties = $file->getMethodProperties($stackPtr);
+        $returnTypeHint = $methodProperties['return_type'];
+        $returnTypeHintPtr = $methodProperties['return_type_token'];
 
         if (isset(self::$whitelist[$methodName]) && self::$whitelist[$methodName][1] === null) {
             if ($returnTypeHint) {
@@ -382,13 +389,15 @@ class MethodTypeHintsSniff implements Sniff
 
             if (!self::isWhitelistedDocBlockType(array_values($returnDoc)[0][0] ?? null)) {
 
-                $error = sprintf(
+                $error = $isClosure
+                ? 'PHP 7 style return type hint is required for closure'
+                : sprintf(
                     'PHP 7 style return type hint is required for method "%1$s::%2$s"',
                     $className,
                     $methodName
                 );
-                $file->addError($error, $namePtr, 'MissingReturnTypeHint');
 
+                $file->addError($error, $namePtr, 'MissingReturnTypeHint');
             }
 
             return;
@@ -407,7 +416,8 @@ class MethodTypeHintsSniff implements Sniff
         }
 
         // PHP7 return type style check
-        if ($tokens[($endBracket + 1)]['code'] !== T_COLON) {
+        $colonPtr = $file->findPrevious([T_WHITESPACE, T_NULLABLE], $returnTypeHintPtr - 1, null, true);
+        if ($tokens[$colonPtr]['code'] !== T_COLON) {
             $error = sprintf(
                 'PHP 7 style return type hint, colon is required for method "%1$s::%2$s"',
                 $className,
@@ -502,7 +512,10 @@ class MethodTypeHintsSniff implements Sniff
 
         // Catch Superfluous return comment doc
         if ($returnDoc 
-            && !in_array($tokens[$returnTypeHintPtr]['content'], ['array', 'MockObject', 'iterable', 'Collection']) 
+            && !in_array(
+                $tokens[$returnTypeHintPtr]['content'],
+                ['array', 'Traversable', 'IterableResult', 'MockObject', 'iterable', 'Collection']
+            )
             && count(array_values($returnDoc)[0]) < 2
         ) {
             $error = 'Superfluous return type doc';

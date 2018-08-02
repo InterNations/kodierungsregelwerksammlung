@@ -5,6 +5,27 @@ use InterNations\Tests\Sniffs\AbstractTestCase;
 
 class MethodTypeHintsSniffTest extends AbstractTestCase
 {
+    public function testClosureTypeHints(): void
+    {
+        $file = __DIR__ . '/Fixtures/MethodTypeHints/ClosureTypeHints.php';
+        $errors = $this->analyze(['InterNations/Sniffs/Syntax/MethodTypeHintsSniff'], [$file]);
+
+        $this->assertReportCount(2, 0, $errors, $file);
+
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'Expected Type hint for the parameter "$someVar" in closure'
+        );
+        $this->assertReportContains(
+            $errors,
+            $file,
+            'errors',
+            'PHP 7 style return type hint is required for closure'
+        );
+    }
+
     public function testValidMethodTypeHints(): void
     {
         $file = __DIR__ . '/Fixtures/MethodTypeHints/ValidTypeHints.php';
