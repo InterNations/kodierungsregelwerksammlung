@@ -248,7 +248,7 @@ class MethodTypeHintsSniff implements Sniff
                             $tokens[$i]['content'],
                             $className,
                             $methodName
-                            );
+                        );
                     $file->addError($error, $typeHintPtr, 'MissingTypeHint');
 
                     continue;
@@ -391,11 +391,7 @@ class MethodTypeHintsSniff implements Sniff
 
                 $error = $isClosure
                 ? 'PHP 7 style return type hint is required for closure'
-                : sprintf(
-                    'PHP 7 style return type hint is required for method "%1$s::%2$s"',
-                    $className,
-                    $methodName
-                );
+                : sprintf('PHP 7 style return type hint is required for method "%1$s::%2$s"', $className, $methodName);
 
                 $file->addError($error, $namePtr, 'MissingReturnTypeHint');
             }
@@ -417,6 +413,7 @@ class MethodTypeHintsSniff implements Sniff
 
         // PHP7 return type style check
         $colonPtr = $file->findPrevious([T_WHITESPACE, T_NULLABLE], $returnTypeHintPtr - 1, null, true);
+        
         if ($tokens[$colonPtr]['code'] !== T_COLON) {
             $error = sprintf(
                 'PHP 7 style return type hint, colon is required for method "%1$s::%2$s"',
