@@ -6,7 +6,6 @@
         <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
         <exclude name="Generic.CodeAnalysis.UselessOverridingMethod"/>
         <exclude name="Generic.CodeAnalysis.AssignmentInCondition"/>
-        <exclude name="Generic.CodeAnalysis.EmptyStatementSniff"/>
         <exclude name="Generic.Commenting.Fixme"/>
         <exclude name="Generic.Commenting.Todo"/>
         <exclude name="Generic.ControlStructures.InlineControlStructure"/>
