@@ -170,6 +170,11 @@ class ExpressionFormattingSniff implements Sniff
             }
         }
 
+        // Return if ternary operator
+        if (in_array($tokens[$startPtr + 2]['code'], [T_INLINE_THEN, T_INLINE_ELSE])) {
+            return;
+        }
+
         $before = static::composeExpression($tokens, $startPtr + 1, $stackPtr + 1);
         $after = static::composeExpression($tokens, $expressionPtr, $endPtr);
 

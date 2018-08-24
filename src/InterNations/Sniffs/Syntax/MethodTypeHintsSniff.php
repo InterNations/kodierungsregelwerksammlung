@@ -216,7 +216,7 @@ class MethodTypeHintsSniff implements Sniff
             if ($tokens[$i]['code'] === T_VARIABLE) {
                 $paramCount++;
 
-                $typeHintPtr = $file->findPrevious([T_WHITESPACE, T_ELLIPSIS], $i - 1, null, true);
+                $typeHintPtr = $file->findPrevious([T_WHITESPACE], $i - 1, null, true);
 
                 // Check for no param
                 if (isset(self::$whitelist[$methodName]) && self::$whitelist[$methodName][0] === null) {
@@ -233,7 +233,7 @@ class MethodTypeHintsSniff implements Sniff
                 }
 
                 // Check for mandatory mixed type hints
-                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_CALLABLE], true)) {
+                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_CALLABLE, T_SELF, T_ELLIPSIS], true)) {
 
                     $docBlockType = $this->getDocBlockType($tokens[$i]['content'], $paramDoc);
 
@@ -307,6 +307,19 @@ class MethodTypeHintsSniff implements Sniff
                     if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
                         $str = 'Collection type hint for the parameter "%1$s" in method "%2$s::%3$s" must be ';
                         $str .= 'documented to to specify the exact type. Use Collection|Class[]';
+                        $error = sprintf($str, $tokens[$i]['content'], $className, $methodName);
+                        $file->addError($error, $typeHintPtr, 'MissingParamDoc');
+
+                        continue;
+                    }
+                }
+
+                // If Splat operator, enforce more specific documentation at @param
+                if ($tokens[$typeHintPtr]['code'] === T_ELLIPSIS && empty($dataProvider)) {
+                    if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
+                        $str = 'Splat operator type hint for the parameter "%1$s" in method "%2$s::%3$s" must be ';
+                        $str .= 'specify the exact type. Use "@param Class[] %1$s" for a list of objects of type ';
+                        $str .= '"Class", use "@param integer[] %1$s" for a list of integers and so on...';
                         $error = sprintf($str, $tokens[$i]['content'], $className, $methodName);
                         $file->addError($error, $typeHintPtr, 'MissingParamDoc');
 
