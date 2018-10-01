@@ -179,7 +179,7 @@ class ExpressionFormattingSniff implements Sniff
         $after = static::composeExpression($tokens, $expressionPtr, $endPtr);
 
 
-        $expression = $before . trim($argumentsLine) . $after;
+        $expression = $before . ltrim($argumentsLine) . $after;
 
         if (mb_strlen($expression, 'UTF-8') <= 120) {
             $file->addError(

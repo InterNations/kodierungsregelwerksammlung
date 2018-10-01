@@ -90,4 +90,10 @@ class ValidTypeHints extends TestClass
     {
         return;
     }
+
+    /** @return PromiseInterface<ViewResultCollection|Entity[]>  */
+    private function testPromises(): PromiseInterface
+    {
+        return;
+    }
 }

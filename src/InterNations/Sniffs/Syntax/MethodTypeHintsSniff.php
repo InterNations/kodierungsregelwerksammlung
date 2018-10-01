@@ -160,6 +160,12 @@ class MethodTypeHintsSniff implements Sniff
             true
         );
 
+        if ($isClosure && $tokens[$commentEnd]['code'] === T_EQUAL) {
+            $assignedClosure = $commentEnd;
+
+            $commentEnd = $file->findPrevious([T_WHITESPACE, T_VARIABLE], $assignedClosure - 1, null, true);
+        }
+
         if ($tokens[$commentEnd]['code'] === T_DOC_COMMENT_CLOSE_TAG) {
             $commentStart = $file->findPrevious(T_DOC_COMMENT_OPEN_TAG, ($commentEnd - 1));
 
@@ -216,7 +222,7 @@ class MethodTypeHintsSniff implements Sniff
             if ($tokens[$i]['code'] === T_VARIABLE) {
                 $paramCount++;
 
-                $typeHintPtr = $file->findPrevious([T_WHITESPACE], $i - 1, null, true);
+                $typeHintPtr = $file->findPrevious([T_WHITESPACE, T_ELLIPSIS], $i - 1, null, true);
 
                 // Check for no param
                 if (isset(self::$whitelist[$methodName]) && self::$whitelist[$methodName][0] === null) {
@@ -233,7 +239,7 @@ class MethodTypeHintsSniff implements Sniff
                 }
 
                 // Check for mandatory mixed type hints
-                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_CALLABLE, T_SELF, T_ELLIPSIS], true)) {
+                if (!in_array($tokens[$typeHintPtr]['code'], [T_STRING, T_CALLABLE, T_SELF], true)) {
 
                     $docBlockType = $this->getDocBlockType($tokens[$i]['content'], $paramDoc);
 
@@ -307,19 +313,6 @@ class MethodTypeHintsSniff implements Sniff
                     if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
                         $str = 'Collection type hint for the parameter "%1$s" in method "%2$s::%3$s" must be ';
                         $str .= 'documented to to specify the exact type. Use Collection|Class[]';
-                        $error = sprintf($str, $tokens[$i]['content'], $className, $methodName);
-                        $file->addError($error, $typeHintPtr, 'MissingParamDoc');
-
-                        continue;
-                    }
-                }
-
-                // If Splat operator, enforce more specific documentation at @param
-                if ($tokens[$typeHintPtr]['code'] === T_ELLIPSIS && empty($dataProvider)) {
-                    if (!$this->unsetrParamType($tokens[$i]['content'], $paramDoc)) {
-                        $str = 'Splat operator type hint for the parameter "%1$s" in method "%2$s::%3$s" must be ';
-                        $str .= 'specify the exact type. Use "@param Class[] %1$s" for a list of objects of type ';
-                        $str .= '"Class", use "@param integer[] %1$s" for a list of integers and so on...';
                         $error = sprintf($str, $tokens[$i]['content'], $className, $methodName);
                         $file->addError($error, $typeHintPtr, 'MissingParamDoc');
 
@@ -500,6 +493,18 @@ class MethodTypeHintsSniff implements Sniff
             return;
         }
 
+        // Check for Promises return type hints
+        if (($tokens[$returnTypeHintPtr]['content'] === 'PromiseInterface' && empty($returnDoc))
+            || ($tokens[$returnTypeHintPtr]['content'] === 'PromiseInterface'
+                && !preg_match('/^PromiseInterface<(.+?)>$/', array_values($returnDoc)[0][0]))) {
+            $str = 'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ';
+            $str .= 'for example use PromiseInterface<Event> or PromiseInterface<ViewResultCollection|Entity[]>instead';
+            $error = sprintf($str, $className, $methodName);
+            $file->addError($error, $returnTypeHintPtr, 'MissingDocForReturnTypeHint');
+
+            return;
+        }
+
         // Make self as a strict type
         if ($className === $tokens[$returnTypeHintPtr]['content']) {
             $str = 'Expected return type "self" a for a method "%1$s::%2$s", found "%3$s"';
@@ -524,7 +529,7 @@ class MethodTypeHintsSniff implements Sniff
         if ($returnDoc 
             && !in_array(
                 $tokens[$returnTypeHintPtr]['content'],
-                ['array', 'Traversable', 'IterableResult', 'MockObject', 'iterable', 'Collection']
+                ['array', 'Traversable', 'IterableResult', 'MockObject', 'iterable', 'Collection', 'PromiseInterface']
             )
             && count(array_values($returnDoc)[0]) < 2
         ) {
