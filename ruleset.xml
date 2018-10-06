@@ -6,6 +6,7 @@
         <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
         <exclude name="Generic.CodeAnalysis.UselessOverridingMethod"/>
         <exclude name="Generic.CodeAnalysis.AssignmentInCondition"/>
+        <exclude name="Generic.CodeAnalysis.EmptyStatement"/>
         <exclude name="Generic.Commenting.Fixme"/>
         <exclude name="Generic.Commenting.Todo"/>
         <exclude name="Generic.ControlStructures.InlineControlStructure"/>
@@ -207,6 +208,7 @@
     <rule ref="./src/InterNations/Sniffs/Formatting/EmptyLineBeforeControlStructureFormattingSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Architecture/ControllerMethodsConventionSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Architecture/TestMethodsConventionSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/Architecture/IntegrationTestsConventionSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/PhpUnitAssertionsSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/PhpUnitStaticallyCalledMethodsSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Waste/SuperfluousFormatStringSniff.php"/>
@@ -226,6 +228,7 @@
     <!-- Bugfix sniff -->
     <rule ref="./src/InterNations/Sniffs/ControlStructures/SwitchDeclarationSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/ControlStructures/CatchUndefinedExceptionSniff.php"/>
+    <rule ref="./src/InterNations/Sniffs/ControlStructures/EmptyStatementSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/Formatting/ExpressionFormattingSniff.php"/>
     <rule ref="./src/InterNations/Sniffs/BestPractice/CommonDependenciesSniff.php"/>
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
@@ -237,7 +240,6 @@
     <rule ref="Squiz.Scope.StaticThisUsage"/>
     <rule ref="Generic.PHP.NoSilencedErrors"/>
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
-    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
     <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
     <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
     <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
