@@ -3,6 +3,11 @@ namespace InterNations\Sniffs\Waste;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
+use const T_CONSTANT_ENCAPSED_STRING;
+use const T_STRING;
+use const T_STRING_CONCAT;
+use const T_USE;
+use const T_WHITESPACE;
 
 class SuperfluousFormatStringSniff implements Sniff
 {
@@ -16,6 +21,12 @@ class SuperfluousFormatStringSniff implements Sniff
         $tokens = $file->getTokens();
 
         if (!in_array($tokens[$stackPtr]['content'], ['printf', 'sprintf'], true)) {
+            return;
+        }
+
+        $usePtr = $file->findPrevious([T_STRING, T_WHITESPACE], $stackPtr - 1, null, true, null, true);
+
+        if ($usePtr !== false && $tokens[$usePtr]['code'] === T_USE) {
             return;
         }
 
