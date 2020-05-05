@@ -2,6 +2,8 @@
 use const Foo\Bar\BAZ;
 use function Foo\funcName;
 
+use Symfony\Component\HttpKernel\KernelEvents;
+
 const lowercase_const = 1;
 
 const UPPERCASE_CONST = 3;
@@ -19,6 +21,11 @@ class Clazz
     public function lalala()
     {
         Clazz::class;
+    }
+
+    public function something()
+    {
+        return KernelEvents::RESPONSE;
     }
 }
 

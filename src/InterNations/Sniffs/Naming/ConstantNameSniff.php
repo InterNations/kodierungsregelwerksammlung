@@ -101,6 +101,7 @@ class ConstantNameSniff implements Sniff
                 $className = $file->findNext(T_STRING, ($class + 1), null, false, null, true);
 
                 if (self::isEventClassName($tokens[$className]['content'])) {
+
                     if (!self::isValidEventConstName($constName)) {
                         $error = 'Class constants for event types must be camelcase and start with '
                             . '"on", "before" or "after". Found %s';
@@ -210,19 +211,6 @@ class ConstantNameSniff implements Sniff
                 if (in_array($tokens[$prevPtr]['code'], [T_SEMICOLON, T_OPEN_CURLY_BRACKET, T_COLON], true)) {
                     return;
                 }
-            }
-
-            $className = $file->findPrevious(T_STRING, ($stackPtr - 1), null, false, null, true);
-
-            if (self::isEventClassName($tokens[$className]['content'])) {
-
-                if (!self::isValidEventConstName($constName)) {
-                    $error = 'Class constants for event types must be camelcase and start with '
-                        . '"on", "before" or "after". Found %s';
-                    $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
-                }
-
-                return;
             }
 
             // Is it a catch block or an Exception
