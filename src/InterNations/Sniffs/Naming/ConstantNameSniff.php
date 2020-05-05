@@ -100,8 +100,8 @@ class ConstantNameSniff implements Sniff
                 $class = $file->findPrevious(T_CLASS, ($stackPtr - 1), null, false, null);
                 $className = $file->findNext(T_STRING, ($class + 1), null, false, null, true);
 
-                if ($this->isEventClassName($tokens[$className]['content'])) {
-                    if (!$this->isValidEventConstName($constName)) {
+                if (self::isEventClassName($tokens[$className]['content'])) {
+                    if (!self::isValidEventConstName($constName)) {
                         $error = 'Class constants for event types must be camelcase and start with '
                             . '"on", "before" or "after". Found %s';
                         $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
@@ -214,22 +214,19 @@ class ConstantNameSniff implements Sniff
 
             $className = $file->findPrevious(T_STRING, ($stackPtr - 1), null, false, null, true);
 
-            if ($this->isEventClassName($tokens[$className]['content'])) {
+            if (self::isEventClassName($tokens[$className]['content'])) {
 
-                if (!$this->isEventClassName($tokens[$className]['content'])) {
-
-                    if (!$this->isValidEventConstName($constName)) {
-                        $error = 'Class constants for event types must be camelcase and start with '
-                            . '"on", "before" or "after". Found %s';
-                        $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
-                    }
+                if (!self::isValidEventConstName($constName)) {
+                    $error = 'Class constants for event types must be camelcase and start with '
+                        . '"on", "before" or "after". Found %s';
+                    $file->addError($error, $stackPtr, 'EventClassConstantNotCamelCase', [$constName]);
                 }
 
                 return;
             }
 
             // Is it a catch block or an Exception
-            if ($this->isAnException($tokens[$stackPtr]['content'])) {
+            if (self::isAnException($tokens[$stackPtr]['content'])) {
                 return;
             }
 
