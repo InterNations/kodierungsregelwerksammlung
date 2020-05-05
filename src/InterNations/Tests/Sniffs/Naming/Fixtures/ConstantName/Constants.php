@@ -14,6 +14,8 @@ class Clazz
 
     const UPPERCASE_CONST = 3;
 
+    const … = "foo";
+
     public function lalala()
     {
         Clazz::class;

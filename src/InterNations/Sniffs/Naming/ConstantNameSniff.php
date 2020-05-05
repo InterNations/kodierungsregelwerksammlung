@@ -112,10 +112,10 @@ class ConstantNameSniff implements Sniff
 
 
                 // This is a class constant.
-                if (strtoupper($constName) !== $constName) {
+                if (mb_strtoupper($constName, 'UTF-8') !== $constName) {
                     $error = 'Class constants must be uppercase; expected %s but found %s';
                     $data = [
-                        strtoupper($constName),
+                        mb_strtoupper($constName, 'UTF-8'),
                         $constName,
                     ];
                     $file->addError($error, $stackPtr, 'ClassConstantNotUpperCase', $data);

@@ -37,7 +37,7 @@ class AliasUseLegacyClassSniff implements Sniff
         $nextToken = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
         switch ($tokens[$nextToken]['content']) {
             case 'function':
-                if (strtolower($symbol) !== $symbol) {
+                if (mb_strtolower($symbol, 'UTF-8') !== $symbol) {
                     $this->addError(
                         $file,
                         $namespacePtr,
@@ -50,7 +50,7 @@ class AliasUseLegacyClassSniff implements Sniff
                 break;
 
             case 'const':
-                if (strtoupper($symbol) !== $symbol) {
+                if (mb_strtoupper($symbol, 'UTF-8') !== $symbol) {
                     $this->addError(
                         $file,
                         $namespacePtr,
