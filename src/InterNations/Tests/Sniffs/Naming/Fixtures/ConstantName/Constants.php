@@ -3,6 +3,7 @@ use const Foo\Bar\BAZ;
 use function Foo\funcName;
 
 use Symfony\Component\HttpKernel\KernelEvents;
+use InterNations\SomethingEvents;
 
 const lowercase_const = 1;
 
@@ -25,6 +26,8 @@ class Clazz
 
     public function something()
     {
+        $foo = SomethingEvents::onSomething;
+
         return KernelEvents::RESPONSE;
     }
 }
