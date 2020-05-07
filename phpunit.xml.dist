@@ -12,7 +12,7 @@
 
     <testsuites>
         <testsuite name="internations/kodierungsregelwerksammlung">
-            <directory>./src/InterNations/Tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 

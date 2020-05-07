@@ -26,7 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "InterNations\\": "src/InterNations"
+            "InterNations\\Sniffs\\": "src/InterNations/Sniffs"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "InterNations\\Sniffs\\Tests\\": "tests/InterNations"
         }
     }
 }

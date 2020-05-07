@@ -41,7 +41,8 @@ class NamespaceNameSniff implements Sniff
                 array_slice(explode('\\', $namespace), substr_count($path, DIRECTORY_SEPARATOR))
             );
 
-            if (strrpos($namespace, $partialNamespace) + strlen($partialNamespace) === strlen($path)) {
+            $expectedNamespace = str_replace(['.php', '/'], ['', '\\'], $path);
+            if ($expectedNamespace === $partialNamespace) {
                 return;
             }
         }
