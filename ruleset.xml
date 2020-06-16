@@ -38,6 +38,7 @@
         <exclude name="Generic.PHP.ForbiddenFunctions"/>
         <exclude name="Generic.PHP.LowerCaseConstant"/>
         <exclude name="Generic.PHP.UpperCaseConstant"/>
+        <exclude name="Generic.PHP.RequireStrictTypes"/>
         <exclude name="Generic.Strings.UnnecessaryStringConcat"/>
         <exclude name="Generic.VersionControl.SubversionProperties"/>
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
