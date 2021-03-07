@@ -3,7 +3,7 @@ namespace InterNations\Sniffs\Tests\Formatting;
 
 use InterNations\Sniffs\Tests\AbstractTestCase;
 
-class ExpressionSniffTest extends AbstractTestCase
+class ExpressionFormattingSniffTest extends AbstractTestCase
 {
     public function testSimpleInvocations(): void
     {

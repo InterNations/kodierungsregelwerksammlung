@@ -3,7 +3,7 @@ namespace InterNations\Sniffs\Tests\Syntax;
 
 use InterNations\Sniffs\Tests\AbstractTestCase;
 
-class BracesTest extends AbstractTestCase
+class BracesSniffTest extends AbstractTestCase
 {
     public function testInvalidDocBlocks(): void
     {

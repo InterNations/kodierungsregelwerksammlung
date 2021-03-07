@@ -3,7 +3,7 @@ namespace InterNations\Sniffs\Tests\Syntax;
 
 use InterNations\Sniffs\Tests\AbstractTestCase;
 
-class ShortListSniffTest extends AbstractTestCase
+class ShortListSyntaxSniffTest extends AbstractTestCase
 {
     public function testShortListSyntax(): void
     {
