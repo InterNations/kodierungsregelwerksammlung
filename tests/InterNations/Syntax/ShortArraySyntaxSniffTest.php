@@ -3,7 +3,7 @@ namespace InterNations\Sniffs\Tests\Syntax;
 
 use InterNations\Sniffs\Tests\AbstractTestCase;
 
-class ShortArraySniffTest extends AbstractTestCase
+class ShortArraySyntaxSniffTest extends AbstractTestCase
 {
     public function testOneLineOk(): void
     {
