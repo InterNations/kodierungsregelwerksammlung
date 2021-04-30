@@ -7,26 +7,23 @@ use PHP_CodeSniffer\Files\File;
 
 class ControllerMethodsConventionSniff implements Sniff
 {
-    private static $whitelist = [
+    private static array $whitelist = [
         '__construct',
         '__destruct',
         'set*'
     ];
 
-    private static $apiVerbs = ['index', 'get', 'post', 'put', 'patch', 'delete', 'head'];
+    private static array $apiVerbs = ['index', 'get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
+    private static array $webVerbs = ['new', 'edit'];
+    private static array $apiActions = [];
+    private static array $webActions = [];
 
-    private static $webVerbs = ['new', 'edit'];
-
-    private static $apiActions = [];
-
-    private static $webActions = [];
-
-    public function register()
+    public function register(): array
     {
         return [T_FUNCTION];
     }
 
-    public function process(File $file, $stackPtr)
+    public function process(File $file, $stackPtr): void
     {
         if (!Util::isController($file)) {
             return;
@@ -42,12 +39,12 @@ class ControllerMethodsConventionSniff implements Sniff
         $namePtr = $file->findNext(T_WHITESPACE, $stackPtr + 1, null, true);
         $name = $tokens[$namePtr]['content'];
 
-        if (static::isWhitelistedName($name)) {
+        if (self::isWhitelistedName($name)) {
             return;
         }
 
         $isWebController = strpos($file->getFilename(), '/Controller/Api/') === false;
-        $actions = $isWebController ? static::getWebActions() : static::getActions();
+        $actions = $isWebController ? self::getWebActions() : self::getActions();
 
         if (!in_array($name, $actions, true)) {
             $file->addError(
@@ -61,9 +58,9 @@ class ControllerMethodsConventionSniff implements Sniff
         }
     }
 
-    private static function isWhitelistedName($needle)
+    private static function isWhitelistedName(string $needle): bool
     {
-        foreach (static::$whitelist as $expression) {
+        foreach (self::$whitelist as $expression) {
             if (fnmatch($expression, $needle)) {
                 return true;
             }
@@ -72,25 +69,23 @@ class ControllerMethodsConventionSniff implements Sniff
         return false;
     }
 
-    private static function getActions()
+    private static function getActions(): array
     {
-        return static::$apiActions ?: static::$apiActions = static::verbsToActions(static::$apiVerbs);
+        return self::$apiActions ?: self::$apiActions = self::verbsToActions(self::$apiVerbs);
     }
 
-    private static function getWebActions()
+    private static function getWebActions(): array
     {
-        return static::$webActions
-            ?: static::$webActions = static::verbsToActions(array_merge(static::$webVerbs, static::$apiVerbs));
+        return self::$webActions
+            ?: self::$webActions = self::verbsToActions(array_merge(self::$webVerbs, self::$apiVerbs));
     }
 
-    private static function verbsToActions(array $actions)
+    private static function verbsToActions(array $actions): array
     {
         sort($actions);
 
         return array_map(
-            static function ($verb) {
-            return $verb . 'Action';
-            },
+            static fn (string $verb) => $verb . 'Action',
             $actions
         );
     }

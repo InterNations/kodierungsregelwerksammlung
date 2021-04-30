@@ -27,6 +27,8 @@ class TestController
 
     public function headAction() { }
 
+    public function optionsAction() { }
+
     public function invalidAction() { }
 
     protected function whateverProtected() { }
