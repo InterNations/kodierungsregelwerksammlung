@@ -84,9 +84,6 @@ class ControllerMethodsConventionSniff implements Sniff
     {
         sort($actions);
 
-        return array_map(
-            static fn (string $verb) => $verb . 'Action',
-            $actions
-        );
+        return array_map(static fn (string $verb) => $verb . 'Action', $actions);
     }
 }
