@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-class ExceptionTest extends TestCase
+class ExceptionTestFixture extends TestCase
 {
     /** @expectedException Exception */
     public function testException()

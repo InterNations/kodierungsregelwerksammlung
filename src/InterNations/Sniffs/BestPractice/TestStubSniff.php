@@ -78,7 +78,7 @@ class TestStubSniff implements Sniff
             '"%s" is implied and does not need to be specified. Simply remove it.',
             $startPtr,
             'ImpliedAny',
-            $file->getTokensAsString($startPtr, $nextPtr - $startPtr + 1)
+            [$file->getTokensAsString($startPtr, $nextPtr - $startPtr + 1)]
         );
     }
 

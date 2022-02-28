@@ -13,6 +13,8 @@ jobs:
       matrix:
         php-version:
           - 7.4
+          - 8.0
+          - 8.1
 
     steps:
       - name: Checkout
@@ -29,11 +31,6 @@ jobs:
         uses: ramsey/composer-install@v1
         with:
           composer-options: --prefer-dist
-
-      - name: Setup PCOV
-        run: |
-          composer require pcov/clobber
-          vendor/bin/pcov clobber
 
       - name: Run Tests
         run: composer tests
