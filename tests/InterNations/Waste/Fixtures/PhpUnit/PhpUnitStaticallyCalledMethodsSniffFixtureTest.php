@@ -1,11 +1,13 @@
 <?php
 namespace Foo;
 
+use stdClass;
+
 /**
  * Fixture for PhpUnitStaticallyCalledMethodsSniff / PhpUnitStaticallyCalledMethodsSniffTest .
  * The class name needs to end in "Test(Case)" to trigger the Sniff
  */
-class PhpUnitStaticallyCalledMethodsSniffFixtureTest
+class PhpUnitStaticallyCalledMethodsSniffFixtureTest extends stdClass
 {
     public function foo()
     {
