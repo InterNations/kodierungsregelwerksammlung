@@ -7,16 +7,16 @@ use PHP_CodeSniffer\Files\File;
 
 class ControllerMethodsConventionSniff implements Sniff
 {
-    private static array $whitelist = [
+    private static $whitelist = [
         '__construct',
         '__destruct',
         'set*'
     ];
 
-    private static array $apiVerbs = ['index', 'get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
-    private static array $webVerbs = ['new', 'edit'];
-    private static array $apiActions = [];
-    private static array $webActions = [];
+    private static $apiVerbs = ['index', 'get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
+    private static $webVerbs = ['new', 'edit'];
+    private static $apiActions = [];
+    private static $webActions = [];
 
     public function register(): array
     {
