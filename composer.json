@@ -33,5 +33,9 @@
         "psr-4": {
             "InterNations\\Sniffs\\Tests\\": "tests/InterNations"
         }
+    },
+    "scripts": {
+        "tests": "phpunit",
+        "coding-style": "phpcs --standard=ruleset.xml ./src/InterNations/Sniffs"
     }
 }
