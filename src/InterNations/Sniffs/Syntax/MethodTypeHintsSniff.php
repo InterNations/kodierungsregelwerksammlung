@@ -125,15 +125,15 @@ class MethodTypeHintsSniff implements Sniff
         }
 
         // Ignore whitelisted methods by class
-        if (isset($this->ignoreTypeHintWhitelist[$className]) 
+        if (isset($this->ignoreTypeHintWhitelist[$className])
             && in_array($methodName, $this->ignoreTypeHintWhitelist[$className])
         ) {
             return;
         }
 
         // Ignore whitelisted methods by parent class
-        if ($parentClassName 
-            && isset($this->ignoreTypeHintWhitelist[$parentClassName]) 
+        if ($parentClassName
+            && isset($this->ignoreTypeHintWhitelist[$parentClassName])
             && in_array($methodName, $this->ignoreTypeHintWhitelist[$parentClassName])
         ) {
             return;
@@ -143,7 +143,7 @@ class MethodTypeHintsSniff implements Sniff
         if ($interfaces) {
             foreach ($interfaces as $interface) {
 
-                if (isset($this->ignoreTypeHintWhitelist[$interface]) 
+                if (isset($this->ignoreTypeHintWhitelist[$interface])
                     && in_array($methodName, $this->ignoreTypeHintWhitelist[$interface])
                 ) {
                     return;
@@ -331,8 +331,8 @@ class MethodTypeHintsSniff implements Sniff
                 }
 
                 // Have strict nullable operator for default null parameters
-                if ($tokens[$typeHintPtr-1]['code'] !== T_NULLABLE 
-                    && $tokens[$typeHintPtr+4]['code'] === T_EQUAL 
+                if ($tokens[$typeHintPtr-1]['code'] !== T_NULLABLE
+                    && $tokens[$typeHintPtr+4]['code'] === T_EQUAL
                     && $tokens[$typeHintPtr+6]['code'] === T_NULL
                 ) {
                     $str = 'Expected type hint "?%1$s" a for a method "%2$s::%3$s", found "%1$s"';
@@ -419,7 +419,7 @@ class MethodTypeHintsSniff implements Sniff
 
         // PHP7 return type style check
         $colonPtr = $file->findPrevious([T_WHITESPACE, T_NULLABLE], $returnTypeHintPtr - 1, null, true);
-        
+
         if ($tokens[$colonPtr]['code'] !== T_COLON) {
             $error = sprintf(
                 'PHP 7 style return type hint, colon is required for method "%1$s::%2$s"',
@@ -458,9 +458,9 @@ class MethodTypeHintsSniff implements Sniff
         }
 
         // Check for array return type hint
-        if (($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc)) 
-            || ($tokens[$returnTypeHintPtr]['content'] === 'array' 
-            && strpos(array_values($returnDoc)[0][0], '[]') === false) 
+        if (($tokens[$returnTypeHintPtr]['content'] === 'array' && empty($returnDoc))
+            || ($tokens[$returnTypeHintPtr]['content'] === 'array'
+            && strpos(array_values($returnDoc)[0][0], '[]') === false)
             || ($tokens[$returnTypeHintPtr]['content'] === 'array' && count(array_values($returnDoc)[0]) === 2)
         ) {
             $str = 'Return type hint for a method "%1$s::%2$s" must be documented to specify their exact type, ';
@@ -526,7 +526,7 @@ class MethodTypeHintsSniff implements Sniff
         }
 
         // Catch Superfluous return comment doc
-        if ($returnDoc 
+        if ($returnDoc
             && !in_array(
                 $tokens[$returnTypeHintPtr]['content'],
                 ['array', 'Traversable', 'IterableResult', 'MockObject', 'iterable', 'Collection', 'PromiseInterface']
@@ -572,8 +572,12 @@ class MethodTypeHintsSniff implements Sniff
         return null;
     }
 
-    private static function isWhitelistedDocBlockType(?string $compoundType)
+    private static function isWhitelistedDocBlockType(?string $compoundType): bool
     {
+        if ($compoundType === null) {
+            return false;
+        }
+
         $types = explode('|', $compoundType);
 
         if (count($types) === 1) {
