@@ -4,3 +4,4 @@ build/*
 composer.lock
 atlassian-ide-plugin.xml
 phpunit.xml
+.phpunit.result.cache

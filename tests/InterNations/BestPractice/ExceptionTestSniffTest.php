@@ -7,7 +7,7 @@ class ExceptionTestSniffTest extends AbstractTestCase
 {
     public function testExistingExceptions(): void
     {
-        $file = __DIR__ . '/Fixtures/ExceptionTest/ExceptionTest.php';
+        $file = __DIR__ . '/Fixtures/ExceptionTest/ExceptionTestFixture.php';
         $errors = $this->analyze(['InterNations/Sniffs/BestPractice/ExceptionTestSniff'], [$file]);
 
         $this->assertReportCount(4, 0, $errors, $file);

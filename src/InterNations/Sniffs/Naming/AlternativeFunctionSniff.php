@@ -28,10 +28,10 @@ class AlternativeFunctionSniff implements Sniff
         'openssl_random_pseudo_bytes' => 'bin2hex(random_bytes(…))',
         'srand'                       => 'mt_srand(…)',
         'rand'                        => 'mt_rand(…)',
-        'var_dump'                    => false,
-        'print_r'                     => false,
-        'printf'                      => false,
-        'vprintf'                     => false,
+        'var_dump'                    => null,
+        'print_r'                     => null,
+        'printf'                      => null,
+        'vprintf'                     => null,
     ];
 
     public function register()
@@ -94,7 +94,7 @@ class AlternativeFunctionSniff implements Sniff
 
         $functionName = $tokens[$stackPtr]['content'];
 
-        if (isset(static::$alternatives[$functionName])) {
+        if (array_key_exists($functionName, self::$alternatives)) {
             $this->createError(
                 $file,
                 $stackPtr,
@@ -105,7 +105,13 @@ class AlternativeFunctionSniff implements Sniff
         }
     }
 
-    private function createError(File $file, $stackPtr, $functionName, $symbol, $alternative = false)
+    private function createError(
+        File    $file,
+        int     $stackPtr,
+        string  $functionName,
+        string  $symbol,
+        ?string $alternative = null
+    ): void
     {
         $message = sprintf('%s "%s" is not allowed. ', $symbol, $functionName);
         $message .= $alternative ? sprintf('Use "%s" instead', $alternative) : 'Please remove it';
