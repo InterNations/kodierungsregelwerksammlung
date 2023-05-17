@@ -19,7 +19,7 @@ class DiscouragedConstantSniff implements Sniff
             . $tokens[$stackPtr]['content']
             . $tokens[$stackPtr + 1]['content'];
 
-        if ($constantName === 'Types::SIMPLE_ARRAY') {
+        if ($constantName === 'Types::SIMPLE_ARRAY' || $constantName === 'Type::SIMPLE_ARRAY') {
             $params = [
                 $constantName,
                 '\Doctrine\DBAL\Connection::PARAM_STR_ARRAY',
